@@ -1,0 +1,13 @@
+dwTL	dwT	dwT	dwT	dwT	dwT	dc.DT	dwT	dwT	dwT	dwT	dwT	dwTR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+H.dwL						dc						H.dwR
+dwBL	dwB	dwB	dwB	dwB	dwB	dc.DB	dwB	dwB	dwB	dwB	dwB	dwBR

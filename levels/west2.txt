@@ -1,0 +1,13 @@
+g.T	gR
+gB	gBR
+								wTL	wTR
+								wL	sBLw	wTR
+								wL	w	wR
+								wBL	wB	wBR	gTL	gT.T
+										gTL	sBRg	g
+										gL	g	g.T
+										gL	g	g.T
+wT	wT	wT	wTR	wTL	wT	wT	wT	wTR		gBL	sTRg	g.T
+w	w	w	wR	wL	w	w	w	sBLw	wTR		gBL	gB.T
+w	w	w	wR	wL	w	w	w	sTLw	wBR
+w	w	w	wR	wL	w	w	w	wR

@@ -1,0 +1,12 @@
+*								
+				g.B				g.B		
+						g.B		g.B		g.B
+						g.B				g.B
+							g.B	g.B	g.B	g.B
+							g.B	
+							g.B		g.B	g.B	g.B
+							g.B	
+							g.B	g.B	g.B	g.B
+	g.B	g.B	g.B				g.B	
+	g.B	R	g.B				g.B		g.B	g.B	g.B
+	g.B	g.B	g.B				g.B

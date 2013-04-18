@@ -1,0 +1,9 @@
+			wR	wL
+			wR	wL
+			wR	wL
+			wR	wL
+			wR	wL
+			wR	wBL	wB	wB	wB	sTRw
+			wR	s	s	s	s	wL
+			wR	s	s	s	s	wL
+			sBLw	wT	wT	wT	wT	sBRw
