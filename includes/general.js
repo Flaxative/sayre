@@ -167,8 +167,8 @@ function tile(terrain, x, y) { Crafty.e(terrain).at(x, y); }
 // sets an unending theme track
 function theme(track) {
     Crafty.audio.add("theme", [
-        "http://dotq.org/movement/media/"+track+".ogg",
-        "http://dotq.org/movement/media/"+track+".mp3"
+        "media/"+track+".ogg",
+        "media/"+track+".mp3"
     ]);
     Crafty.audio.play("theme", -1); //play and repeat forever
     }
@@ -294,7 +294,7 @@ function dialogue(statement, speaker, portrait) {
     if(speaker) {   
         text = '<h3><b>' + speaker + '</b></h3>' + text;      
         if(portrait) {
-            text = '<div class="portrait" style="background-image:url(\''+'http://dotq.org/movement/assets/portraits/'+speaker+'.png'+'\');"></div>'+text;
+            text = '<div class="portrait" style="background-image:url(\''+'assets/portraits/'+speaker+'.png'+'\');"></div>'+text;
             }
         }
     pauseAll(); Crafty.unbind('KeyDown', (inventory));
@@ -497,7 +497,7 @@ function displayArsenal() {
     $('.inventory').append('<h3>Weapons</h3>');
     weapons_carried.forEach(function(weapon) {
         h++;
-        $('.inventory').append('<fieldset class="equippable" data-itemType="weapon" data-x="'+h+'" data-y="'+j+'" data-item="'+weapon+'"><img src="/movement/assets/inventory/'+weapon+'-inv.png" /></fieldset>');
+        $('.inventory').append('<fieldset class="equippable" data-itemType="weapon" data-x="'+h+'" data-y="'+j+'" data-item="'+weapon+'"><img src="assets/inventory/'+weapon+'-inv.png" /></fieldset>');
         });
         
     // BTN 2
@@ -506,7 +506,7 @@ function displayArsenal() {
         h = 0; j = 2;
         secondaries_carried.forEach(function(btn2) {
             h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="secondary" data-x="'+h+'" data-y="'+j+'" data-item="'+btn2+'"><img src="/movement/assets/inventory/'+btn2+'-inv.png" /></fieldset>');
+            $('.inventory').append('<fieldset class="equippable" data-itemType="secondary" data-x="'+h+'" data-y="'+j+'" data-item="'+btn2+'"><img src="assets/inventory/'+btn2+'-inv.png" /></fieldset>');
             });
         }
     
@@ -516,7 +516,7 @@ function displayArsenal() {
         h = 0; j = 3;
         outfits_carried.forEach(function(armor) {
             h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="armor" data-x="'+h+'" data-y="'+j+'" data-item="'+armor+'"><img src="/movement/assets/inventory/'+armor+'-inv.png" /></fieldset>');
+            $('.inventory').append('<fieldset class="equippable" data-itemType="armor" data-x="'+h+'" data-y="'+j+'" data-item="'+armor+'"><img src="assets/inventory/'+armor+'-inv.png" /></fieldset>');
             });
         }
     
@@ -526,7 +526,7 @@ function displayArsenal() {
         h = 0; j = 4;
         accessories_carried.forEach(function(misc) {
             h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="accessory" data-x="'+h+'" data-y="'+j+'" data-item="'+misc+'"><img src="/movement/assets/inventory/'+misc+'-inv.png" /></fieldset>');
+            $('.inventory').append('<fieldset class="equippable" data-itemType="accessory" data-x="'+h+'" data-y="'+j+'" data-item="'+misc+'"><img src="assets/inventory/'+misc+'-inv.png" /></fieldset>');
             });
         }
         
