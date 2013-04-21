@@ -1,11 +1,8 @@
-
-
 // ~~~~~
 // ~~~~~
 // ENEMIES
 // ~~~~~
 // ~~~~~
-
 
 // Our slide component - listens for slide events
 // and smoothly slides to another tile location
@@ -101,17 +98,7 @@ Crafty.c("RandomAI",{
 });
 
 // Monster base - actors with collision
-Crafty.c('Monster', {
-  init: function() {
-    this.requires('Actor, Collision, Pausable');
-  },
-  pause: function() {
-    this.paused = true; console.log(this.paused)
-    },
-  run: function() {
-    this.paused = false; console.log(this.paused);
-    },
-});
+Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausable').attr({z: 2}); },});
 
 // Minion component; tells a monster it's ok to fall to its death on movement.
 Crafty.c('Minion', {
