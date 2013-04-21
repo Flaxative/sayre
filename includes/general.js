@@ -73,6 +73,8 @@ function resumeAll() {
     }
 
 
+// ~~~~~
+/* SIDEBAR & STAT FUNCTIONS */
 var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div id='life-red' class='line1'></div>" +
             "<div id='life-gray' class='line2'></div><div id='life-red' class='line2'></div>" +
             "<img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /></div>" +
@@ -92,7 +94,7 @@ function updateHP() {
     if (current_hp<155) {$("#life-red.line1").css('width', current_hp);}
     else {var c_hp2 = current_hp - 154; $("#life-red.line1").css('width', 154); $("#life-red.line2").css('width', c_hp2);}
     if (current_hp<=0) {
-        disableActions();
+        disableActions(); Crafty('Weapon').destroy();
         Crafty('player').disableControl().stop().tween({
             x: Crafty('player').x+18,
             y: Crafty('player').y+20,
@@ -110,6 +112,18 @@ function setSlot(slot) {
 // sets rupee count
 function updateCoins() {
     $('#coins').text(coins);
+    }
+    
+// refills health by an amount
+function refillHearts(x) {
+    current_hp = Math.min(current_hp+x, max_hp);
+    updateHP();
+    }
+
+// adds or subtracts coins
+function getCoins(x) {
+    coins += x;  coins = Math.max(0, coins);
+    updateCoins();
     }
     
 // ~~~~~
@@ -150,8 +164,11 @@ function placePlayer(facing) {                       // actually make the PC
     if(down) { dir.down = true; this.player.animate("walk_down", 10, -1); }
     if(left) { dir.left = true; this.player.animate("walk_left", 10, -1); }
     }
+            
+// sets a single floor tile
+function tile(terrain, x, y) { Crafty.e(terrain).at(x, y); }
 
-// sets a grid-based floor tile
+// fill room with a tile
 function tileAll(terrain) {          
             for (var x = 0; x < Game.map_grid.width; x++) {
                 for (var y = 0; y < Game.map_grid.height; y++) {
@@ -160,9 +177,15 @@ function tileAll(terrain) {
                 }
             }
         }
-            
-// sets a single floor tile
-function tile(terrain, x, y) { Crafty.e(terrain).at(x, y); }
+    
+// fills a rectangle with a certain tile
+function tileA(terrain, startx, starty, endx, endy) {
+    for (var x = startx; x <= endx; x++) {
+        for (var y = starty; y <= endy; y++) {
+            Crafty.e(terrain).at(x, y);
+            }
+        }
+    }
 
 // sets an unending theme track
 function theme(track) {
@@ -222,8 +245,8 @@ function propA(thing, startx, starty, endx, endy, scene) {
             if(!scene.occupied[x][y]) {
                 prop(thing, x, y, scene);
                 }
+            }
         }
-    }
     }
     
 // builds a ring around the world
@@ -239,15 +262,6 @@ function edgePop (edgeprop, scene) {
                 }
             }
         }
-    }
-    
-// fills a rectangle with a certain tile
-function tileA(terrain, startx, starty, endx, endy) {
-    for (var x = startx; x <= endx; x++) {
-        for (var y = starty; y <= endy; y++) {
-            Crafty.e(terrain).at(x, y);
-        }
-    }
     }
 
 // ~~~~~
@@ -273,18 +287,6 @@ function interact(e) {
             }
         }
     }
-    
-// binds tab to inventory
-function inventory(e) {
-    if(e.keyCode == Crafty.keys['TAB']) {
-        if(!in_inventory) {
-             in_inventory = true; openInventory();
-            }
-        else {
-             in_inventory = false; destroyInventory();
-            }
-        } 
-    }
 
 // basic dialogue functionality
 function dialogue(statement, speaker, portrait) {
@@ -304,7 +306,8 @@ function dialogue(statement, speaker, portrait) {
 // test of non-dialogue interaction 
 function torchBushes() {//console.log(Crafty('Bush'));
     Crafty('Bush').destroy();
-    tell('The crazy dude burned all the bushes.');
+    //tell('The crazy dude burned all the bushes.');
+    dialogue('The crazy dude burned all the bushes.');
     }
 
 
@@ -315,13 +318,13 @@ function torchBushes() {//console.log(Crafty('Bush'));
 // ~~~~~
 // ~~~~~
 
+// triggers on space when not in a menu or dialogue. uses active weapon.
 function useWeapon(weapon) {
-    swinging = true; potent = true;
-    // pause the player
-    Crafty('player').disableControl().stop(); 
-    disableActions();
+    swinging = true; potent = true;             // enable attacks
+    Crafty('player').disableControl().stop();   // pause the player
+    disableActions();                           // stop interaction & inventory
+    //console.log("You swing your mighty "+weapon+" "+facing+"!");
     
-    console.log("You swing your mighty "+weapon+" "+facing+"!");
     Crafty.e(weapon).attr({x: 100, y: 100}).timeout(function() {
         Crafty('Weapon').destroy(); swinging = false; 
         Crafty('player').trigger("Run").fourway(speed);
@@ -342,47 +345,37 @@ function useWeapon(weapon) {
     if(facing=='down') {
         Crafty('Weapon')
         .attr({z: 1001, rotation: 0, x: Crafty('player').x+Crafty('player').w/2-Crafty('Weapon').w/2+8, y: Crafty('player').y+Crafty('player').h-15});
-        //console.log('Player position: ' + Crafty('player').x + ', ' + Crafty('player').y + '; Sword position: ' + Crafty('weapon').x + ', ' + Crafty('weapon').y)
         }
-    Crafty('player').attach(Crafty('Weapon'));
-    Crafty('Weapon').attr({h:0}).tween({h:Crafty('Weapon').length}, 2);
+    Crafty('player').attach(Crafty('Weapon'));  // weapon moves with you if you move, though ATM you shouldn't move
+    Crafty('Weapon').attr({h:0}).tween({h:Crafty('Weapon').length}, 2); // extend the weapon quickly
     //Crafty('weapon').stop().animate("swing", 6.5, 1);
     }
 
 // triggers when a monster hits 0 hp or falls in a hole
 function killMonster(monster) {
-    monsters_on_screen--; if(monsters_on_screen==0) { console.log("You killed them all!"); } // test for eradication of monsters
-    if(monster.death&&monster.death!="random") {eval(monster.death);} //console.log(monster.death); // runs any death trigger for the killed monster
-    if(monster.death=="random"&&swinging) {
+    monsters_on_screen--;                                                   // one fewer monster!
+    // if(monsters_on_screen==0) { console.log("You killed them all!"); }   // test for eradication of monsters
+    if(monster.death&&monster.death!="random") {eval(monster.death);}       // runs any death trigger for the killed monster
+    if(monster.death=="random"&&swinging) {                                 // only drop random loot if YOU killed the monster // this is an imperfect check BTW
         randomLoot(monster.x, monster.y); // add a "worth" attribute or something in order to tier random drops
         }
-    monster.tween({opacity:0}, 3).timeout(function() {this.destroy();}, 100);
+    //primitive death animation using alpha tween
+    monster.stop().unbind("EnterFrame").trigger("Pause").removeComponent("Monster").tween({alpha:0}, 16).timeout(function() {this.destroy();}, 500);
     }
 
-// when monsters with "death:random" die, they trigger this loot generator
+// when monsters with "death:random" die, they trigger this random loot generator
 function randomLoot(x, y) { // add a "worth" argument in order to tier random drops
     var loot_result = Math.floor((Math.random()*9)+1);
-    var loot_table = ['', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeB', 'Bomb'];
-    //console.log('you got mail at '+x+', '+y+'!');
-    if(!loot_table[loot_result]) {tell('no drops');}
-    else {
-        if(loot_table[loot_result]=='RupeeG') {Crafty.e('RupeeG').attr({x:x+12, y:y+6});}
-        if(loot_table[loot_result]=='RupeeB') {Crafty.e('RupeeB').attr({x:x+12, y:y+6});}
-        if(loot_table[loot_result]=='Bomb') {tell("The monster dropped a bomb.");}
-        }
+    var loot_table = ['', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeB', 'Bomb', 'HeartFull', 'HeartHalf', 'HeartHalf'];
+    if(!loot_table[loot_result]) {tell('no drops');} // bombs don't exist yet except on the table.
+    else if(loot_table[loot_result]=='Bomb') {tell("The monster dropped a bomb.");}
+    else {dropLoot(loot_table[loot_result], x, y);}
     }
-    
-// temp function; should be 'open doors' or similar; opens closed doors in dungeon room
-function unlockDoors() {
-    if(monsters_on_screen==0) {
-        console.log('upon slaying the final monster, you hear a rumbling from the walls...');
-        Crafty('Door').destroy();
-        }
-    }
-    
-function closeDoors() {
-    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('player').tween({x: 440}, 4);} if(trackplayer.x<40) {trackplayer.x = 40; Crafty('player').tween({x: 40}, 4);}
-    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('player').tween({y: 440}, 4);} if(trackplayer.y<40) {trackplayer.y = 40; Crafty('player').tween({y: 40}, 4);}
+
+// places a pick up at a given location
+function dropLoot(loot, x, y) {
+    var newdrop = Crafty.e(loot).attr({x:x, y:y});
+    newdrop.attr({x:x+newdrop.overx, y:y+newdrop.overy});
     }
 
 // triggers the first invulnerability frame
@@ -410,140 +403,8 @@ function flicker2(x) {
     .timeout(function(){flicker1(x);}, 100);
     }
     
-// ~~~~~
-// ~~~~~
-/* INVENTORY FUNCTIONS */
-// ~~~~~
-// ~~~~~
-
-function enableInventoryNav() {Crafty.bind('KeyDown', (inventoryNav));}
-function disableInventoryNav() {Crafty.unbind('KeyDown', (inventoryNav));}
-
-function inventoryNav(e) {
-    if(e.keyCode == Crafty.keys['RIGHT_ARROW']) {
-        if(!$('.active').length) { $('.inventory fieldset').first().addClass('active'); summary();} // initial selection
-        else {
-            var h = $('.active').attr('data-x'); var j = $('.active').attr('data-y');
-            $('.active').removeClass('active');
-            h++; 
-            if(h>$('fieldset[data-y="'+j+'"]').last().attr("data-x")) {$('fieldset[data-y="'+j+'"]').first().addClass('active'); summary();}
-            else {$('fieldset[data-x="'+h+'"][data-y="'+j+'"]').addClass('active'); summary();}
-            }
-        }
-    if(e.keyCode == Crafty.keys['LEFT_ARROW']) {
-        if(!$('.active').length) { $('.inventory fieldset').last().addClass('active'); summary();} // initial selection
-        else {
-            var h = $('.active').attr('data-x'); var j = $('.active').attr('data-y');
-            $('.active').removeClass('active');
-            h--; 
-            if(h<1) {$('fieldset[data-y="'+j+'"]').last().addClass('active'); summary();}
-            else {$('fieldset[data-x="'+h+'"][data-y="'+j+'"]').addClass('active'); summary();}
-            }
-        }
-    if(e.keyCode == Crafty.keys['DOWN_ARROW']) {
-        if(!$('.active').length) { $('.inventory fieldset').first().addClass('active'); summary();} // initial selection
-        else {
-            var h = $('.active').attr('data-x'); var j = $('.active').attr('data-y');
-            $('.active').removeClass('active'); 
-            j++;
-            if(j>$('.inventory fieldset').last().attr("data-y")) {j = 1;}
-            if(h>$('fieldset[data-y="'+j+'"]').last().attr("data-x")) {$('fieldset[data-y="'+j+'"]').last().addClass('active'); summary();}
-            else {$('fieldset[data-x="'+h+'"][data-y="'+j+'"]').addClass('active'); summary();}
-            }
-        }
-    if(e.keyCode == Crafty.keys['UP_ARROW']) {
-        if(!$('.active').length) { $('.inventory fieldset').last().addClass('active'); summary();} // initial selection
-        else {
-            var h = $('.active').attr('data-x'); var j = $('.active').attr('data-y');
-            $('.active').removeClass('active'); 
-            j--;
-            if(j<1) {j = $('.inventory fieldset').last().attr("data-y");}
-            if(h>$('fieldset[data-y="'+j+'"]').last().attr("data-x")) {$('fieldset[data-y="'+j+'"]').last().addClass('active'); summary();}
-            else {$('fieldset[data-x="'+h+'"][data-y="'+j+'"]').addClass('active'); summary();}
-            }
-        }
-    if(e.keyCode == Crafty.keys['SPACE']) {
-        if(!$('.active').length) { return; } // initial selection
-        else {
-            var itemType = $('.active').attr('data-itemType');
-            var item = $('.active').attr('data-item');
-            if(itemType == 'weapon') {weapon = item;}
-            if(itemType == 'secondary') {secondary = item;}
-            if(itemType == 'armor') {armor = item;}
-            if(itemType == 'accessory') {accessory = item;}
-            
-            setSlot(itemType);
-            }
-        }
     
-    }
-
-// used to displace descriptions of selected items in inventory
-function summary() {$("#summary").html($('.active').attr('data-item')+': '+item_description[$('.active').attr('data-item')]);}
-
-// opens inventory, creates an entity and triggers a function to populate it
-function openInventory() {
-    console.log('inventory open');
-    pauseAll(); Crafty.unbind('KeyUp', (interact));
-    $('#inventory').show(); displayArsenal();
-    enableInventoryNav();
-    }
-    
-// fills inventory with things in jQuery
-function displayArsenal() {
-    var h = 0; var j = 1; // initialize grid variables for inventory
-    
-    // WEAPONS
-    $('.inventory').append('<h3>Weapons</h3>');
-    weapons_carried.forEach(function(weapon) {
-        h++;
-        $('.inventory').append('<fieldset class="equippable" data-itemType="weapon" data-x="'+h+'" data-y="'+j+'" data-item="'+weapon+'"><img src="assets/inventory/'+weapon+'-inv.png" /></fieldset>');
-        });
         
-    // BTN 2
-    if(secondaries_carried[0]) {    // don't show category if none exist
-        $('.inventory').append('<h3>Btn 2</h3>');
-        h = 0; j = 2;
-        secondaries_carried.forEach(function(btn2) {
-            h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="secondary" data-x="'+h+'" data-y="'+j+'" data-item="'+btn2+'"><img src="assets/inventory/'+btn2+'-inv.png" /></fieldset>');
-            });
-        }
-    
-    // Armor
-    if(outfits_carried[0]) {    // don't show category if none exist
-        $('.inventory').append('<h3>Armor</h3>');
-        h = 0; j = 3;
-        outfits_carried.forEach(function(armor) {
-            h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="armor" data-x="'+h+'" data-y="'+j+'" data-item="'+armor+'"><img src="assets/inventory/'+armor+'-inv.png" /></fieldset>');
-            });
-        }
-    
-    // Accessories / Misc
-    if(accessories_carried[0]) {    // don't show category if none exist
-        $('.inventory').append('<h3>Accessories</h3>');
-        h = 0; j = 4;
-        accessories_carried.forEach(function(misc) {
-            h++;
-            $('.inventory').append('<fieldset class="equippable" data-itemType="accessory" data-x="'+h+'" data-y="'+j+'" data-item="'+misc+'"><img src="assets/inventory/'+misc+'-inv.png" /></fieldset>');
-            });
-        }
-        
-    $('.inventory').append('<div id="summary"></div>');
-    }
-    
-// close inventory, destroys all entities & elements
-function destroyInventory() {
-    disableInventoryNav();
-    console.log('inventory gone');
-    $('#inventory *').remove();
-    $('#inventory').hide();
-    resumeAll(); Crafty.bind('KeyUp', (interact));
-    }
-    
-    
-    
 // ~~~~~
 // ~~~~~
 /* MAP MANIPULATION FUNCTIONS */
@@ -596,7 +457,7 @@ function fallEndless() {
         placePlayer();                                                                  // create fresh PC
         facing = "down";                                                                // always facing down after fall
         enableActions();                                                                // re-enable inventory and action
-        //dropPlayer(trackplayer.x, trackplayer.y); // falling animation to start square. off ATM.
+        //dropPlayer(trackplayer.x, trackplayer.y);                                       // falling animation to start square. off ATM.
         }
     }
     
@@ -616,4 +477,21 @@ function dropPlayer(xpos, ypos) {
         enableActions();
         falling = false;
         }, 500);
+    }
+    
+    
+// ~~~~~
+// ~~~~~
+// DUNGEON DOOR MANIPULATION FUNCTIONS
+// temp function; should be 'open doors' or similar; opens closed doors in dungeon room when it's cleared
+function unlockDoors() {
+    if(monsters_on_screen==0) {
+        console.log('upon slaying the final monster, you hear a rumbling from the walls...');
+        Crafty('Door').destroy();
+        }
+    }
+// makes sure that the player is inside the room, and not stuck in a solid dungeon door
+function closeDoors() {
+    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('player').tween({x: 440}, 4);} if(trackplayer.x<40) {trackplayer.x = 40; Crafty('player').tween({x: 40}, 4);}
+    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('player').tween({y: 440}, 4);} if(trackplayer.y<40) {trackplayer.y = 40; Crafty('player').tween({y: 40}, 4);}
     }

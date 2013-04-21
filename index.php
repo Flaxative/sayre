@@ -8,6 +8,10 @@
 	<script type="text/javascript" src="includes/general.js"></script>
 	<!-- <script type="text/javascript" src="includes/components/sprite-color.js"></script> unused ATM -->
 	<script type="text/javascript" src="includes/components.js"></script>
+	<script type="text/javascript" src="includes/components/inventory.js"></script>
+	<script type="text/javascript" src="includes/components/drops.js"></script>
+	<script type="text/javascript" src="includes/components/enemies.js"></script>
+	<script type="text/javascript" src="includes/components/weapons.js"></script>
 	<script type="text/javascript" src="includes/loading.js"></script>
 	<script type="text/javascript" src="includes/scenes.js"></script>
 	<script type="text/javascript" src="includes/defeat.js"></script>

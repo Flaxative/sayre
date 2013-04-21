@@ -9,7 +9,8 @@ Crafty.scene('Loading', function(){
         .text('<h3>Loading</h3><div id="bar"><div id="fill"></div></div><div id="loadtext"></div>');
  
     var toLoad = [];
-    toLoad.push('media/opening.ogg', "media/opening.mp3", "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", 'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png', 'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png', 'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
+    toLoad.push('media/opening.ogg', "media/opening.mp3", "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", 'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png', 'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png', 'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
+    'assets/refill-heart.png', 'assets/refill-half.png', 
     
     'assets/inventory/Boomerang-inv.png', 'assets/inventory/Shield-inv.png', 
     'assets/inventory/Wedding Dress-inv.png', 'assets/inventory/Platemail-inv.png', 
@@ -35,6 +36,12 @@ Crafty.scene('Loading', function(){
             });
         Crafty.sprite(40, "assets/tree-1.png", {
             tree: [0, 0]
+            });
+        Crafty.sprite(16, 14, "assets/refill-heart.png", {
+            refill_heart: [0, 0]
+            });
+        Crafty.sprite(8, 14, "assets/refill-half.png", {
+            refill_half: [0, 0]
             });
         Crafty.sprite(8, 14, "assets/coins.png", {
             rupeeG1: [0, 0], rupeeG2: [1, 0], rupeeG3: [2, 0],
@@ -125,10 +132,11 @@ Crafty.scene('Loading', function(){
             doorT: [1, 0], doorR: [8, 1], doorL: [9, 1], doorB: [1, 0]
             });
             
-            
+        // Sets sound effects
         Crafty.audio.add({
-              rupee: ['media/rupee.mp3', 'media/LOZ_Get_Rupee.wav'],
-              secret: ['media/secret.mp3']
+              rupee: ['media/rupee.mp3', 'media/LOZ_Get_Rupee.wav'],    // coin get
+              secret: ['media/secret.mp3'],                             // find secret
+              gulp: ['media/gulp.wav']                                  // heart refill get
             });
             
         //$('#console span').text(''); // Clear the console.
@@ -145,7 +153,7 @@ Crafty.scene('Loading', function(){
                 enableActions();
                 $("#console").click( function() {console.log(dir);});
                 $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(); updateCoins();
-                //theme('opening'); tile_theme = 'opening'; // initialize music 
+                // theme('opening'); tile_theme = 'opening'; // initialize music 
                 })
             ;
  
