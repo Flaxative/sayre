@@ -1,0 +1,35 @@
+To-do for Sayre:
+
+- Core Mechanics -
+• better dialogue system
+• shops
+• heart refills
+• heart containers
+• bombs?
+• bipolar mechanic (see below)
+
+- Planning - 
+• plan ONE dungeon!
+• think about the political climate of Hyrule...
+
+- Story - 
+• Ganon, Zelda's stepfather, tries to marry her off to one of his minions. (think more about why)
+• Zelda, aware of corruption/etc., pretends to go along with it, gathers provisions and stores them in a safe place, then flees the bridal preparation area with the support of her maid.
+• Ganon kills her maid, makes it look like Zelda did it, denounces her... paints her as a traitor of hyrule. she is now in exile?
+
+- Bipolar Mechanic idea - 
+Each dungeon has two modes/sides/levels/IDK how it'll be organized. But one is the light side, and one is the dark side. 
+
+The two sides have the same rooms and the same enemies. Zelda can only attack in the light side. In the dark side she cannot. Some enemies behave differently in the two different modes. And while the rooms' general layouts are identical, some features change. In particular, holes should become more common. (The compass and map don't function in the dark side. -- assuming compass & map) In the dark side, Zelda (maybe moves more slowly and) gains a new ability - maybe passive - related to movement or navigating the dungeon. 
+
+- think about: what is the new mechanic?
+- does the player HAVE to complete both halves of each dungeon?
+- are both halves available at the same time, or is the game itself divided into a light/dark dichotomy?
+- how does the switch occur? is there one 'nexus' that controls which side you're on, or are there specific things to interact with in particular rooms - like omens in Betrayal - that allow you to switch?
+
+- I'm leaning toward the light/dark split being less explicitly related to zelda's mind. superficially it should just be a typical fantasy light/dark thing, tho with thematic enemies and ominous clues throughout the game it should be 'more' than that.. and there should be a 'key' to it insofar as if a player knows what's going on, or figures it out, it all makes sense.
+
+- Music Direction - ???
+overworld, towns, etc., should have a jazzy feel - 1920s, sayre's era, type stuff.
+manic half of dungeons - dubstep plays on jazz themes? (not chillstep)
+depressive half of dungeons - NIN ghosts-esque atmospheric stuff
