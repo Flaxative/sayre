@@ -145,7 +145,7 @@ Crafty.scene('Loading', function(){
                 enableActions();
                 $("#console").click( function() {console.log(dir);});
                 $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(); updateCoins();
-                theme('opening'); tile_theme = 'opening'; // initialize music 
+                //theme('opening'); tile_theme = 'opening'; // initialize music 
                 })
             ;
  
