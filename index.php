@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="includes/general.js"></script>
 	<!-- <script type="text/javascript" src="includes/components/sprite-color.js"></script> unused ATM -->
 	<script type="text/javascript" src="includes/components.js"></script>
+	<script type="text/javascript" src="includes/components/terrain.js"></script>
 	<script type="text/javascript" src="includes/components/inventory.js"></script>
 	<script type="text/javascript" src="includes/components/drops.js"></script>
 	<script type="text/javascript" src="includes/components/enemies.js"></script>
