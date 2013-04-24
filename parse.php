@@ -77,4 +77,7 @@ loadMap('cave1.txt', 'dc');
 
 echo '<h2>cave 2</h2>';
 loadMap('cave2.txt', 'H');
+
+echo '<h2>south 1</h2>';
+loadMap('south1.txt', 'g');
     ?>

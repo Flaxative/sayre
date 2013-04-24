@@ -149,9 +149,9 @@ Crafty.c('PlayerCharacter', {
             Crafty.scene(data[0].obj.direction);
             })     
       .bind('Moved', function(from) {
-           if(this.hit('Monster')&&this.has('vulnerable')){
+           if(this.hit('Painful')&&this.has('vulnerable')){
                tell('ouch!');
-               damagePlayer(this.hit('Monster')[0].obj.strength);
+               damagePlayer(this.hit('Painful')[0].obj.strength);
             }
            if(this.hit('Solid')){
                 if(this.hit('poi')){

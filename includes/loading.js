@@ -9,7 +9,7 @@ Crafty.scene('Loading', function(){
         .text('<h3>Loading</h3><div id="bar"><div id="fill"></div></div><div id="loadtext"></div>');
  
     var toLoad = [];
-    toLoad.push('media/opening.ogg', "media/opening.mp3", "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", 'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png', 'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png', 'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
+    toLoad.push('media/opening.ogg', "media/opening.mp3", "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", 'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png', 'assets/projectile-rock.png', 'assets/projectile-rock-big.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png', 'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png', 'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
     'assets/refill-heart.png', 'assets/refill-half.png', 
     
     'assets/inventory/Boomerang-inv.png', 'assets/inventory/Shield-inv.png', 
@@ -42,6 +42,12 @@ Crafty.scene('Loading', function(){
             });
         Crafty.sprite(8, 14, "assets/refill-half.png", {
             refill_half: [0, 0]
+            });
+        Crafty.sprite(16, "assets/projectile-rock.png", {
+            projectile_rock: [0, 0]
+            });
+        Crafty.sprite(24, "assets/projectile-rock-big.png", {
+            projectile_rock_big: [0, 0]
             });
         Crafty.sprite(8, 14, "assets/coins.png", {
             rupeeG1: [0, 0], rupeeG2: [1, 0], rupeeG3: [2, 0],
@@ -94,6 +100,30 @@ Crafty.scene('Loading', function(){
             slimeleft: [0, 3],
             slimeright: [0, 1],
             slimeup: [0, 0]
+            });
+        Crafty.sprite(40, "assets/slimes-blue.png", {
+            slimeBdown: [0, 2],
+            slimeBleft: [0, 3],
+            slimeBright: [0, 1],
+            slimeBup: [0, 0]
+            });
+        Crafty.sprite(40, "assets/octorok-40.png", {
+            octdown: [0, 0],
+            octup: [0, 1],
+            octleft: [0, 2],
+            octright: [0, 3]
+            });
+        Crafty.sprite(40, "assets/octorok-blue.png", {
+            octBdown: [0, 0],
+            octBup: [0, 1],
+            octBleft: [0, 2],
+            octBright: [0, 3]
+            });
+        Crafty.sprite(40, "assets/octorok-gold.png", {
+            octGdown: [0, 0],
+            octGup: [0, 1],
+            octGleft: [0, 2],
+            octGright: [0, 3]
             });
         Crafty.sprite(40, "assets/RPGTiles-40.png", {
             sand: [0, 0], grass: [0, 1],

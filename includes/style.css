@@ -13,11 +13,11 @@ h1 {font-size: 12px; padding: 10px;}
     }
     
 #full_game_wrapper {
-    margin: 20px auto; width: 720px; vertical-align:top; min-width: 720px; height: 520px; white-space: nowrap;
+    margin: 20px auto; width: 720px; vertical-align:top; min-width: 720px; height: 520px; white-space: nowrap; border: 3px solid #000;
     }
 #full_game_wrapper * {white-space: normal;}
 #cr-stage {display: inline-block; vertical-align:top; width: 520px; height: 520px; }
-.sidebar {height: 478px; width: 158px; display: inline-block; vertical-align:top;}
+.sidebar {height: 480px; width: 159px; display: inline-block; vertical-align:top; border-left: 1px solid #000;}
     
 #sprite {
     background: /*#f00*/ transparent url('images/nyan.png');
@@ -38,11 +38,12 @@ h1 {font-size: 12px; padding: 10px;}
 
 #console span {max-width: 100%; display:none;}
 
+.dialogue {border-top: 1px solid #000;}
+
 .dbox {
     padding: 20px;
     background: #000 url(images/mochaGrunge.png);
     color: #fff; font-size: 12px; line-height: 22px;
-    border: 1px solid #000;
     font-family: 'Press Start 2P', cursive;
     }
     
@@ -118,5 +119,5 @@ legend {color: #fff; font-size: 8px;}
 .coin {height: 28px; width: 16px; border: none;}
 
 #inventory {
-    height: 478px; width: 479px; margin-bottom: -520px; margin-right: -520px; position: absolute; z-index: 5;
+    height: 480px; width: 480px; margin-bottom: -520px; margin-right: -520px; position: absolute; z-index: 5;
     display: none; }

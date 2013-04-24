@@ -1,11 +1,11 @@
 // ~~~~~
 /* GLOBAL VARS */
-var current_scene; var tile_theme;
+var current_scene; var scene_name; var tile_theme;
 var facing = 'down'; var dir = {up: false, down: false, left: false, right: false};
 var in_inventory = false; var dialog; var interlocutor = false; var talking = false; var NPCname;
 var potent = true; var swinging = false; var falling = false; var current_hole; 
 var pushedblock; var pushing = 0; var speed = 4;
-var monsters_on_screen = 0;
+var monsters_on_screen = 0; var unlock_by_killing = false;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -62,13 +62,15 @@ function enableActions() {
     
 // pause player & monsters
 function pauseAll() {
-    Crafty('Monster').trigger("Pause");
+    Crafty('Monster Pausable').trigger("Pause");
+    Crafty('Projectile').trigger("Pause");
     Crafty('player').trigger("Pause");
     Crafty('player').disableControl().stop();
     }
 // unpause player & monsters
 function resumeAll() {
-    Crafty('Monster').trigger("Run");
+    Crafty('Monster Pausable').trigger("Run");
+    Crafty('Projectile').trigger("Run");
     Crafty('player').trigger("Run").fourway(speed);
     }
 
@@ -300,7 +302,7 @@ function dialogue(statement, speaker, portrait) {
             }
         }
     pauseAll(); Crafty.unbind('KeyDown', (inventory));
-    dialog = Crafty.e("2D, DOM, Text, dbox, light, innershadow").attr({ w: 479, h:178, x: 0, y: 300}).text(text);
+    dialog = Crafty.e("2D, DOM, Text, dialogue, dbox, light, innershadow").attr({ w: 480, h:179, x: 0, y: 300}).text(text);
     }
 
 // test of non-dialogue interaction 
@@ -355,12 +357,15 @@ function useWeapon(weapon) {
 function killMonster(monster) {
     monsters_on_screen--;                                                   // one fewer monster!
     // if(monsters_on_screen==0) { console.log("You killed them all!"); }   // test for eradication of monsters
-    if(monster.death&&monster.death!="random") {eval(monster.death);}       // runs any death trigger for the killed monster
+    if(monster.death&&monster.death!="random") {eval(monster.death)(monster.x, monster.y);}       // runs any death trigger for the killed monster
     if(monster.death=="random"&&swinging) {                                 // only drop random loot if YOU killed the monster // this is an imperfect check BTW
         randomLoot(monster.x, monster.y); // add a "worth" attribute or something in order to tier random drops
         }
     //primitive death animation using alpha tween
-    monster.stop().unbind("EnterFrame").trigger("Pause").removeComponent("Monster").tween({alpha:0}, 16).timeout(function() {this.destroy();}, 500);
+    monster.stop().unbind("EnterFrame").trigger("Pause")    // stop its movement
+    .removeComponent("Painful").removeComponent("Monster")  // stop it from hurting PC, or dying multiple times
+    .tween({alpha:0}, 16).timeout(function() {this.destroy();}, 500);
+    if(monsters_on_screen<=0&&unlock_by_killing) {unlockDoors();}
     }
 
 // when monsters with "death:random" die, they trigger this random loot generator
@@ -485,13 +490,14 @@ function dropPlayer(xpos, ypos) {
 // DUNGEON DOOR MANIPULATION FUNCTIONS
 // temp function; should be 'open doors' or similar; opens closed doors in dungeon room when it's cleared
 function unlockDoors() {
-    if(monsters_on_screen==0) {
-        console.log('upon slaying the final monster, you hear a rumbling from the walls...');
-        Crafty('Door').destroy();
-        }
+    console.log('you hear a rumbling from the walls...');
+    Crafty('Door').destroy();
     }
 // makes sure that the player is inside the room, and not stuck in a solid dungeon door
-function closeDoors() {
-    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('player').tween({x: 440}, 4);} if(trackplayer.x<40) {trackplayer.x = 40; Crafty('player').tween({x: 40}, 4);}
-    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('player').tween({y: 440}, 4);} if(trackplayer.y<40) {trackplayer.y = 40; Crafty('player').tween({y: 40}, 4);}
+function closeDoors(monsters) {
+    if(monsters) {unlock_by_killing = true;} else {unlock_by_killing = false;} // sometimes you need to unlock doors by other means!
+    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('player').tween({x: 440}, 4);} 
+    if(trackplayer.x<40) {trackplayer.x = 40; Crafty('player').tween({x: 40}, 4);}
+    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('player').tween({y: 440}, 4);} 
+    if(trackplayer.y<40) {trackplayer.y = 40; Crafty('player').tween({y: 40}, 4);}
     }

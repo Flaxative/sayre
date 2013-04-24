@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="includes/components/terrain.js"></script>
 	<script type="text/javascript" src="includes/components/inventory.js"></script>
 	<script type="text/javascript" src="includes/components/drops.js"></script>
+	<script type="text/javascript" src="includes/components/enemies-old.js"></script>
 	<script type="text/javascript" src="includes/components/enemies.js"></script>
 	<script type="text/javascript" src="includes/components/weapons.js"></script>
 	<script type="text/javascript" src="includes/loading.js"></script>
