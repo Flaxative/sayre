@@ -31,10 +31,18 @@ Crafty.c('RupeeB', {
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
     }); 
+Crafty.c('RupeeY', {
+    init: function() {
+        this.requires('Rupee, rupeeY1').attr({value: 10})
+        .animate("shine", 6, 0, 8).animate("shine", 24, -1)
+        .attr({w: 16, h: 28})
+        .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
+        }
+    });
 Crafty.c('RupeeR', {
     init: function() {
-        this.requires('Rupee, rupeeR1').attr({value: 10})
-        .animate("shine", 6, 0, 8).animate("shine", 24, -1)
+        this.requires('Rupee, rupeeR1').attr({value: 20})
+        .animate("shine", 9, 0, 11).animate("shine", 24, -1)
         .attr({w: 16, h: 28})
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }

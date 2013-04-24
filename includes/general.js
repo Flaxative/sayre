@@ -104,7 +104,7 @@ function updateHP() {
             }, 32).timeout(function() {Crafty.scene('defeat');}, 1000); 
         }
     }
-// sets active weapon
+// sets active item
 function setSlot(slot) {
     $('.equipped-'+slot).remove();
     if(eval(slot)) {
@@ -113,7 +113,20 @@ function setSlot(slot) {
     }
 // sets rupee count
 function updateCoins() {
-    $('#coins').text(coins);
+    var old_coins = $('#coins').text();     // get old value
+    if (old_coins < coins) {                // increment coins +1
+        old_coins++;
+        $('#coins').text(old_coins);
+        setTimeout("updateCoins()", 50);
+        return;
+        }
+    if (old_coins > coins) {                // increment coins -1
+        old_coins--;
+        $('#coins').text(old_coins);
+        setTimeout("updateCoins()", 50);
+        return;
+        }
+    return false;
     }
     
 // refills health by an amount

@@ -52,7 +52,8 @@ Crafty.scene('Loading', function(){
         Crafty.sprite(8, 14, "assets/coins.png", {
             rupeeG1: [0, 0], rupeeG2: [1, 0], rupeeG3: [2, 0],
             rupeeB1: [3, 0], rupeeB2: [4, 0], rupeeB3: [5, 0],
-            rupeeR1: [6, 0], rupeeR2: [7, 0], rupeeR3: [8, 0],
+            rupeeY1: [6, 0], rupeeY2: [7, 0], rupeeY3: [8, 0],
+            rupeeR1: [9, 0], rupeeR2: [10, 0], rupeeR3: [11, 0],
             });
         Crafty.sprite(32, "assets/remains.png", {
             remains1: [0, 0], remains2: [1, 0], remains3: [2, 0],
