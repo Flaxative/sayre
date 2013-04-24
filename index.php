@@ -30,7 +30,9 @@
     </div>
 </div>
 
-<h1>Hello World &bull; <a href="parse.php">level parser</a></h1>
+<h1>Hello World 
+    &bull; <a href="parse.php">level parser</a> 
+    &bull; <?php include 'count.php'; ?> lines of code</h1>
 
 <div id="full_game_wrapper">
 
