@@ -104,7 +104,7 @@ function displayArsenal() {
     // BTN 2
     if(secondaries_carried[0]) {    // don't show category if none exist
         $('.inventory').append('<h3>Btn 2</h3>');
-        h = 0; j = 2;
+        h = 0; j ++;
         secondaries_carried.forEach(function(btn2) {
             h++;
             $('.inventory').append('<fieldset class="equippable" data-itemType="secondary" data-x="'+h+'" data-y="'+j+'" data-item="'+btn2+'"><img src="assets/inventory/'+btn2+'-inv.png" /></fieldset>');
@@ -114,7 +114,7 @@ function displayArsenal() {
     // Armor
     if(outfits_carried[0]) {    // don't show category if none exist
         $('.inventory').append('<h3>Armor</h3>');
-        h = 0; j = 3;
+        h = 0; j ++;
         outfits_carried.forEach(function(armor) {
             h++;
             $('.inventory').append('<fieldset class="equippable" data-itemType="armor" data-x="'+h+'" data-y="'+j+'" data-item="'+armor+'"><img src="assets/inventory/'+armor+'-inv.png" /></fieldset>');
@@ -124,7 +124,7 @@ function displayArsenal() {
     // Accessories / Misc
     if(accessories_carried[0]) {    // don't show category if none exist
         $('.inventory').append('<h3>Accessories</h3>');
-        h = 0; j = 4;
+        h = 0; j ++;
         accessories_carried.forEach(function(misc) {
             h++;
             $('.inventory').append('<fieldset class="equippable" data-itemType="accessory" data-x="'+h+'" data-y="'+j+'" data-item="'+misc+'"><img src="assets/inventory/'+misc+'-inv.png" /></fieldset>');

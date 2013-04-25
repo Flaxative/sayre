@@ -298,6 +298,7 @@ function interact(e) {
             if(itemGet == true) {
                 Crafty('player').sprite(0,3); itemGet = false;
                 Crafty('Reward').destroy();
+                Crafty.audio.unpause("theme");
                 }
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
@@ -368,6 +369,7 @@ function openChest() {
     }
 
 function chestNotice(contents, type, value) {
+    Crafty.audio.pause("theme");
     Crafty.audio.play('chest');     // plays chest sound
     Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item get pose
     // create notificaion text
