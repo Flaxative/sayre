@@ -47,3 +47,18 @@ Crafty.c('RupeeR', {
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
     });
+    
+Crafty.c('Chest', {
+    init: function() {
+        this.requires('Actor, Solid, SpriteAnimation, Collision, chest_closed_up, poi')
+        .attr({h: 32, w: 32, overx: 4, overy: 4, direction: "up", interact:"openChest(interlocutor)"})
+        .collision([0, 0], [32, 0], [32, 16], [0, 16])  // allow the hero to walk 'onto' the chest a bit
+        ;
+        }
+    });
+    
+Crafty.c('Reward', {
+    init: function() {
+        this.requires('2D, DOM').attr({w: 40, h: 40});
+        }
+    });

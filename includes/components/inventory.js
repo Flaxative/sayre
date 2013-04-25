@@ -94,12 +94,13 @@ function displayArsenal() {
     var h = 0; var j = 1; // initialize grid variables for inventory
     
     // WEAPONS
-    $('.inventory').append('<h3>Weapons</h3>');
-    weapons_carried.forEach(function(weapon) {
-        h++;
-        $('.inventory').append('<fieldset class="equippable" data-itemType="weapon" data-x="'+h+'" data-y="'+j+'" data-item="'+weapon+'"><img src="assets/inventory/'+weapon+'-inv.png" /></fieldset>');
-        });
-        
+    if(weapons_carried[0]) {
+        $('.inventory').append('<h3>Weapons</h3>');
+        weapons_carried.forEach(function(weapon) {
+            h++;
+            $('.inventory').append('<fieldset class="equippable" data-itemType="weapon" data-x="'+h+'" data-y="'+j+'" data-item="'+weapon+'"><img src="assets/inventory/'+weapon+'-inv.png" /></fieldset>');
+            });
+        }
     // BTN 2
     if(secondaries_carried[0]) {    // don't show category if none exist
         $('.inventory').append('<h3>Btn 2</h3>');

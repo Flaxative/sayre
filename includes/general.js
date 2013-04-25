@@ -2,7 +2,7 @@
 /* GLOBAL VARS */
 var current_scene; var scene_name; var tile_theme;
 var facing = 'down'; var dir = {up: false, down: false, left: false, right: false};
-var in_inventory = false; var dialog; var interlocutor = false; var talking = false; var NPCname;
+var in_inventory = false; var dialog; var interlocutor = false; var talking = false; var itemGet = false; var NPCname;
 var potent = true; var swinging = false; var falling = false; var current_hole; 
 var pushedblock; var pushing = 0; var speed = 4;
 var monsters_on_screen = 0; var unlock_by_killing = false;
@@ -13,11 +13,11 @@ var max_hp = 66; var current_hp = 66;
 /* INVENTORY VARS */
 var coins = 0; var bombs = 0; var keys = 0;
 var weapon = 'Wooden Sword'; 
-var weapons_carried = ['Wooden Sword', 'Longspear', 'Longspear', 'Longspear', 'Longspear', 'Longspear'];
+var weapons_carried = ['Wooden Sword'];
 var secondary = ''; 
-var secondaries_carried = ['Boomerang', 'Shield', 'Boomerang', 'Boomerang'];
+var secondaries_carried = ['Boomerang'];
 var armor = ''; 
-var outfits_carried = ['Wedding Dress'];
+var outfits_carried = [];
 var accessory = ''; 
 var accessories_carried = ['Blue Ring', 'Blue Ring'];
 
@@ -27,7 +27,8 @@ var item_description = {
     "Boomerang": "Stun enemies or nab items at range!",
     "Shield": "Blocks attacks aimed at your front.",
     "Wedding Dress": "You don't like it, but it's the only outfit you've got.",
-    "Blue Ring": "This magical band halves incoming damage."
+    "Blue Ring": "This magical band halves incoming damage.", 
+    "Rupees": "Don't spend them all at once, okay?"
     };
 
 // ~~~~~
@@ -85,7 +86,7 @@ var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div 
             "<fieldset id='armor' class='margin-right'><legend>Armor<legend><span class='slot'></span></fieldset>" +
             "<fieldset id='accessory'><legend>Misc<legend><span class='slot'></span></fieldset> " +
             "<div id='meta'>" +
-            "<img src='assets/coin-single.png' class='coin' /><span id='coins'></span>" +
+            "<img src='assets/coin-single.png' class='coin' /><span id='coins'>0</span>" +
             "</div>" +
             "<div id='minimap'></div>";
 
@@ -246,9 +247,9 @@ function monster(rawr, x, y, scene) {
     
 // places props and obstacles
 function prop(type, x, y, scene) {
-    Crafty.e(type).at(x, y);
     if(typeof(scene)==='undefined') scene = current_scene;
     scene.occupied[x][y] = true;
+    return Crafty.e(type).at(x, y);
     }
     
 // fills a rectangle with a certain prop
@@ -294,6 +295,10 @@ function interact(e) {
         else if(talking) {
             talking = false;
             dialog.destroy(); 
+            if(itemGet == true) {
+                Crafty('player').sprite(0,3); itemGet = false;
+                Crafty('Reward').destroy();
+                }
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
             }
@@ -325,7 +330,58 @@ function torchBushes() {//console.log(Crafty('Bush'));
     dialogue('The crazy dude burned all the bushes.');
     }
 
+// opens chests!
+function openChest() {
+    if(facing==interlocutor.direction) {
+        var chest = interlocutor;       // get the chest's object
+        interlocutor = false;           // clear interlocutor to prevent spammability
+        chest.removeComponent('poi').addComponent('chest_open_'+chest.direction);    // prevent further opening || chest.direction is for extensibility
+        if(chest.type == "weapon") {
+            weapons_carried.push(chest.contents);
+            chestNotice(chest.contents, "weapon");
+            return;
+            }
+        if(chest.type == "secondary") {
+            secondaries_carried.push(chest.contents);
+            chestNotice(chest.contents, "secondary");
+            return;
+            }
+        if(chest.type == "armor") {
+            outfits_carried.push(chest.contents);
+            chestNotice(chest.contents, "armor");
+            return;
+            }
+        if(chest.type == "misc") {
+            accessories_carried.push(chest.contents);
+            chestNotice(chest.contents, "misc");
+            return;
+            }
+        if(chest.type == "rupee") {
+            getCoins(chest.value);
+            chestNotice(chest.contents, "rupee", chest.value);
+            return;
+            }
+        console.log(chest.contents);
+        return;
+        }
+    return false;
+    }
 
+function chestNotice(contents, type, value) {
+    Crafty.audio.play('chest');     // plays chest sound
+    Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item get pose
+    // create notificaion text
+    var chestNotification = "You found ";
+    if(value) {chestNotification += value+' ';} else {chestNotification += "the ";}
+    chestNotification += contents+"! "+item_description[contents];
+    if(type=="weapon"||type=="secondary"||type=="armor"||type=="misc") {
+        chestNotification += " <br /><br />You can equip this item from your inventory by pressing TAB.";
+        }
+    itemGet = true;                     // allows the dialogue closing trigger to work best
+    dialogue(chestNotification);        // creates notification
+    Crafty.e('Reward').attr({x: Crafty('player').x-11, y: Crafty('player').y-58});  // displays reward shining above head
+    $(".Reward").append('<img src="assets/inventory/'+contents+'-inv.png" />');
+    }
 
 // ~~~~~
 // ~~~~~

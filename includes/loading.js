@@ -9,12 +9,18 @@ Crafty.scene('Loading', function(){
         .text('<h3>Loading</h3><div id="bar"><div id="fill"></div></div><div id="loadtext"></div>');
  
     var toLoad = [];
-    toLoad.push('media/opening.ogg', "media/opening.mp3", "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", 'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png', 'assets/projectile-rock.png', 'assets/projectile-rock-big.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png', 'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png', 'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
-    'assets/refill-heart.png', 'assets/refill-half.png', 
+    toLoad.push('media/opening.ogg', "media/opening.mp3", 
+    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", "media/chest.wav", 
     
+    'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png', 'assets/projectile-rock.png', 'assets/projectile-rock-big.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png',  'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
+    'assets/refill-heart.png', 'assets/refill-half.png', 
+    'assets/chest.png',
+    
+    'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png',
     'assets/inventory/Boomerang-inv.png', 'assets/inventory/Shield-inv.png', 
     'assets/inventory/Wedding Dress-inv.png', 'assets/inventory/Platemail-inv.png', 
-    'assets/inventory/Blue Ring-inv.png'
+    'assets/inventory/Blue Ring-inv.png',
+    'assets/inventory/Rupees-inv.png'
     );
  
   // Load our sprite map image
@@ -48,6 +54,10 @@ Crafty.scene('Loading', function(){
             });
         Crafty.sprite(24, "assets/projectile-rock-big.png", {
             projectile_rock_big: [0, 0]
+            });
+        Crafty.sprite(32, "assets/chest.png", {
+            chest_closed_up: [0, 0],
+            chest_open_up: [1, 0]
             });
         Crafty.sprite(8, 14, "assets/coins.png", {
             rupeeG1: [0, 0], rupeeG2: [1, 0], rupeeG3: [2, 0],
@@ -94,7 +104,8 @@ Crafty.scene('Loading', function(){
             chardown: [0, 0],
             charleft: [0, 1],
             charright: [0, 2],
-            charup: [0, 3]
+            charup: [0, 3],
+            charGet: [0, 4]
             });
         Crafty.sprite(40, "assets/slimes-5.png", {
             slimedown: [0, 2],
@@ -167,7 +178,8 @@ Crafty.scene('Loading', function(){
         Crafty.audio.add({
               rupee: ['media/rupee.mp3', 'media/LOZ_Get_Rupee.wav'],    // coin get
               secret: ['media/secret.mp3'],                             // find secret
-              gulp: ['media/gulp.wav']                                  // heart refill get
+              gulp: ['media/gulp.wav'],                                  // heart refill get
+              chest: ['media/chest.wav']                                  // open chest
             });
             
         //$('#console span').text(''); // Clear the console.
