@@ -5,6 +5,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="includes/crafty.js"></script>
+	<script type="text/javascript" src="includes/crafty-extensions.js"></script>
 	<script type="text/javascript" src="includes/general.js"></script>
 	<!-- <script type="text/javascript" src="includes/components/sprite-color.js"></script> unused ATM -->
 	<script type="text/javascript" src="includes/components.js"></script>
@@ -26,7 +27,8 @@
     Arrow keys to move.<br /> 
     Space to interact.<br />
     Tab for inventory.<br />
-    <span></span> <!-- Dump space for tell(); -->
+    <hr />
+    <div></div> <!-- Dump space for tell(); -->
     </div>
 </div>
 

@@ -2,10 +2,11 @@
 /* GLOBAL VARS */
 var current_scene; var scene_name; var tile_theme;
 var facing = 'down'; var dir = {up: false, down: false, left: false, right: false};
-var in_inventory = false; var dialog; var interlocutor = false; var talking = false; var itemGet = false; var NPCname;
+var in_inventory = false; var dialog; var interlocutor = false; var talking = false; var paused = false; var itemGet = false; var NPCname; var NPCnice;
 var potent = true; var swinging = false; var falling = false; var current_hole; 
 var pushedblock; var pushing = 0; var speed = 4;
 var monsters_on_screen = 0; var unlock_by_killing = false;
+var more_dialogue = false; var current_statement = 0;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -28,15 +29,16 @@ var item_description = {
     "Shield": "Blocks attacks aimed at your front.",
     "Wedding Dress": "You don't like it, but it's the only outfit you've got.",
     "Blue Ring": "This magical band halves incoming damage.", 
-    "Rupees": "Don't spend them all at once, okay?"
+    "Rupees": "Don't spend them all at once, okay?",
+    "Heart Container": "Your heart has increased!"
     };
 
 // ~~~~~
 /* placeholder/temp - DIALOGUE VARS */
-var oldman_dialogue = 'You are a brave young man, to go exploring this nine-tile world all on your own. Your grandmother would be so proud if she could see you today.';
+var old_man_dialogue = 'You are a brave young man, to go exploring this thirteen-tile world all on your own. Your grandmother would be so proud if she could see you today.|Let me tell you a thing or two about navigating. As you know already, hitting SPACE will allow you to interact with NPCs and objects.|But did you know that SPACE is also the key used to attack? When we\'re done talking, you can try it out.|Moving along, TAB opens your inventory. In your inventory, navigate with the arrow keys. Use SPACE to select an item.|Finally, ESCAPE pauses the game and allows you to access the menu (assuming Flak has it set up).|I hope that I\'ve been helpful! Enjoy your journey!';
 var fisherman_dialogue = 'The fish aren\'t biting today. I wonder if it has anything to do with the weather.';
 var groundskeeper_dialogue = 'It is a dreadful infestation.';
-var shykid_dialogue = 'You found me!';
+var shy_kid_dialogue = 'You found me!';
 var nope = 'It is a very poorly kept secret.';
 
 // ~~~~~
@@ -51,14 +53,14 @@ function UrlExists(url)
     }
     
 // custom side console
-function tell(x) {$('#console span').append(' '+x);}   
+function tell(x) {$('#console .inner div').append(' '+x);}   
 
-// disable or enable the space & tab keys
+// disable or enable the space & tab & esc keys
 function disableActions() {
-    Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyDown', (inventory));
+    Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyDown', (inventory)); Crafty.unbind('KeyUp', (pause_key));
     }
 function enableActions() {
-    Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyDown', (inventory));
+    Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyDown', (inventory)); Crafty.bind('KeyUp', (pause_key));
     }
     
 // pause player & monsters
@@ -74,13 +76,47 @@ function resumeAll() {
     Crafty('Projectile').trigger("Run");
     Crafty('player').trigger("Run").fourway(speed);
     }
+    
+// pause key
+// binds space to interact
+function pause_key(e) {
+    if(e.keyCode == Crafty.keys['ESC']) {
+        if(talking && !more_dialogue) {     // if at end of dialogue, close dialogue
+            tell('this triggers sometimes');
+            talking = false;
+            dialog.destroy(); 
+            if(itemGet == true) {
+                Crafty('player').sprite(0,3); itemGet = false;
+                Crafty('Reward').destroy();
+                Crafty.audio.unpause("theme");
+                }
+            resumeAll();
+            Crafty.bind('KeyDown', (inventory));
+            }
+        else if(talking&&more_dialogue) {       // else if in middle of dialogue, continue dialogue
+            eval(interlocutor.interact);
+            }
+        else if(paused) {                       // else if paused, unpause
+            paused = false; resumeAll();
+            tell('<p>unpause!</p>');
+            Crafty.bind('KeyDown', (inventory));
+            Crafty.bind('KeyUp', (interact));
+            }
+        else {                                  // else pause
+            paused = true; pauseAll();
+            tell('<p>pause!</p>');
+            Crafty.unbind('KeyDown', (inventory));
+            Crafty.unbind('KeyUp', (interact));
+            }
+        }
+    }
 
 
 // ~~~~~
 /* SIDEBAR & STAT FUNCTIONS */
 var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div id='life-red' class='line1'></div>" +
             "<div id='life-gray' class='line2'></div><div id='life-red' class='line2'></div>" +
-            "<img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /><img src='assets/heart-container-1.png' /></div>" +
+            "<img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /></div>" +
             "<fieldset id='weapon' class='margin-right'><legend>Space<legend></fieldset>" +
             "<fieldset id='secondary'><legend>Btn2<legend><span class='slot'></span></fieldset> " +
             "<fieldset id='armor' class='margin-right'><legend>Armor<legend><span class='slot'></span></fieldset>" +
@@ -91,11 +127,22 @@ var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div 
             "<div id='minimap'></div>";
 
 // updates heart meter    
-function updateHP() {
-    if (max_hp<155) {$("#life-gray.line1").css('width', max_hp);}
-    else {var m_hp2 = max_hp - 154; $("#life-gray.line1").css('width', 154); $("#life-gray.line2").css('width', m_hp2);}
-    if (current_hp<155) {$("#life-red.line1").css('width', current_hp);}
-    else {var c_hp2 = current_hp - 154; $("#life-red.line1").css('width', 154); $("#life-red.line2").css('width', c_hp2);}
+function updateHP(speed) {
+    if(typeof(speed)==='undefined') {speed = 400;}
+    if (max_hp<155) {
+        $("#life-gray.line1").animate({'width': max_hp}, speed, "linear", function() {});;
+        }
+    else {var m_hp2 = max_hp - 154; 
+        $("#life-gray.line1").animate({'width': 154}, speed, "linear", function() {}); 
+        $("#life-gray.line2").animate({'width': m_hp2}, speed, "linear", function() {});
+        }
+    if (current_hp<155) {
+        $("#life-red.line1").animate({'width': current_hp}, speed, "linear", function() {});
+        }
+    else {var c_hp2 = current_hp - 154; 
+        $("#life-red.line1").animate({'width': 154}, speed, "linear", function() {});; 
+        $("#life-red.line2").animate({'width': c_hp2}, speed, "linear", function() {});;
+        }
     if (current_hp<=0) {
         disableActions(); Crafty('Weapon').destroy();
         Crafty('player').disableControl().stop().tween({
@@ -235,6 +282,14 @@ function exit(x, y, destination, scene) {
     if(typeof(scene)==='undefined') scene = current_scene;
     scene.occupied[x][y] = true;
     }
+ 
+// places an NPC
+function setNPCname(name) {NPCname = name, NPCnice = NPCname.toLowerCase().replace(' ', '_');}
+function makeNPC(name, x, y, interaction, facing) {
+    if(typeof(facing)==='undefined') {facing = 'down';}
+    setNPCname(name);
+    Crafty.e('NPC2').addComponent(NPCname, NPCnice+'_'+facing).at(x, y).attr({spriteName: NPCnice, name: NPCname, interact: interaction});
+    } 
     
 // places monsters
 function monster(rawr, x, y, scene) {
@@ -289,10 +344,18 @@ function edgePop (edgeprop, scene) {
 // binds space to interact
 function interact(e) {
     if(e.keyCode == Crafty.keys['SPACE']) {
-        if(interlocutor&&!talking) {
+        if(interlocutor&&!talking) {            // if no dialogue, start dialogue
+            if(interlocutor.has('NPC2')) {      // if interlocutor is a (new) NPC, turn it to face you
+                var npc_facing; // set NPC facing opposite your own
+                if(facing=='up') {npc_facing = 'down';} if(facing=='down') {npc_facing = 'up';}
+                if(facing=='right') {npc_facing = 'left';} if(facing=='left') {npc_facing = 'right';}
+                var npc_new_sprite = interlocutor.spriteName+'_'+npc_facing; // get name of new facing sprite
+                interlocutor.addComponent(npc_new_sprite);
+                }
             eval(interlocutor.interact);
             }
-        else if(talking) {
+        else if(talking && !more_dialogue) {    // if end of dialogue, end dialogue
+            // tell('this triggers sometimes'); // debug
             talking = false;
             dialog.destroy(); 
             if(itemGet == true) {
@@ -303,17 +366,36 @@ function interact(e) {
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
             }
-        else if(!swinging&&weapon) {
+        else if(talking&&more_dialogue) {       // if more dialogue, continue dialogue
+            eval(interlocutor.interact);
+            }
+        else if(!swinging&&weapon) {            // if nothing to interact with, use weapon!
             useWeapon(weapon);
             }
         }
     }
 
 // basic dialogue functionality
-function dialogue(statement, speaker, portrait) {
+function dialogue(statement, speaker, portrait, statement_number) {
+    if(talking) {dialog.destroy();} 
+    if(statement.indexOf('|')>-1) {
+        // tell('hi'); tell(statement.indexOf('|')); // debug
+        var statement_array = statement.split("|");
+        var number_of_statements = statement_array.length;
+        if(!current_statement) {current_statement = 0;}
+        var words = statement_array[current_statement];
+        current_statement++; 
+        // tell(current_statement+'/'+number_of_statements); // debug
+            // check if there's more after this
+            if(current_statement < number_of_statements) {more_dialogue = true;} 
+            else {more_dialogue = false; current_statement = 0;}
+        //tell(more_dialogue) //debug
+        }
+    else {var words = statement; more_dialogue = false;}
     talking = true; trackplayer.x = Crafty('player').x; trackplayer.y = Crafty('player').y;
     var text;
-    text = '<p>' + statement + '</p>';
+    text = '<p>' + words + '</p>';
+    if(more_dialogue) {text = text + '<img class="dialogue-next" src="assets/dialogue-next.gif" alt="there\'s more!" />';}
     if(speaker) {   
         text = '<h3><b>' + speaker + '</b></h3>' + text;      
         if(portrait) {
@@ -371,16 +453,20 @@ function openChest() {
 function chestNotice(contents, type, value) {
     Crafty.audio.pause("theme");
     Crafty.audio.play('chest');     // plays chest sound
-    Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item get pose
+    Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item GET pose
     // create notificaion text
     var chestNotification = "You found ";
-    if(value) {chestNotification += value+' ';} else {chestNotification += "the ";}
+        // get the article
+        if(value) {chestNotification += value+' ';} 
+        else if(contents=='Heart Container') {chestNotification += 'a ';} 
+        else {chestNotification += "the ";}
     chestNotification += contents+"! "+item_description[contents];
     if(type=="weapon"||type=="secondary"||type=="armor"||type=="misc") {
         chestNotification += " <br /><br />You can equip this item from your inventory by pressing TAB.";
         }
     itemGet = true;                     // allows the dialogue closing trigger to work best
     dialogue(chestNotification);        // creates notification
+    if(contents=='Heart Container') {heartContainer();}
     Crafty.e('Reward').attr({x: Crafty('player').x-11, y: Crafty('player').y-58});  // displays reward shining above head
     $(".Reward").append('<img src="assets/inventory/'+contents+'-inv.png" />');
     }
@@ -395,7 +481,7 @@ function chestNotice(contents, type, value) {
 function useWeapon(weapon) {
     swinging = true; potent = true;             // enable attacks
     Crafty('player').disableControl().stop();   // pause the player
-    disableActions();                           // stop interaction & inventory
+    disableActions();                           // stop interaction & inventory & pause
     //console.log("You swing your mighty "+weapon+" "+facing+"!");
     
     Crafty.e(weapon).attr({x: 100, y: 100}).timeout(function() {
@@ -454,9 +540,16 @@ function dropLoot(loot, x, y) {
     newdrop.attr({x:x+newdrop.overx, y:y+newdrop.overy});
     }
 
+function heartContainer() {
+    max_hp += 22;
+    updateHP(10);
+    current_hp = max_hp;
+    updateHP(1500);
+    }
+
 // triggers the first invulnerability frame
 function damagePlayer(x) {
-    console.log("You've been hit!"); current_hp = Math.max(current_hp-x, 0); updateHP();
+    console.log("You've been hit!"); current_hp = Math.max(current_hp-x, 0); updateHP(10);
     Crafty('player').removeComponent('vulnerable').fourway(2); speed = 2;
     flicker1(10);
    }

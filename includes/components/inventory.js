@@ -84,7 +84,7 @@ function summary() {$("#summary").html($('.active').attr('data-item')+': '+item_
 // opens inventory, creates an entity and triggers a function to populate it
 function openInventory() {
     console.log('inventory open');
-    pauseAll(); Crafty.unbind('KeyUp', (interact));
+    pauseAll(); Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyUp', (pause_key));
     $('#inventory').show(); displayArsenal();
     enableInventoryNav();
     }
@@ -140,5 +140,5 @@ function destroyInventory() {
     console.log('inventory gone');
     $('#inventory *').remove();
     $('#inventory').hide();
-    resumeAll(); Crafty.bind('KeyUp', (interact));
+    resumeAll(); Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyUp', (pause_key));
     }

@@ -55,6 +55,19 @@ Crafty.c('NPC', {
   },
 });
 
+Crafty.c('NPC2', {
+    init: function() {
+    this.requires('Actor, Solid, Collision, Tween, SpriteAnimation, poi');
+    }
+});
+
+Crafty.c('Old Man', {
+    init: function() {
+    this.requires('NPC2').attr({w:29, h:40, overx: 5.5}).collision();
+        }    
+});
+Crafty.c('Shy Kid', {init: function() {this.requires('NPC2').attr({w:29, h:34, overx:5.5, overy:6}).collision(); } });
+
 // The player character entity. Super complex!!
 Crafty.c('PlayerCharacter', {
     init: function() {
@@ -139,6 +152,14 @@ Crafty.c('PlayerCharacter', {
                 getCoins(data[0].obj.value);
                 data[0].obj.destroy();
                 }, 60);
+            })  
+        .onHit("HeartContainer", function(data) {
+            // tell('on exit');
+            //data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 1);
+            data[0].obj.removeComponent('HeartContainer') // stop from triggering multiple times
+            Crafty.audio.play('gulp');
+            chestNotice('Heart Container');
+            data[0].obj.destroy();
             })  
         .onHit("hole", function(data) {
             current_hole = data[0].obj;

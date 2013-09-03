@@ -12,6 +12,14 @@ Crafty.c('HeartHalf', {
         }
     });
 
+// Heart Container in the Wild
+Crafty.c('HeartContainer', {
+    init: function() {
+        this.requires('Actor, Collision, Tween, heart_container')
+        .attr({rotation: 0, overx: 6, overy: 5, w: 30, h: 28}).collision();
+        } 
+    });
+
 // Basic Rupee component
 Crafty.c('Rupee', {init: function() {this.requires('Actor, SpriteAnimation, Collision, Tween').attr({rotation: 0, overx: 12, overy: 6}); } });
 

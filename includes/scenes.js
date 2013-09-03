@@ -13,23 +13,26 @@ Crafty.scene('Game', function() {
     this.occupied[5][5] = true; // occupy player's initial position
  
     tile('Grass', 0, 0); tile('Grass', 1, 0); tile('Grass', 2, 0); tile('Grass', 3, 0); tile('Grass', 4, 0); tile('Grass', 5, 0); tile('Grass', 6, 0); tile('Grass', 7, 0); tile('Grass', 8, 0); tile('Grass', 9, 0); tile('Grass', 10, 0); tile('Grass', 11, 0); tile('Grass', 12, 0); tile('Grass', 0, 1); tile('Grass', 1, 1); tile('Grass', 2, 1); tile('Grass', 3, 1); tile('Grass', 4, 1); prop('Bush', 4, 1); tile('Grass', 5, 1); tile('Grass', 6, 1); tile('Grass', 7, 1); tile('Grass', 8, 1); prop('Bush', 8, 1); tile('Grass', 9, 1); tile('Grass', 10, 1); tile('Grass', 11, 1); tile('Grass', 12, 1); tile('Grass', 0, 2); tile('Grass', 1, 2); tile('Grass', 2, 2); tile('Grass', 3, 2); tile('Grass', 4, 2); tile('Grass', 5, 2); tile('Grass', 6, 2); prop('Bush', 6, 2); tile('Grass', 7, 2); tile('Grass', 8, 2); prop('Bush', 8, 2); tile('Grass', 9, 2); tile('Grass', 10, 2); prop('Bush', 10, 2); tile('Grass', 11, 2); tile('Grass', 12, 2); tile('Grass', 0, 3); tile('Grass', 1, 3); tile('Grass', 2, 3); tile('Grass', 3, 3); tile('Grass', 4, 3); tile('Grass', 5, 3); tile('Grass', 6, 3); prop('Bush', 6, 3); tile('Grass', 7, 3); tile('Grass', 8, 3); tile('Grass', 9, 3); tile('Grass', 10, 3); prop('Bush', 10, 3); tile('Grass', 11, 3); tile('Grass', 12, 3); tile('Grass', 0, 4); tile('Grass', 1, 4); tile('Grass', 2, 4); tile('Grass', 3, 4); tile('Grass', 4, 4); tile('Grass', 5, 4); tile('Grass', 6, 4); tile('Grass', 7, 4); prop('Bush', 7, 4); tile('Grass', 8, 4); prop('Bush', 8, 4); tile('Grass', 9, 4); prop('Bush', 9, 4); tile('Grass', 10, 4); prop('Bush', 10, 4); tile('Grass', 11, 4); tile('Grass', 12, 4); tile('Grass', 0, 5); tile('Grass', 1, 5); tile('Grass', 2, 5); tile('Grass', 3, 5); tile('Grass', 4, 5); tile('Grass', 5, 5); tile('Grass', 6, 5); tile('Grass', 7, 5); prop('Bush', 7, 5); tile('Grass', 8, 5); tile('Grass', 9, 5); tile('Grass', 10, 5); tile('Grass', 11, 5); tile('Grass', 12, 5); tile('Grass', 0, 6); tile('Grass', 1, 6); tile('Grass', 2, 6); tile('Grass', 3, 6); tile('Grass', 4, 6); tile('Grass', 5, 6); tile('Grass', 6, 6); tile('Grass', 7, 6); prop('Bush', 7, 6); tile('Grass', 8, 6); tile('Grass', 9, 6); prop('Bush', 9, 6); tile('Grass', 10, 6); prop('Bush', 10, 6); tile('Grass', 11, 6); prop('Bush', 11, 6); tile('Grass', 12, 6); tile('Grass', 0, 7); tile('Grass', 1, 7); tile('Grass', 2, 7); tile('Grass', 3, 7); tile('Grass', 4, 7); tile('Grass', 5, 7); tile('Grass', 6, 7); tile('Grass', 7, 7); prop('Bush', 7, 7); tile('Grass', 8, 7); tile('Grass', 9, 7); tile('Grass', 10, 7); tile('Grass', 11, 7); tile('Grass', 12, 7); tile('Grass', 0, 8); tile('Grass', 1, 8); tile('Grass', 2, 8); tile('Grass', 3, 8); tile('Grass', 4, 8); tile('Grass', 5, 8); tile('Grass', 6, 8); tile('Grass', 7, 8); prop('Bush', 7, 8); tile('Grass', 8, 8); prop('Bush', 8, 8); tile('Grass', 9, 8); prop('Bush', 9, 8); tile('Grass', 10, 8); prop('Bush', 10, 8); tile('Grass', 11, 8); tile('Grass', 12, 8); tile('Grass', 0, 9); tile('Grass', 1, 9); prop('Bush', 1, 9); tile('Grass', 2, 9); prop('Bush', 2, 9); tile('Grass', 3, 9); prop('Bush', 3, 9); tile('Grass', 4, 9); tile('Grass', 5, 9); tile('Grass', 6, 9); tile('Grass', 7, 9); prop('Bush', 7, 9); tile('Grass', 8, 9); tile('Grass', 9, 9); tile('Grass', 10, 9); tile('Grass', 11, 9); tile('Grass', 12, 9); tile('Grass', 0, 10); tile('Grass', 1, 10); prop('Bush', 1, 10); prop('Rock', 2, 10); tile('Grass', 3, 10); prop('Bush', 3, 10); tile('Grass', 4, 10); tile('Grass', 5, 10); tile('Grass', 6, 10); tile('Grass', 7, 10); prop('Bush', 7, 10); tile('Grass', 8, 10); tile('Grass', 9, 10); prop('Bush', 9, 10); tile('Grass', 10, 10); prop('Bush', 10, 10); tile('Grass', 11, 10); prop('Bush', 11, 10); tile('Grass', 12, 10); tile('Grass', 0, 11); tile('Grass', 1, 11); prop('Bush', 1, 11); tile('Grass', 2, 11); prop('Bush', 2, 11); tile('Grass', 3, 11); prop('Bush', 3, 11); tile('Grass', 4, 11); tile('Grass', 5, 11); tile('Grass', 6, 11); tile('Grass', 7, 11); prop('Bush', 7, 11); tile('Grass', 8, 11); tile('Grass', 9, 11); tile('Grass', 10, 11); tile('Grass', 11, 11); tile('Grass', 12, 11); tile('Grass', 0, 12); tile('Grass', 1, 12); tile('Grass', 2, 12); tile('Grass', 3, 12); tile('Grass', 4, 12); tile('Grass', 5, 12); tile('Grass', 6, 12); tile('Grass', 7, 12); tile('Grass', 8, 12); tile('Grass', 9, 12); tile('Grass', 10, 12); tile('Grass', 11, 12); tile('Grass', 12, 12);
+        
+    setNPCname('Old Man'); tell(NPCnice);
+    makeNPC(NPCname, 2, 4, "dialogue("+NPCnice+"_dialogue, '"+NPCname+"', true)");
     
-    prop('Chest', 3, 4).attr({contents: "Longspear", type: "weapon"});
+    setNPCname('Shy Kid'); tell(NPCnice);
+    makeNPC(NPCname, 11, 11, "dialogue("+NPCnice+"_dialogue, '"+NPCname+"', false)", 'left');
+    //Crafty.e('Old Man').attr(interact: "dialogue(oldman_dialogue, '"+NPCname+"', true)");
   
-  // OLD MAN
-  NPCname = "Old Man";
-  this.npc = Crafty.e('NPC').at(2, 4).attr({name: NPCname, interact: "dialogue(oldman_dialogue, '"+NPCname+"', true)"});
-  this.occupied[this.npc.at().x][this.npc.at().y] = true;
+ // "dialogue(oldman_dialogue, '"+NPCname+"', true)"
   
-  // OLD MAN 2
+ 
+  // BURNINATOR
   NPCname = "Old Man 2";
   this.npc2 = Crafty.e('NPC').at(2, 1).color('#63f9ff').attr({name: NPCname, interact: "torchBushes()"});
   this.occupied[this.npc2.at().x][this.npc2.at().y] = true;
  
-  // OLD MAN
-  NPCname = "Shy Kid";
-  this.npc = Crafty.e('NPC').at(11, 11).attr({name: NPCname, interact: "dialogue(shykid_dialogue, '"+NPCname+"', false)"});
-  this.occupied[this.npc.at().x][this.npc.at().y] = true;
+  // SHY KID
+  //NPCname = "Shy Kid";
+  //this.npc = Crafty.e('NPC').at(11, 11).attr({name: NPCname, interact: "dialogue(shykid_dialogue, '"+NPCname+"', false)"});
+  //this.occupied[this.npc.at().x][this.npc.at().y] = true;
   
     edgePop('Tree');
   
@@ -55,11 +58,6 @@ Crafty.scene('north1', function() {
  
     edgePop('Tree');
     tile('TreeWalkable', 12, 2);
-    
-    prop('Chest', 1, 1).attr({contents: "Wedding Dress", type: "armor"});
-    prop('Chest', 2, 1).attr({contents: "Shield", type: "secondary"});
-    prop('Chest', 3, 1).attr({contents: "Rupees", value: 50, type: "rupee"});
-    prop('Chest', 4, 1).attr({contents: "Rupees", value: 20, type: "rupee"});
      
 });
 
@@ -105,6 +103,16 @@ Crafty.scene('ne1', function() {
 
     edgePop('Tree');
     tile('TreeWalkable', 0, 2);
+    
+        
+    // secret test chests
+    prop('Chest', 1, 1).attr({contents: "Wedding Dress", type: "armor"});
+    prop('Chest', 2, 1).attr({contents: "Shield", type: "secondary"});
+    prop('Chest', 3, 1).attr({contents: "Rupees", value: 50, type: "rupee"});
+    prop('Chest', 4, 1).attr({contents: "Rupees", value: 20, type: "rupee"});
+    prop('Chest', 5, 1).attr({contents: "Longspear", type: "weapon"});
+    prop('Chest', 6, 1).attr({contents: "Heart Container", type: "misc"});
+    prop('HeartContainer', 7, 1);
  
 });
 

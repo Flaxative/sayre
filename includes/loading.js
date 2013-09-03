@@ -9,18 +9,51 @@ Crafty.scene('Loading', function(){
         .text('<h3>Loading</h3><div id="bar"><div id="fill"></div></div><div id="loadtext"></div>');
  
     var toLoad = [];
-    toLoad.push('media/opening.ogg', "media/opening.mp3", 
+    toLoad.push(
+    
+    // music
+    'media/opening.ogg', "media/opening.mp3", 
+    
+    // SFX
     "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", "media/chest.wav", 
     
-    'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/grass-1.png', 'assets/rock.png', 'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 'assets/RPGTiles-40.png', 'assets/cactus.png', 'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png', 'assets/projectile-rock.png', 'assets/projectile-rock-big.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/hole-1.png', 'assets/heart-container-1.png',  'assets/fire.png', 'assets/fire-tile.png', 'assets/coins.png', 'assets/coin-single.png', 'assets/remains.png',
-    'assets/refill-heart.png', 'assets/refill-half.png', 
-    'assets/chest.png',
+    // character sprites
+    'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 
+    'assets/old-man.png', 'assets/shy-kid.png',
     
+    // weapons
+    'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png',
+    
+    // monster sprites
+    'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png',
+    'assets/projectile-rock.png', 'assets/projectile-rock-big.png',
+    
+    // portraits
+    'assets/portraits/Old Man.png', 'assets/portraits/Fisherman.png', 'assets/portraits/Groundskeeper.png', 
+    
+    // UI
+    'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 
+    'assets/heart-empty-1.png', 'assets/dialogue-next.gif', 'assets/coin-single.png',
+    
+    // tiles
+    'assets/RPGTiles-40.png', 'assets/fire-tile.png', 'assets/grass-1.png',  
+    
+    // props
+    'assets/cactus.png', 'assets/hole-1.png', 'assets/fire.png', 'assets/remains.png',
+    'assets/tree-1.png', 'assets/bush-1.png', 'assets/bush-dead.png', 'assets/rock.png',
+    
+    // drops
+    'assets/refill-heart.png', 'assets/refill-half.png', 'assets/coins.png', 
+    
+    // treasure
+    'assets/chest.png', 'assets/heart-container.png', 
+    
+    // box images for inventory slots
     'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png',
     'assets/inventory/Boomerang-inv.png', 'assets/inventory/Shield-inv.png', 
     'assets/inventory/Wedding Dress-inv.png', 'assets/inventory/Platemail-inv.png', 
     'assets/inventory/Blue Ring-inv.png',
-    'assets/inventory/Rupees-inv.png'
+    'assets/inventory/Rupees-inv.png', 'assets/inventory/Heart Container-inv.png'
     );
  
   // Load our sprite map image
@@ -48,6 +81,9 @@ Crafty.scene('Loading', function(){
             });
         Crafty.sprite(8, 14, "assets/refill-half.png", {
             refill_half: [0, 0]
+            });
+        Crafty.sprite(30, 28, "assets/heart-container.png", {
+            heart_container: [0, 0]
             });
         Crafty.sprite(16, "assets/projectile-rock.png", {
             projectile_rock: [0, 0]
@@ -106,6 +142,18 @@ Crafty.scene('Loading', function(){
             charright: [0, 2],
             charup: [0, 3],
             charGet: [0, 4]
+            });
+        Crafty.sprite(29, 40, "assets/old-man.png", {
+            old_man_down: [0, 0],
+            old_man_up: [0, 1],
+            old_man_right: [3, 0],
+            old_man_left: [3, 1]
+            });
+        Crafty.sprite(29, 32, "assets/shy-kid.png", {
+            shy_kid_down: [1, 0],
+            shy_kid_up: [1, 3],
+            shy_kid_right: [1, 2],
+            shy_kid_left: [1, 1]
             });
         Crafty.sprite(40, "assets/slimes-5.png", {
             slimedown: [0, 2],
@@ -195,7 +243,7 @@ Crafty.scene('Loading', function(){
                 Crafty.scene('Game'); // go to first screen
                 enableActions();
                 $("#console").click( function() {console.log(dir);});
-                $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(); updateCoins();
+                $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(10); updateCoins();
                 // theme('opening'); tile_theme = 'opening'; // initialize music 
                 })
             ;

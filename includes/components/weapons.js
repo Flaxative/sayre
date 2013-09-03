@@ -23,7 +23,7 @@ Crafty.c('Wooden Sword', {
         .attr({h: 30, w: 10, damage: 5, z: 2, length: 30}).collision()
         .animate("swing", 0, 0, 2) // initializes the swing animation (currently not implemented)
         .onHit('Bush', function(data) {
-            if(potent) {potent = false;
+            if(potent) {
                 Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush      
                 var loot_result = Math.floor((Math.random()*3)+1);
                 var loot_table = Array(4); loot_table[1] = 'RupeeG';

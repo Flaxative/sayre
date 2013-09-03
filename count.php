@@ -9,6 +9,7 @@
         $i += count(file('levels/west2.txt'));
         $i += count(file('levels/ocean.txt'));
         $i += count(file('levels/nw1.txt'));
+        $i += count(file('includes/crafty-extensions.js'));
         $i += count(file('includes/general.js'));
         $i += count(file('includes/components.js'));
         $i += count(file('includes/scenes.js'));
