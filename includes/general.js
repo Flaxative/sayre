@@ -7,6 +7,7 @@ var potent = true; var swinging = false; var falling = false; var current_hole;
 var pushedblock; var pushing = 0; var speed = 4;
 var monsters_on_screen = 0; var unlock_by_killing = false;
 var more_dialogue = false; var current_statement = 0;
+var has_boomerang = true;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -35,7 +36,7 @@ var item_description = {
 
 // ~~~~~
 /* placeholder/temp - DIALOGUE VARS */
-var old_man_dialogue = 'You are a brave young man, to go exploring this thirteen-tile world all on your own. Your grandmother would be so proud if she could see you today.|Let me tell you a thing or two about navigating. As you know already, hitting SPACE will allow you to interact with NPCs and objects.|But did you know that SPACE is also the key used to attack? When we\'re done talking, you can try it out.|Moving along, TAB opens your inventory. In your inventory, navigate with the arrow keys. Use SPACE to select an item.|Finally, ESCAPE pauses the game and allows you to access the menu (assuming Flak has it set up).|I hope that I\'ve been helpful! Enjoy your journey!';
+var old_man_dialogue = 'You are a brave young man, to go exploring this ten-tile world all on your own. Your grandmother would be so proud if she could see you today.|Let me tell you a thing or two about navigating. As you know already, hitting C will allow you to interact with NPCs and objects.|But did you know that C is also the key used to attack? When we\'re done talking, you can try it out.|Moving along, S opens your inventory. In your inventory, navigate with the arrow keys. Use C to select an item.|The D key activates your secondary item.|Finally, ESCAPE pauses the game and allows you to access the menu (assuming Flak has it set up).|I hope that I\'ve been helpful! Enjoy your journey!';
 var fisherman_dialogue = 'The fish aren\'t biting today. I wonder if it has anything to do with the weather.';
 var groundskeeper_dialogue = 'It is a dreadful infestation.';
 var shy_kid_dialogue = 'You found me!';
@@ -55,12 +56,14 @@ function UrlExists(url)
 // custom side console
 function tell(x) {$('#console .inner div').append(' '+x);}   
 
-// disable or enable the space & tab & esc keys
+// disable or enable the action, inventory, and pause keys
 function disableActions() {
-    Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyDown', (inventory)); Crafty.unbind('KeyUp', (pause_key));
+    Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyUp', (useSecondary));
+    Crafty.unbind('KeyDown', (inventory)); Crafty.unbind('KeyUp', (pause_key));
     }
 function enableActions() {
-    Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyDown', (inventory)); Crafty.bind('KeyUp', (pause_key));
+    Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyUp', (useSecondary)); 
+    Crafty.bind('KeyDown', (inventory)); Crafty.bind('KeyUp', (pause_key));
     }
     
 // pause player & monsters
@@ -78,10 +81,14 @@ function resumeAll() {
     }
     
 // pause key
-// binds space to interact
+// binds escape to pause & end interaction
 function pause_key(e) {
     if(e.keyCode == Crafty.keys['ESC']) {
-        if(talking && !more_dialogue) {     // if at end of dialogue, close dialogue
+        if(in_inventory) {
+            in_inventory = false;
+            destroyInventory();
+            }
+        else if(talking && !more_dialogue) {     // if at end of dialogue, close dialogue
             tell('this triggers sometimes');
             talking = false;
             dialog.destroy(); 
@@ -101,12 +108,14 @@ function pause_key(e) {
             tell('<p>unpause!</p>');
             Crafty.bind('KeyDown', (inventory));
             Crafty.bind('KeyUp', (interact));
+            Crafty.bind('KeyUp', (useSecondary));
             }
         else {                                  // else pause
             paused = true; pauseAll();
             tell('<p>pause!</p>');
             Crafty.unbind('KeyDown', (inventory));
             Crafty.unbind('KeyUp', (interact));
+            Crafty.unbind('KeyUp', (useSecondary));
             }
         }
     }
@@ -117,8 +126,8 @@ function pause_key(e) {
 var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div id='life-red' class='line1'></div>" +
             "<div id='life-gray' class='line2'></div><div id='life-red' class='line2'></div>" +
             "<img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /><img src='assets/heart-empty-1.png' /></div>" +
-            "<fieldset id='weapon' class='margin-right'><legend>Space<legend></fieldset>" +
-            "<fieldset id='secondary'><legend>Btn2<legend><span class='slot'></span></fieldset> " +
+            "<fieldset id='secondary' class='margin-right'><legend>D Btn<legend><span class='slot'></span></fieldset>" +
+            "<fieldset id='weapon'><legend>C Btn<legend><span class='slot'></span></fieldset> " +
             "<fieldset id='armor' class='margin-right'><legend>Armor<legend><span class='slot'></span></fieldset>" +
             "<fieldset id='accessory'><legend>Misc<legend><span class='slot'></span></fieldset> " +
             "<div id='meta'>" +
@@ -204,10 +213,10 @@ function getcoords() {                              // check position after tran
     }
 
 function setFacing() {
-    if(facing=='up') {this.player.addComponent('charup');} 
-    if(facing=='down') {this.player.addComponent('chardown');} 
-    if(facing=='left') {this.player.addComponent('charleft');} 
-    if(facing=='right') {this.player.addComponent('charright');}
+    if(facing=='up') {this.player.addComponent('charup').attr({facing: 'up'});} 
+    if(facing=='down') {this.player.addComponent('chardown').attr({facing: 'down'});} 
+    if(facing=='left') {this.player.addComponent('charleft').attr({facing: 'left'});} 
+    if(facing=='right') {this.player.addComponent('charright').attr({facing: 'right'});}
     this.player.attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);
     }
 
@@ -222,10 +231,11 @@ function placePlayer(facing) {                       // actually make the PC
     left = Crafty.keydown[Crafty.keys.LEFT_ARROW];
     right = Crafty.keydown[Crafty.keys.RIGHT_ARROW];
     if(up) { dir.up = true;                             // set global direction for facing, attacks, shield, etc.
-        this.player.animate("walk_up", 10, -1); }   // play proper movement animation for cross-transition motion
-    if(right) { dir.right = true; this.player.animate("walk_right", 10, -1); }
-    if(down) { dir.down = true; this.player.animate("walk_down", 10, -1); }
-    if(left) { dir.left = true; this.player.animate("walk_left", 10, -1); }
+        this.player.animate("walk_up", 10, -1)      // play proper movement animation for cross-transition motion
+        .attr({facing: "up"}); }   
+    if(right) { dir.right = true; this.player.animate("walk_right", 10, -1).attr({facing: "right"}); }
+    if(down) { dir.down = true; this.player.animate("walk_down", 10, -1).attr({facing: "down"}); }
+    if(left) { dir.left = true; this.player.animate("walk_left", 10, -1).attr({facing: "left"}); }
     }
             
 // sets a single floor tile
@@ -341,9 +351,9 @@ function edgePop (edgeprop, scene) {
 // ~~~~~
 // ~~~~~
 
-// binds space to interact
+// binds C to interact
 function interact(e) {
-    if(e.keyCode == Crafty.keys['SPACE']) {
+    if(e.keyCode == Crafty.keys['C']) {
         if(interlocutor&&!talking) {            // if no dialogue, start dialogue
             if(interlocutor.has('NPC2')) {      // if interlocutor is a (new) NPC, turn it to face you
                 var npc_facing; // set NPC facing opposite your own
@@ -371,6 +381,38 @@ function interact(e) {
             }
         else if(!swinging&&weapon) {            // if nothing to interact with, use weapon!
             useWeapon(weapon);
+            }
+        }
+    }
+
+// binds D to secondary
+function useSecondary(e) {
+    if(e.keyCode == Crafty.keys['D']) {
+        if(talking && !more_dialogue) {    // if end of dialogue, end dialogue
+            // tell('this triggers sometimes'); // debug
+            talking = false;
+            dialog.destroy(); 
+            if(itemGet == true) {
+                Crafty('player').sprite(0,3); itemGet = false;
+                Crafty('Reward').destroy();
+                Crafty.audio.unpause("theme");
+                }
+            resumeAll();
+            Crafty.bind('KeyDown', (inventory));
+            }
+        else if(talking&&more_dialogue) {       // if more dialogue, continue dialogue
+            eval(interlocutor.interact);
+            }
+        else if(!swinging&&weapon) {            // if nothing to interact with, use secondary!
+            if(!secondary) {tell('nothing equipped'); return;} // if no secondary, fail elegantly
+            // tell("use "+secondary); // debug
+            else if(secondary=='Boomerang'&&has_boomerang) { // boomerang is special and has a lot of rules.
+                // tell('have boomerang and will throw'); // debug
+                chuckBoomerang();
+                }
+            else { // no special rules, so just use your secondary
+                useWeapon(secondary);
+                }
             }
         }
     }
@@ -462,7 +504,7 @@ function chestNotice(contents, type, value) {
         else {chestNotification += "the ";}
     chestNotification += contents+"! "+item_description[contents];
     if(type=="weapon"||type=="secondary"||type=="armor"||type=="misc") {
-        chestNotification += " <br /><br />You can equip this item from your inventory by pressing TAB.";
+        chestNotification += " <br /><br />You can equip this item from your inventory by pressing S.";
         }
     itemGet = true;                     // allows the dialogue closing trigger to work best
     dialogue(chestNotification);        // creates notification
@@ -477,7 +519,7 @@ function chestNotice(contents, type, value) {
 // ~~~~~
 // ~~~~~
 
-// triggers on space when not in a menu or dialogue. uses active weapon.
+// triggers on interaction key (Z) when not in a menu or dialogue. uses active weapon.
 function useWeapon(weapon) {
     swinging = true; potent = true;             // enable attacks
     Crafty('player').disableControl().stop();   // pause the player
@@ -488,7 +530,7 @@ function useWeapon(weapon) {
         Crafty('Weapon').destroy(); swinging = false; 
         Crafty('player').trigger("Run").fourway(speed);
         enableActions();
-        }, 200);
+        }, Crafty('Weapon').useSpeed);
     if(facing=='up') {
         Crafty('Weapon')
         .attr({rotation: 180, x: Crafty('player').x+Crafty('player').w/2+Crafty('Weapon').w/2-8, y: Crafty('player').y+15});

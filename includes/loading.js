@@ -22,7 +22,7 @@ Crafty.scene('Loading', function(){
     'assets/old-man.png', 'assets/shy-kid.png',
     
     // weapons
-    'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png',
+    'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/boomerang.png',
     
     // monster sprites
     'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png',
@@ -50,7 +50,8 @@ Crafty.scene('Loading', function(){
     
     // box images for inventory slots
     'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png',
-    'assets/inventory/Boomerang-inv.png', 'assets/inventory/Shield-inv.png', 
+    'assets/inventory/Boomerang-inv.png', 'assets/inventory/Magic Boomerang-inv.png', 
+    'assets/inventory/Shield-inv.png', 
     'assets/inventory/Wedding Dress-inv.png', 'assets/inventory/Platemail-inv.png', 
     'assets/inventory/Blue Ring-inv.png',
     'assets/inventory/Rupees-inv.png', 'assets/inventory/Heart Container-inv.png'
@@ -110,6 +111,10 @@ Crafty.scene('Loading', function(){
             });
         Crafty.sprite(6, 60, "assets/longspear.png", {
             longspear: [0, 0]
+            });
+        Crafty.sprite(56, 56, "assets/boomerang.png", {
+            boomerang: [0, 0],
+            magic_boomerang: [0, 1]
             });
         Crafty.sprite(40, "assets/bush-1.png", {
             bush: [0, 0]

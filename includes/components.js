@@ -71,8 +71,8 @@ Crafty.c('Shy Kid', {init: function() {this.requires('NPC2').attr({w:29, h:34, o
 // The player character entity. Super complex!!
 Crafty.c('PlayerCharacter', {
     init: function() {
-        this.requires('Actor, Tween, player, Fourway, Collision, chardown, vulnerable, SpriteAnimation, Pausable')
-        .attr({x: 0, y: 0, w: 36, h: 40, z: 1000})
+        this.requires('Actor, Tween, player, FourwayFlak, Collision, chardown, vulnerable, SpriteAnimation, Pausable')
+        .attr({x: 0, y: 0, w: 36, h: 40, z: 1000, facing: 'down'})
         .attr({alpha: 1.0, name: "Flak"})
         .fourway(4)
         //.multiway(4, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180})
@@ -89,7 +89,7 @@ Crafty.c('PlayerCharacter', {
             if (direction.x < 0) {
                 if (!this.isPlaying("walk_left"))
                     this.stop().animate("walk_left", 10, -1);
-                    dir.left = true; dir.right = false; facing = 'left';
+                    dir.left = true; dir.right = false; facing = 'left'; this.facing = 'left';
                     /*if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 90, 
@@ -101,7 +101,7 @@ Crafty.c('PlayerCharacter', {
             if (direction.x > 0) {
                 if (!this.isPlaying("walk_right"))
                     this.stop().animate("walk_right", 10, -1);
-                    dir.right = true; dir.left = false; facing = 'right';
+                    dir.right = true; dir.left = false; facing = 'right'; this.facing = 'right';
                    /* if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 270, 
@@ -113,7 +113,7 @@ Crafty.c('PlayerCharacter', {
             if (direction.y < 0) {
                 if (!this.isPlaying("walk_up"))
                     this.stop().animate("walk_up", 10, -1);
-                    dir.up = true; dir.down = false; facing='up';
+                    dir.up = true; dir.down = false; facing='up'; this.facing = 'up';
                   /*  if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 180, 
@@ -125,7 +125,7 @@ Crafty.c('PlayerCharacter', {
             if (direction.y > 0) {
                 if (!this.isPlaying("walk_down"))
                     this.stop().animate("walk_down", 10, -1);
-                    dir.down = true; dir.up = false; facing='down';
+                    dir.down = true; dir.up = false; facing='down'; this.facing = 'down';
                    /* if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 0, 

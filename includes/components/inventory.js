@@ -6,7 +6,7 @@
     
 // binds tab to inventory
 function inventory(e) {
-    if(e.keyCode == Crafty.keys['TAB']) {
+    if(e.keyCode == Crafty.keys['S']) {
         if(!in_inventory) {
              in_inventory = true; openInventory();
             }
@@ -62,7 +62,7 @@ function inventoryNav(e) {
             else {$('fieldset[data-x="'+h+'"][data-y="'+j+'"]').addClass('active'); summary();}
             }
         }
-    if(e.keyCode == Crafty.keys['SPACE']) {
+    if(e.keyCode == Crafty.keys['C']||e.keyCode == Crafty.keys['D']) {
         if(!$('.active').length) { return; } // initial selection
         else {
             var itemType = $('.active').attr('data-itemType');
@@ -84,7 +84,7 @@ function summary() {$("#summary").html($('.active').attr('data-item')+': '+item_
 // opens inventory, creates an entity and triggers a function to populate it
 function openInventory() {
     console.log('inventory open');
-    pauseAll(); Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyUp', (pause_key));
+    pauseAll(); Crafty.unbind('KeyUp', (interact)); Crafty.unbind('KeyUp', (useSecondary));
     $('#inventory').show(); displayArsenal();
     enableInventoryNav();
     }
@@ -140,5 +140,5 @@ function destroyInventory() {
     console.log('inventory gone');
     $('#inventory *').remove();
     $('#inventory').hide();
-    resumeAll(); Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyUp', (pause_key));
+    resumeAll(); Crafty.bind('KeyUp', (interact)); Crafty.bind('KeyUp', (useSecondary));
     }

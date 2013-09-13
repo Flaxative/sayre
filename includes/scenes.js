@@ -211,8 +211,8 @@ Crafty.scene('south1', function() {
     edgePop('Tree');
     
     monster('Octorok', 3, 3);
-    monster('OctorokBlue', 9, 9);
     monster('Octorok', 3, 9);
     monster('OctorokGold', 9, 3);
+    monster('OctorokBlue', 9, 9);
  
 });

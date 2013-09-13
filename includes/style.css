@@ -43,8 +43,8 @@ h1 {font-size: 12px; padding: 10px;}
 .dbox {
     padding: 20px;
     background: #000 url(images/mochaGrunge.png);
-    color: #fff; font-size: 12px; line-height: 22px;
-    font-family: 'Press Start 2P', cursive;
+    color: #fff; font-size: 12px !important; line-height: 22px !important;
+    font-family: 'Press Start 2P', cursive !important;
     }
     
 .dbox.light {background: #4f543f url(images/lightGrunge.png);}
@@ -55,15 +55,16 @@ h1 {font-size: 12px; padding: 10px;}
     border: 1px solid #fff;
     }
     
-.loading {width: 520px; height: 520px;}
-.loading h3 {text-align: center; font-weight: bold; margin: 100px 0 20px 0;}
+.loading, .start { font-family: 'Press Start 2P', cursive !important;}
+.loading {width: 520px !important; height: 520px !important;}
+.loading h3 {text-align: center; font-weight: bold; margin: 100px 0 20px 0; font-size: 21px;}
 #bar {width: 200px; margin: 20px auto; 
     padding: 0; height: 30px; background: #999; border: 1px solid #000; 
     border-radius: 8px; overflow: hidden;}
 #fill {width: 0; background: #0f0; height: 30px; margin: 0;}
 #loadtext {text-align: center; font-style:italic;}
 
-.start {text-align: center; background: #eee;
+.start {text-align: center; background: #eee; font-size: 12px !important; 
    width: 150px; border: 1px solid #000;}
 .start:hover {background: #fff;}
 .start:active {background: #999;}

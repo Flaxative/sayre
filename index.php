@@ -25,8 +25,9 @@
     <div class="inner">
     Colored blocks are NPCs.<br />
     Arrow keys to move.<br /> 
-    Space to interact.<br />
-    Tab for inventory.<br />
+    C to interact &amp; use weapon.<br />
+    D to use secondary item.<br />
+    S for inventory.<br />
     <hr />
     <div></div> <!-- Dump space for tell(); -->
     </div>

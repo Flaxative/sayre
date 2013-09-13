@@ -20,24 +20,29 @@ Crafty.c('Painful', { init: function() { this.bind("Moved", function(from) {
 // pw (projectile width), and ph (projectile height)
 Crafty.c("Shooter", {
     fireProjectile: function() {
+        //tell('yes2'); tell(this.projectile); //debug
         if(this.facing=='left') {
-            var newRock = Crafty.e(this.projectile).attr({x:this.x-this.pw, y: this.y+this.h/2-this.ph/2});
-            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", [-1,0]);}});
+            var newRock = Crafty.e(this.projectile).attr({shotDir: "left", x:this.x-this.pw, y: this.y+this.h/2-this.ph/2});
+            newRock.dir = [-1,0];
+            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", this.dir);}});
             return;
             }
         if(this.facing=='right') {
-            var newRock = Crafty.e(this.projectile).attr({x:this.x+this.w, y: this.y+this.h/2-this.ph/2});
-            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", [1,0]);}});
+            var newRock = Crafty.e(this.projectile).attr({shotDir: "right", x:this.x+this.w, y: this.y+this.h/2-this.ph/2});
+            newRock.dir = [1,0];
+            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", this.dir);}});
             return;
             }
         if(this.facing=='up') {
-            var newRock = Crafty.e(this.projectile).attr({y:this.y-this.ph, x: this.x+this.w/2-this.pw/2});
-            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", [0,-1]);}});
+            var newRock = Crafty.e(this.projectile).attr({shotDir: "up", y:this.y-this.ph, x: this.x+this.w/2-this.pw/2});
+            newRock.dir = [0,-1];
+            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", this.dir);}});
             return;
             }
         if(this.facing=='down') {
-            var newRock = Crafty.e(this.projectile).attr({y:this.y+this.h, x: this.x+this.w/2-this.pw/2});
-            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", [0,1]);}});
+            var newRock = Crafty.e(this.projectile).attr({shotDir: "down", y:this.y+this.h, x: this.x+this.w/2-this.pw/2});
+            newRock.dir = [0,1];
+            newRock.bind("EnterFrame", function() {if(!this.paused) {this.trigger("Slide", this.dir);}});
             return;
             }
         return false;
@@ -59,7 +64,7 @@ Crafty.c('Stable', {
     init: function() {
         this.bind('Moved', function(from) {
            if(this.hit('hole')){
-               this.cancelSlide(); tell('switching dirs');
+               this.cancelSlide(); // tell('switching dirs'); // debug
                this.checkMovement(true);
             }
         });
@@ -190,53 +195,54 @@ Crafty.c('FourSlide', {init: function(){this.bind('Slide', function(direction){
    
 // Gives monsters a "Rotate" trigger || currently used only for 4-way octoroks
 Crafty.c('Rotator', {init: function(){this.bind('Rotate', function(args){
+    tell('rotation happening');
     var rotateDir = args[0]; var spriteBase = args[1]; // get rotation direction & sprite base name
     var keepw = this.w; var keeph = this.h; // get height and width to preserve after rotation
     if(this.facing=="left") {
             if (rotateDir=='cw') {
+                this.animate("walk_up", 1, 1);
                 this.facing = "up";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             if (rotateDir=='ccw') {
+                this.animate("walk_down", 1, 1);
                 this.facing = "down";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             }
     if(this.facing=="up") {
             if (rotateDir=='cw') {
+                this.animate("walk_right", 1, 1);
                 this.facing = "right";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             if (rotateDir=='ccw') {
+                this.animate("walk_left", 1, 1);
                 this.facing = "left";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             }
     if(this.facing=="right") {
             if (rotateDir=='cw') {
+                this.animate("walk_down", 1, 1);
                 this.facing = "down";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             if (rotateDir=='ccw') {
+                this.animate("walk_up", 1, 1);
                 this.facing = "up";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             }
     if(this.facing=="down") {
             if (rotateDir=='cw') {
+                this.animate("walk_left", 1, 1);
                 this.facing = "left";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             if (rotateDir=='ccw') {
+                this.animate("walk_right", 1, 1);
                 this.facing = "right";
-                this.addComponent(spriteBase+this.facing).attr({w: keepw, h: keeph}).collision();
                 return true;
                 }
             }
@@ -255,7 +261,7 @@ Crafty.c('SlimeBase', {
         .attr({w:40, h:40, hp: 5, strength: 11}).collision()
       .bind('Moved', function(from) {
            if(this.hit('Solid')||this.hit('Exit')||this.hit('Monster')){
-               this.cancelSlide(); tell('switching dirs');
+               this.cancelSlide(); // tell('switching dirs'); // debug
                this.checkMovement(true);
             }
         })
@@ -419,7 +425,7 @@ Crafty.c('RockProjectile', {
 // Large rock projectile, for gold octoroks
 Crafty.c('RockProjectileBig', {
     init: function() {
-        this.requires('RockProjectile, projectile_rock_big')
+        this.requires('RockProjectile, Guard, projectile_rock_big')
         .attr({ w: 24, h: 24, strength: 22}).collision();
         }
     });
