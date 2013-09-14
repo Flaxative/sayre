@@ -28,11 +28,13 @@ Crafty.c('Wooden Sword', {
                 var loot_result = Math.floor((Math.random()*3)+1);
                 var loot_table = Array(4); loot_table[1] = 'RupeeG';
                 if(loot_table[loot_result]) {dropLoot(loot_table[loot_result], data[0].obj.x, data[0].obj.y);}
+                Crafty.audio.play('bush_hit');
                 // missing: somehow tell the game not to repopulate the bush. stop rupee farming.
                 }
             data[0].obj.destroy();
             })
         ;
+        Crafty.audio.play('sword_swing');
         },
     });
 
@@ -45,7 +47,7 @@ Crafty.c('Longspear', {
         },
     });
 
-// longspear (placeholder, most likely)
+// boomerang
 Crafty.c('Boomerang', {
     init: function() {
         this.requires("Weapon, boomerang")
@@ -54,10 +56,12 @@ Crafty.c('Boomerang', {
         },
     });
     
-
-
-
-
+// invisible actor that makes sure you don't throw the boomerang too far
+Crafty.c('RangeIncrement', {
+    init: function() {
+        this.requires('Actor, Collision').attr({w:40, h:40}).collision();
+        }
+    });
 
 
 
@@ -67,18 +71,32 @@ Crafty.c('Boomerang', {
 
 // boomerang functions
 function chuckBoomerang() {
-    has_boomerang = false;
-    swinging = true; potent = true;             // enable attacks
+    has_boomerang = false; swinging = true; potent = true;
     Crafty('player').disableControl().stop();   // pause the player
     disableActions();                           // stop interaction & inventory & pause
     Crafty("player").addComponent("Shooter").attr({projectile: "BoomerangProjectile", pw: 20, ph: 20}).fireProjectile();
+    var RIx = 0; var RIy = 0;
+    if(Crafty('player').facing=='left') {RIx = Crafty('player').x-240; RIy = Crafty('player').y;}
+    else if(Crafty('player').facing=='right') {RIx = Crafty('player').x+240; RIy = Crafty('player').y;}
+    else if(Crafty('player').facing=='up') {RIx = Crafty('player').x; RIy = Crafty('player').y-240;}
+    else if(Crafty('player').facing=='down') {RIx = Crafty('player').x; RIy = Crafty('player').y+240;}
+    Crafty.e("RangeIncrement").attr({x: RIx, y: RIy});
+    Crafty.audio.play('boomerang');
     }
 function catchBoomerang() {
-    has_boomerang = true;
-    swinging = false; 
+    has_boomerang = true; swinging = false; 
     Crafty('player').trigger("Run").fourway(speed);
     enableActions();
     }
+
+// component for displaying 'ding' & reflection @ location of impact
+Crafty.c('Bounce', {
+    init: function() {
+        this.requires('Actor, SpriteAnimation, bounce').animate("bounce", 0, 0, 1).attr({z: 1003, w: 40, h: 40});
+        this.animate("bounce", 4, 1).timeout(function() {this.destroy();}, 140);
+        Crafty.audio.play('bounce');
+        },
+    });
 
 // Boomerang projectile for Zelda
 Crafty.c('BoomerangProjectile', {
@@ -88,7 +106,7 @@ Crafty.c('BoomerangProjectile', {
         .attr({z: 1003, w: 20, h: 20, speed: 6, strength: 3}).collision()
         .onHit("player", function() {
             // destroy the boomerang projectile and regain the ability to chuck it
-            this.destroy(); catchBoomerang(); //tell('it returned!');
+            this.unbind("timeout").destroy(); catchBoomerang(); //tell('it returned!');
             })
         // if it hits a heart or rupee, get'em
         .onHit("Heart", function(data) {
@@ -106,28 +124,54 @@ Crafty.c('BoomerangProjectile', {
                 data[0].obj.destroy();
                 }, 60);
             })
-        // if it hits a surface, map edge, or monster, it should bounce back to you
-        .onHit("Guard", function(data) {this.boomerangReturn(data);})
-        .onHit("Exit", function(data) {this.boomerangReturn(data);})
+        // if it hits a surface, map edge, NPC, or monster, it should bounce back to you
+        .onHit("RangeIncrement", function(data) {this.boomerangReturn(data); data[0].obj.destroy();})
+        .onHit("Guard", function(data) {this.boomerangReturn(data, true);})
+        .onHit("Exit", function(data) {this.boomerangReturn(data, true);})
+        .onHit("NPC", function(data) {this.boomerangReturn(data, true);}) // deprecate when you can
+        .onHit("NPC2", function(data) {this.boomerangReturn(data, true);})
         .onHit("Monster", function(data) {
             if(potent) {potent = false;  
                 tell("Stunned!"); // message... until we can actually stun!
                 // deal damage || ultimately, should only do this to bats or other weak monsters
                 // data[0].obj.hp -= this.strength; if(data[0].obj.hp<1) {killMonster(data[0].obj);}
-                Crafty('BoomerangProjectile').boomerangReturn(data); // bounce back
+                Crafty('BoomerangProjectile').boomerangReturn(data, true); // bounce back
                 }
             });
             this.animate("rotate", 6, -1);
         },
-    boomerangReturn: function(data) {
+    boomerangReturn: function(data, bounce) {
         // if boomerang overlaps guard/monster/etc. by too much to bounce back, simply return it
-        if(data[0].overlap<-6) {this.destroy(); catchBoomerang(); return;} 
+        if(data) {
+            if(data[0].overlap<-6) {
+                if(bounce) {
+                    if(Crafty('player').facing=='left') {Crafty.e('Bounce').attr({x: Crafty('player').x-40, y: Crafty('player').y});}
+                    else if(Crafty('player').facing=='right') {Crafty.e('Bounce').attr({x: Crafty('player').x+30, y: Crafty('player').y});}
+                    else if(Crafty('player').facing=='up') {Crafty.e('Bounce').attr({x: Crafty('player').x, y: Crafty('player').y-40});}
+                    else if(Crafty('player').facing=='down') {Crafty.e('Bounce').attr({x: Crafty('player').x, y: Crafty('player').y+30});}
+                    }
+                this.destroy(); catchBoomerang(); 
+                return;}
+            } 
         // otherwise, get variables and begin bouncing
         var boomerang = Crafty('BoomerangProjectile');
-        boomerang.cancelSlide(); //tell('yep');
-        if(boomerang.shotDir=='left') {boomerang.dir=[1,0]; boomerang.shotDir='right';}
-        else if(boomerang.shotDir=='right') {boomerang.dir=[-1,0]; boomerang.shotDir='left';}
-        else if(boomerang.shotDir=='up') {boomerang.dir=[0,1]; boomerang.shotDir='down';}
-        else if(boomerang.shotDir=='down') {boomerang.dir=[0,-1]; boomerang.shotDir='up';}
+        boomerang.cancelSlide(); //tell('yep'); 
+        
+        if(boomerang.shotDir=='left') {
+            if(bounce) {Crafty.e('Bounce').attr({x: this.x-30, y: this.y-10});}
+            boomerang.dir=[1,0]; boomerang.shotDir='right';
+            }
+        else if(boomerang.shotDir=='right') {
+            if(bounce) {Crafty.e('Bounce').attr({x: this.x+10, y: this.y-10});} 
+            boomerang.dir=[-1,0]; boomerang.shotDir='left';
+            }
+        else if(boomerang.shotDir=='up') {
+            if(bounce) {Crafty.e('Bounce').attr({x: this.x-10, y: this.y-30});} 
+            boomerang.dir=[0,1]; boomerang.shotDir='down';
+            }
+        else if(boomerang.shotDir=='down') {
+            if(bounce) {Crafty.e('Bounce').attr({x: this.x-10, y: this.y+10});} 
+            boomerang.dir=[0,-1]; boomerang.shotDir='up';
+            }
         }
     });

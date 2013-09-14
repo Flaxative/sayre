@@ -12,17 +12,20 @@ Crafty.scene('Loading', function(){
     toLoad.push(
     
     // music
-    'media/opening.ogg', "media/opening.mp3", 
+    'media/opening.ogg', "media/opening.mp3", // stolen from mantra
     
     // SFX
-    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/gulp.wav", "media/chest.wav", 
+    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/chest.wav", // these are all stolen from Legend of Zelda games
+    "media/gulp.wav", /* CC: http://www.freesound.org/people/Q.K./sounds/56271/ */ 
+    'media/bounce.wav', /* CC: http://www.freesound.org/people/gezortenplotz/sounds/20132/ */ 'media/boomerang.wav',  /* CC: http://www.freesound.org/people/NoiseCollector/sounds/67376/ */
+    'media/',   /* CC: http://www.freesound.org/people/j1987/sounds/106113/ */   'media/',   /* CC:  http://www.freesound.org/people/Langerium/sounds/84616/ */
     
     // character sprites
     'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 
     'assets/old-man.png', 'assets/shy-kid.png',
     
     // weapons
-    'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/boomerang.png',
+    'assets/bounce.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/boomerang.png',
     
     // monster sprites
     'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png',
@@ -115,6 +118,9 @@ Crafty.scene('Loading', function(){
         Crafty.sprite(56, 56, "assets/boomerang.png", {
             boomerang: [0, 0],
             magic_boomerang: [0, 1]
+            });
+        Crafty.sprite(40, "assets/bounce.png", {
+            bounce: [0, 0]
             });
         Crafty.sprite(40, "assets/bush-1.png", {
             bush: [0, 0]
@@ -231,8 +237,12 @@ Crafty.scene('Loading', function(){
         Crafty.audio.add({
               rupee: ['media/rupee.mp3', 'media/LOZ_Get_Rupee.wav'],    // coin get
               secret: ['media/secret.mp3'],                             // find secret
-              gulp: ['media/gulp.wav'],                                  // heart refill get
-              chest: ['media/chest.wav']                                  // open chest
+              gulp: ['media/gulp.wav'],                                 // heart refill get
+              chest: ['media/chest.wav'],                               // open chest
+              bounce: ['media/bounce.wav'],                             // something bounces off a guard
+              boomerang: ['media/boomerang.wav'],                        // boomerang whrrrr
+              sword_swing: ['media/sword.wav'],                               // sword swing
+              bush_hit: ['media/bush.wav']                                  // bush hit
             });
             
         //$('#console span').text(''); // Clear the console.
@@ -249,7 +259,7 @@ Crafty.scene('Loading', function(){
                 enableActions();
                 $("#console").click( function() {console.log(dir);});
                 $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(10); updateCoins();
-                // theme('opening'); tile_theme = 'opening'; // initialize music 
+                //theme('opening'); tile_theme = 'opening'; // initialize music 
                 })
             ;
  

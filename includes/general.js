@@ -7,7 +7,7 @@ var potent = true; var swinging = false; var falling = false; var current_hole;
 var pushedblock; var pushing = 0; var speed = 4;
 var monsters_on_screen = 0; var unlock_by_killing = false;
 var more_dialogue = false; var current_statement = 0;
-var has_boomerang = true;
+var has_boomerang = true; var boomerang_returning = false;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -591,8 +591,9 @@ function heartContainer() {
 
 // triggers the first invulnerability frame
 function damagePlayer(x) {
-    console.log("You've been hit!"); current_hp = Math.max(current_hp-x, 0); updateHP(10);
-    Crafty('player').removeComponent('vulnerable').fourway(2); speed = 2;
+    tell("You've been hit!"); 
+    current_hp = Math.max(current_hp-x, 0); updateHP(10);
+    Crafty('player').removeComponent('vulnerable');//.fourway(2); speed = 2;
     flicker1(10);
    }
    
@@ -604,7 +605,7 @@ function flicker1(x) {
         .timeout(function(){flicker2(x);}, 100);
         }
     else if (current_hp>0) {
-        Crafty('player').addComponent('vulnerable').fourway(4); speed = 4;
+        Crafty('player').addComponent('vulnerable');//.fourway(4); speed = 4;
         }
     }
 
