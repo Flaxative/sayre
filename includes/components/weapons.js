@@ -127,7 +127,6 @@ Crafty.c('BoomerangProjectile', {
         // if it hits a surface, map edge, NPC, or monster, it should bounce back to you
         .onHit("RangeIncrement", function(data) {this.boomerangReturn(data); data[0].obj.destroy();})
         .onHit("Guard", function(data) {this.boomerangReturn(data, true);})
-        .onHit("Exit", function(data) {this.boomerangReturn(data, true);})
         .onHit("NPC", function(data) {this.boomerangReturn(data, true);}) // deprecate when you can
         .onHit("NPC2", function(data) {this.boomerangReturn(data, true);})
         .onHit("Monster", function(data) {
