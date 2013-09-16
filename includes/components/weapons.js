@@ -3,11 +3,18 @@
 Crafty.c('Weapon', {
     init: function() {
         this.requires("Actor, Collision, SpriteAnimation, Tween")
+        .onHit('Guard', function(data) {
+            if(potent) { 
+                potent = false;
+                bounce(data[0].obj.x, data[0].obj.y, data[0].obj.hitNoise);
+                }
+            })
         .onHit('Monster', function(data) {
             if(this.hit('Guard')) {potent = false;}                 // block attacks that pass through "guards"
             if(potent) {potent = false;                             // make sure we only hit once!
                                                                     // console.log(this.damage);
                                                                     // console.log(data[0].obj.hp);
+                Crafty.audio.play(data[0].obj.hitNoise);
                 data[0].obj.hp -= this.damage;                      // damage hit monsters
                 if(data[0].obj.hp<1) {killMonster(data[0].obj);}    // kill monsters with 0 or fewer HPs
                 }
@@ -94,9 +101,13 @@ Crafty.c('Bounce', {
     init: function() {
         this.requires('Actor, SpriteAnimation, bounce').animate("bounce", 0, 0, 1).attr({z: 1003, w: 40, h: 40});
         this.animate("bounce", 4, 1).timeout(function() {this.destroy();}, 140);
-        Crafty.audio.play('bounce');
         },
     });
+    
+function bounce(x, y, noise) {
+    Crafty.e('Bounce').attr({x: x, y: y});
+    Crafty.audio.play(noise);
+    }
 
 // Boomerang projectile for Zelda
 Crafty.c('BoomerangProjectile', {
@@ -126,28 +137,28 @@ Crafty.c('BoomerangProjectile', {
             })
         // if it hits a surface, map edge, NPC, or monster, it should bounce back to you
         .onHit("RangeIncrement", function(data) {this.boomerangReturn(data); data[0].obj.destroy();})
-        .onHit("Guard", function(data) {this.boomerangReturn(data, true);})
-        .onHit("NPC", function(data) {this.boomerangReturn(data, true);}) // deprecate when you can
-        .onHit("NPC2", function(data) {this.boomerangReturn(data, true);})
+        .onHit("Guard", function(data) {this.boomerangReturn(data, data[0].obj.hitNoise);})
+        .onHit("NPC", function(data) {this.boomerangReturn(data, 'bounce_quiet');}) // deprecate when you can
+        .onHit("NPC2", function(data) {this.boomerangReturn(data, 'bounce_quiet');})
         .onHit("Monster", function(data) {
             if(potent) {potent = false;  
                 tell("Stunned!"); // message... until we can actually stun!
                 // deal damage || ultimately, should only do this to bats or other weak monsters
                 // data[0].obj.hp -= this.strength; if(data[0].obj.hp<1) {killMonster(data[0].obj);}
-                Crafty('BoomerangProjectile').boomerangReturn(data, true); // bounce back
+                Crafty('BoomerangProjectile').boomerangReturn(data, data[0].obj.hitNoise); // bounce back
                 }
             });
             this.animate("rotate", 6, -1);
         },
-    boomerangReturn: function(data, bounce) {
+    boomerangReturn: function(data, ricochet) {
         // if boomerang overlaps guard/monster/etc. by too much to bounce back, simply return it
         if(data) {
             if(data[0].overlap<-6) {
-                if(bounce) {
-                    if(Crafty('player').facing=='left') {Crafty.e('Bounce').attr({x: Crafty('player').x-40, y: Crafty('player').y});}
-                    else if(Crafty('player').facing=='right') {Crafty.e('Bounce').attr({x: Crafty('player').x+30, y: Crafty('player').y});}
-                    else if(Crafty('player').facing=='up') {Crafty.e('Bounce').attr({x: Crafty('player').x, y: Crafty('player').y-40});}
-                    else if(Crafty('player').facing=='down') {Crafty.e('Bounce').attr({x: Crafty('player').x, y: Crafty('player').y+30});}
+                if(ricochet) {
+                    if(Crafty('player').facing=='left') {bounce(Crafty('player').x-40, Crafty('player').y, ricochet);}
+                    else if(Crafty('player').facing=='right') {bounce(Crafty('player').x+30, Crafty('player').y, ricochet);}
+                    else if(Crafty('player').facing=='up') {bounce(Crafty('player').x, Crafty('player').y-40, ricochet);}
+                    else if(Crafty('player').facing=='down') {bounce(Crafty('player').x, Crafty('player').y+30, ricochet);}
                     }
                 this.destroy(); catchBoomerang(); 
                 return;}
@@ -157,19 +168,19 @@ Crafty.c('BoomerangProjectile', {
         boomerang.cancelSlide(); //tell('yep'); 
         
         if(boomerang.shotDir=='left') {
-            if(bounce) {Crafty.e('Bounce').attr({x: this.x-30, y: this.y-10});}
+            if(ricochet) {bounce(this.x-30, this.y-10, ricochet);}
             boomerang.dir=[1,0]; boomerang.shotDir='right';
             }
         else if(boomerang.shotDir=='right') {
-            if(bounce) {Crafty.e('Bounce').attr({x: this.x+10, y: this.y-10});} 
+            if(ricochet) {bounce(this.x+10, this.y-10, ricochet);} 
             boomerang.dir=[-1,0]; boomerang.shotDir='left';
             }
         else if(boomerang.shotDir=='up') {
-            if(bounce) {Crafty.e('Bounce').attr({x: this.x-10, y: this.y-30});} 
+            if(ricochet) {bounce(this.x-10, this.y-30, ricochet);} 
             boomerang.dir=[0,1]; boomerang.shotDir='down';
             }
         else if(boomerang.shotDir=='down') {
-            if(bounce) {Crafty.e('Bounce').attr({x: this.x-10, y: this.y+10});} 
+            if(ricochet) {bounce(this.x-10, this.y+10, ricochet);} 
             boomerang.dir=[0,-1]; boomerang.shotDir='up';
             }
         }

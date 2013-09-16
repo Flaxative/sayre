@@ -640,6 +640,7 @@ function hidden_passage1() {
 function fall() {
     current_hole.removeComponent('hole').addComponent('hole_entered'); // easier than unbinding anything!
     disableActions();                                                  // turn off all controls
+    Crafty.audio.play('falling');
     Crafty('player').disableControl()                                  // turn off player controls; stop animation; tween falling animation
         .sprite(0,0).stop()
         .tween({

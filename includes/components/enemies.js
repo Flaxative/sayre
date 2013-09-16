@@ -10,7 +10,7 @@ Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausab
 // Some monsters hurt you just by touch 
 Crafty.c('Painful', { init: function() { this.bind("Moved", function(from) {
        if(this.hit('player')&&Crafty('player').has('vulnerable')){
-           tell('ouch!');
+           tell('ouch!'); Crafty.audio.play('ow');
            damagePlayer(this.strength);
         }
     }); },});
@@ -258,7 +258,7 @@ Crafty.c('SlimeBase', {
         .animate("walk_right", 0, 1, 2)
         .animate("walk_down", 0, 2, 2)
         .animate("walk_left", 0, 3, 2)
-        .attr({w:40, h:40, hp: 5, strength: 11}).collision()
+        .attr({w:40, h:40, hp: 5, strength: 11, hitNoise: 'grunt'}).collision()
       .bind('Moved', function(from) {
            if(this.hit('Solid')||this.hit('Exit')||this.hit('Monster')){
                this.cancelSlide(); // tell('switching dirs'); // debug
@@ -302,7 +302,7 @@ Crafty.c('Octorok', {
         .animate("walk_left", 0, 2, 3)
         .animate("walk_right", 0, 3, 3)
         .attr({w:40, h:40, hp: 5, strength: 11, death: "random", speed: 2, 
-            projectile: "RockProjectile", pw: 16, ph: 16}).collision()
+            projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },
     countToShot: function() { // counts down to shooting phase
@@ -412,10 +412,12 @@ Crafty.c('RockProjectile', {
     init: function() {
         this.requires('Projectile, projectile, projectile_rock')
         .attr({z: 1003, w: 16, h: 16, speed: 6, strength: 11}).collision()
-        .onHit("Guard", function() {
+        .onHit("Guard", function(data) {
+            bounce(data[0].obj.x, data[0].obj.y, 'bounce_quiet');
             this.destroy();
             })
         .onHit("player", function() {
+            Crafty.audio.play('ow');
             damagePlayer(this.strength);
             this.destroy();
             });

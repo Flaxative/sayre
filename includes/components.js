@@ -171,7 +171,7 @@ Crafty.c('PlayerCharacter', {
             })     
       .bind('Moved', function(from) {
            if(this.hit('Painful')&&this.has('vulnerable')){
-               tell('ouch!');
+               tell('ouch!'); Crafty.audio.play('ow');
                damagePlayer(this.hit('Painful')[0].obj.strength);
             }
            if(this.hit('Solid')){

@@ -17,8 +17,12 @@ Crafty.scene('Loading', function(){
     // SFX
     "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/chest.wav", // these are all stolen from Legend of Zelda games
     "media/gulp.wav", /* CC: http://www.freesound.org/people/Q.K./sounds/56271/ */ 
-    'media/bounce.wav', /* CC: http://www.freesound.org/people/gezortenplotz/sounds/20132/ */ 'media/boomerang.wav',  /* CC: http://www.freesound.org/people/NoiseCollector/sounds/67376/ */
-    'media/',   /* CC: http://www.freesound.org/people/j1987/sounds/106113/ */   'media/',   /* CC:  http://www.freesound.org/people/Langerium/sounds/84616/ */
+    'media/bounce.wav', 'media/bounce-quiet.wav', /* CC: http://www.freesound.org/people/gezortenplotz/sounds/20132/ */ 'media/wood-hit.wav', /* CC: http://www.freesound.org/people/dheming/sounds/177780/ */
+    'media/boomerang.wav',  /* CC: http://www.freesound.org/people/NoiseCollector/sounds/67376/ */
+    'media/bush.wav',   /* CC: http://www.freesound.org/people/j1987/sounds/106113/ */   'media/sword.wav',   /* CC:  http://www.freesound.org/people/Langerium/sounds/84616/ */
+    'media/ow.mp3',   /* CC:  http://www.freesound.org/people/alex_audio/sounds/188568/ */ 
+    'media/grunt.wav',   /* CC:  http://www.freesound.org/people/JCH321/sounds/66206/ */ 'media/octorok-pain.wav', /* CC: http://www.freesound.org/people/Michel88/sounds/76972/ */
+    'media/falling.eav',   /* CC:  http://www.freesound.org/people/UncleSigmund/sounds/30988/ */ 
     
     // character sprites
     'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 
@@ -239,10 +243,16 @@ Crafty.scene('Loading', function(){
               secret: ['media/secret.mp3'],                             // find secret
               gulp: ['media/gulp.wav'],                                 // heart refill get
               chest: ['media/chest.wav'],                               // open chest
+              wood_hit: ['media/wood-hit.wav'],                             // something bounces off wood
               bounce: ['media/bounce.wav'],                             // something bounces off a guard
+              bounce_quiet: ['media/bounce-quiet.wav'],                             // something bounces off a guard quietly
               boomerang: ['media/boomerang.wav'],                        // boomerang whrrrr
               sword_swing: ['media/sword.wav'],                               // sword swing
-              bush_hit: ['media/bush.wav']                                  // bush hit
+              bush_hit: ['media/bush.wav'],                                  // bush hit
+              ow: ['media/ow.mp3'],                                  // player 'ow'
+              falling: ['media/falling.wav'],                                  // player falling
+              grunt: ['media/grunt.wav'],                                  // monster grunt
+              octorok_pain: ['media/octorok-pain.wav']                                  // octorok grunt
             });
             
         //$('#console span').text(''); // Clear the console.

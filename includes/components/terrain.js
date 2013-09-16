@@ -53,9 +53,9 @@ Crafty.c('SandBLw', {init: function() {this.requires('Water, sandBLw').collision
 Crafty.c('Cobble_Dark', {init: function() {this.requires('Actor, cobble_dark');},});
 
 // Basic Wall component
-Crafty.c('Wall', {init: function() {this.requires('Barricade');}, });
+Crafty.c('Wall', {init: function() {this.requires('Barricade').attr({hitNoise: 'bounce'});}, });
 // Basic Door component
-Crafty.c('Door', {init: function() {this.requires('Barricade');}, });
+Crafty.c('Door', {init: function() {this.requires('Barricade').attr({hitNoise: 'wood_hit'});}, });
 // Dungeon Walls
 Crafty.c('WallL', {init: function() {this.requires('Wall, wallL').attr({h:40, w:40}).collision([0, 0], [16, 0], [16, 40], [0, 40]);},});
 Crafty.c('WallR', {init: function() {this.requires('Wall, wallR').attr({h:40, w:40}).collision([24, 0], [40, 0], [40, 40], [24, 40]);},});
@@ -77,18 +77,18 @@ Crafty.c('DoorR', {init: function() {this.requires('Door, doorR').attr({h:40, w:
 Crafty.c('Barricade', { init: function() { this.requires('Actor, Solid, Collision, Guard'); }, }); 
  
 // Tree
-Crafty.c('Tree', { init: function() { this.requires('Barricade, tree').collision(); }, }); 
+Crafty.c('Tree', { init: function() { this.requires('Barricade, tree').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
 // Walkable Tree
 Crafty.c('TreeWalkable', { init: function() { this.requires('Actor, tree'); }, });
 // Cactus
-Crafty.c('Cactus', { init: function() { this.requires('Barricade, cactus').collision(); }, }); 
+Crafty.c('Cactus', { init: function() { this.requires('Barricade, cactus').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
 // Bush
 Crafty.c('Bush', { init: function() { this.requires('Actor, Solid, bush, Collision').collision(); }, });
 // When you chop down a bush, you make a dead bush
 Crafty.c('BushDead', { init: function() { this.requires('Actor, bush_dead') }, });
 
 // A rock is a barricade that looks like a Link to the Past ziggurat.
-Crafty.c('Rock', {init: function() {this.requires('Barricade, rock').collision();},});
+Crafty.c('Rock', {init: function() {this.requires('Barricade, rock').attr({hitNoise: 'bounce'}).collision();},});
 // Literally exactly the same as a rock, but pushable.
 Crafty.c('RockP', {init: function() {this.requires('Rock, pushable').collision();},});
 
