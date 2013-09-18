@@ -143,6 +143,11 @@ Crafty.c('PlayerCharacter', {
             refillHearts(data[0].obj.value);
             data[0].obj.destroy();
             })
+        .onHit("BombDrop", function(data) {
+            Crafty.audio.play('pickup');
+            data[0].obj.destroy();
+            getBombs(data[0].obj.value);
+            })
         .onHit("Rupee", function(data) {
             // tell('on exit');
             data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 1);

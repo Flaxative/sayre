@@ -13,11 +13,11 @@ var max_hp = 66; var current_hp = 66;
 
 // ~~~~~
 /* INVENTORY VARS */
-var coins = 0; var bombs = 0; var keys = 0;
+var coins = 0; var bombs = 50; var keys = 0;
 var weapon = 'Wooden Sword'; 
 var weapons_carried = ['Wooden Sword'];
 var secondary = ''; 
-var secondaries_carried = ['Boomerang'];
+var secondaries_carried = ['Boomerang', 'Bombs'];
 var armor = ''; 
 var outfits_carried = [];
 var accessory = ''; 
@@ -31,7 +31,8 @@ var item_description = {
     "Wedding Dress": "You don't like it, but it's the only outfit you've got.",
     "Blue Ring": "This magical band halves incoming damage.", 
     "Rupees": "Don't spend them all at once, okay?",
-    "Heart Container": "Your heart has increased!"
+    "Heart Container": "Your heart has increased!",
+    "Bombs": "Place one of these bad boys and watch your enemies jump. Just... don't play with these at home."
     };
 
 // ~~~~~
@@ -131,7 +132,9 @@ var sidebar_base = "<div id='life'><div id='life-gray' class='line1'></div><div 
             "<fieldset id='armor' class='margin-right'><legend>Armor<legend><span class='slot'></span></fieldset>" +
             "<fieldset id='accessory'><legend>Misc<legend><span class='slot'></span></fieldset> " +
             "<div id='meta'>" +
-            "<img src='assets/coin-single.png' class='coin' /><span id='coins'>0</span>" +
+            "<div class='collectible'><img src='assets/coin-single.png' class='coin' /></div><span id='coins'>"+coins+"</span>" +
+            "<br />" +
+            "<div class='collectible'><img src='assets/bomb-single.png' class='bomb' /></div><span id='bombs'>"+bombs+"</span>" +
             "</div>" +
             "<div id='minimap'></div>";
 
@@ -185,6 +188,23 @@ function updateCoins() {
         }
     return false;
     }
+// sets bomb count
+function updateBombs() {
+    var old_bombs = $('#bombs').text();     // get old value
+    if (old_bombs < bombs) {                // increment coins +1
+        old_bombs++;
+        $('#bombs').text(old_bombs);
+        setTimeout("updateBombs()", 50);
+        return;
+        }
+    if (old_bombs > bombs) {                // increment coins -1
+        old_bombs--;
+        $('#bombs').text(old_bombs);
+        setTimeout("updateBombs()", 50);
+        return;
+        }
+    return false;
+    }
     
 // refills health by an amount
 function refillHearts(x) {
@@ -196,6 +216,12 @@ function refillHearts(x) {
 function getCoins(x) {
     coins += x;  coins = Math.max(0, coins);
     updateCoins();
+    }
+
+// adds or subtracts coins
+function getBombs(x) {
+    bombs += x;  bombs = Math.max(0, bombs);
+    updateBombs();
     }
     
 // ~~~~~
@@ -405,10 +431,21 @@ function useSecondary(e) {
             }
         else if(!swinging&&weapon) {            // if nothing to interact with, use secondary!
             if(!secondary) {tell('nothing equipped'); return;} // if no secondary, fail elegantly
-            // tell("use "+secondary); // debug
+            //tell("use "+secondary); // debug
             else if(secondary=='Boomerang'&&has_boomerang) { // boomerang is special and has a lot of rules.
                 // tell('have boomerang and will throw'); // debug
                 chuckBoomerang();
+                }
+            else if(secondary=='Bombs') { // bomb is special and has a lot of rules.
+                // tell('have boomerang and will throw'); // debug
+                if(bombs<1) { //if you have no bombs, do nothing
+                    //tell("You don't have any bombs to place!");
+                    }
+                else { // if you have bombs, use one of them
+                    getBombs(-1); //tell("You used a bomb..."); 
+                    Crafty.e("Bomb").attr({x: Crafty("player").x+5, y: Crafty("player").y+1});
+                    }
+                //chuckBoomerang();
                 }
             else { // no special rules, so just use your secondary
                 useWeapon(secondary);
@@ -557,7 +594,7 @@ function killMonster(monster) {
     monsters_on_screen--;                                                   // one fewer monster!
     // if(monsters_on_screen==0) { console.log("You killed them all!"); }   // test for eradication of monsters
     if(monster.death&&monster.death!="random") {eval(monster.death)(monster.x, monster.y);}       // runs any death trigger for the killed monster
-    if(monster.death=="random"&&swinging) {                                 // only drop random loot if YOU killed the monster // this is an imperfect check BTW
+    if(monster.death=="random") {                                 // only drop random loot if YOU killed the monster // this is an imperfect check BTW
         randomLoot(monster.x, monster.y); // add a "worth" attribute or something in order to tier random drops
         }
     //primitive death animation using alpha tween
@@ -570,9 +607,8 @@ function killMonster(monster) {
 // when monsters with "death:random" die, they trigger this random loot generator
 function randomLoot(x, y) { // add a "worth" argument in order to tier random drops
     var loot_result = Math.floor((Math.random()*9)+1);
-    var loot_table = ['', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeB', 'Bomb', 'HeartFull', 'HeartHalf', 'HeartHalf'];
-    if(!loot_table[loot_result]) {tell('no drops');} // bombs don't exist yet except on the table.
-    else if(loot_table[loot_result]=='Bomb') {tell("The monster dropped a bomb.");}
+    var loot_table = ['', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeB', 'BombDrop', 'HeartFull', 'HeartHalf', 'HeartHalf'];
+    if(!loot_table[loot_result]) {tell('no drops');}
     else {dropLoot(loot_table[loot_result], x, y);}
     }
 
@@ -657,7 +693,7 @@ function fall() {
 function fallFoe(foe, foe_hole) {
     foe.unbind('EnterFrame')
         .sprite(0,0).stop().tween({w: 1, h: 1, rotation: -45, x: foe_hole.x+19, y: foe_hole.y+19}, 32)
-        .timeout(function(){killMonster(foe);}, 1000);
+        .timeout(function(){foe.death(''); killMonster(foe);}, 1000);
     }
 
 // for those nasty holes in the ground that don't lead anywhere except to damage.

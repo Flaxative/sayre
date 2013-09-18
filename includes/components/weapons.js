@@ -11,9 +11,10 @@ Crafty.c('Weapon', {
             })
         .onHit('Monster', function(data) {
             if(this.hit('Guard')) {potent = false;}                 // block attacks that pass through "guards"
-            if(potent) {potent = false;                             // make sure we only hit once!
+            if(potent&&data[0].obj.has('vulnerable')) {potent = false;                             // make sure we only hit once!
                                                                     // console.log(this.damage);
                                                                     // console.log(data[0].obj.hp);
+                hurtMonster(data[0].obj);
                 Crafty.audio.play(data[0].obj.hitNoise);
                 data[0].obj.hp -= this.damage;                      // damage hit monsters
                 if(data[0].obj.hp<1) {killMonster(data[0].obj);}    // kill monsters with 0 or fewer HPs
@@ -184,4 +185,53 @@ Crafty.c('BoomerangProjectile', {
             boomerang.dir=[0,-1]; boomerang.shotDir='up';
             }
         }
+    });
+    
+    
+// BOMBS!
+Crafty.c('Bomb', {
+    init: function() {
+        this.requires('Actor, SpriteAnimation, bomb_placed')
+        .animate("commence_detonation", 0, 0, 15).attr({z: 1, w: 30, h: 37, overx: 5, overy: 1});
+        this.animate("commence_detonation", 24, 1).timeout(function() { // initial, slower animation - play once in 1 second
+            this.animate("commence_detonation", 16, 2).timeout(function() { // second, faster animation - play twice in 1 second
+                Crafty.e('Bomb Explosion').attr({x: this.x-30, y: this.y-26});
+                this.destroy(); // destroy the bomb
+                }, 750);
+            }, 1000);
+        },
+    });
+    
+Crafty.c('Bomb Explosion', {
+    init: function() {
+        this.requires('Actor, SpriteAnimation, Collision, bomb_explosion')
+        .animate("explosion", 0, 0, 9).attr({z: 1, w: 90, h: 92, overx: -25, overy: -25, damage: 10, strength: 22}).collision()
+        .onHit('Bush', function(data) { // bombs should destroy plants
+            Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush      
+            var loot_result = Math.floor((Math.random()*3)+1);
+            var loot_table = Array(4); loot_table[1] = 'RupeeG';
+            if(loot_table[loot_result]) {dropLoot(loot_table[loot_result], data[0].obj.x, data[0].obj.y);}
+            Crafty.audio.play('bush_hit');
+            // missing: somehow tell the game not to repopulate the bush. stop rupee farming.
+            data[0].obj.destroy();
+            })
+        .onHit('Monster', function(data) {
+            if(data[0].obj.has('vulnerable')) {
+                hurtMonster(data[0].obj);
+                Crafty.audio.play(data[0].obj.hitNoise);
+                data[0].obj.hp -= this.damage;                      // damage hit monsters
+                if(data[0].obj.hp<1) {killMonster(data[0].obj);}    // kill monsters with 0 or fewer HPs
+                }
+            })
+        .onHit("player", function() { // bombs should hurt players
+            if(Crafty('player').has('vulnerable')) {
+                tell('ouch!'); Crafty.audio.play('ow');
+               damagePlayer(this.strength);
+                }
+            });
+        Crafty.audio.play('bomb_explosion');
+        this.animate("explosion", 16, 1).timeout(function() { // play the explosion animation
+                this.destroy(); // destroy the explosion
+            }, 500);
+        },
     });

@@ -4,6 +4,14 @@
 // ~~~~~
 // ~~~~~
 
+// method to remove vulnerability from a monster upon it being hit - 
+// this prevents bombs from instagibbing everything, for instance
+function hurtMonster(monster) { 
+    monster.removeComponent('vulnerable').timeout(function() {
+        monster.addComponent('vulnerable')
+        }, 500);
+    }
+
 // Monster base - actors with collision
 Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausable').attr({z: 2}); },});
 
@@ -252,7 +260,7 @@ Crafty.c('Rotator', {init: function(){this.bind('Rotate', function(args){
 // Pink Slime Foundation -- uses old RandomAI
 Crafty.c('SlimeBase', {
   init: function() {
-    this.requires('Monster, RandomAIOld, SpriteAnimation, FourSlide, Painful, ooze, slimedown')
+    this.requires('Monster, RandomAIOld, SpriteAnimation, FourSlide, Painful, vulnerable, ooze, slimedown')
       //.color('#ff5ec4')
         .animate("walk_up", 0, 0, 2)
         .animate("walk_right", 0, 1, 2)
@@ -295,7 +303,7 @@ Crafty.c('Octorok', {
   init: function() {
     this.timeTillNextShot = 60 + 20 * Math.floor((Math.random()*5)+1);
     //this.shotInterval = 1500 + 100 * Math.floor((Math.random()*30)+1); // stop & shoot every 1.5-4.5 seconds
-    this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, octorok, octdown')
+    this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, vulnerable, octorok, octdown')
       //.color('#ff5ec4')
         .animate("walk_down", 0, 0, 3)
         .animate("walk_up", 0, 1, 3)
@@ -348,14 +356,14 @@ Crafty.c('OctorokBlue', {
   init: function() {
     this.timeTillNextShot = 60 + 20 * Math.floor((Math.random()*5)+1);
     //this.shotInterval = 1500 + 100 * Math.floor((Math.random()*30)+1); // stop & shoot every 1.5-4.5 seconds
-    this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, octorok, octBdown')
+    this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, vulnerable, octorok, octBdown')
       //.color('#ff5ec4')
         .animate("walk_down", 0, 0, 3)
         .animate("walk_up", 0, 1, 3)
         .animate("walk_left", 0, 2, 3)
         .animate("walk_right", 0, 3, 3)
         .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, 
-            projectile: "RockProjectile", pw: 16, ph: 16}).collision()
+            projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },
     countToShot: function() {

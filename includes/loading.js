@@ -15,14 +15,15 @@ Crafty.scene('Loading', function(){
     'media/opening.ogg', "media/opening.mp3", // stolen from mantra
     
     // SFX
-    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3", "media/chest.wav", // these are all stolen from Legend of Zelda games
-    "media/gulp.wav", /* CC: http://www.freesound.org/people/Q.K./sounds/56271/ */ 
+    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3","media/secret.wav", "media/chest.wav", // these are all stolen from Legend of Zelda games
+    "media/gulp.wav", /* CC: http://www.freesound.org/people/Q.K./sounds/56271/ */ 'media/pickup.wav', /* CC: http://www.freesound.org/people/timgormly/sounds/170170/ */
     'media/bounce.wav', 'media/bounce-quiet.wav', /* CC: http://www.freesound.org/people/gezortenplotz/sounds/20132/ */ 'media/wood-hit.wav', /* CC: http://www.freesound.org/people/dheming/sounds/177780/ */
     'media/boomerang.wav',  /* CC: http://www.freesound.org/people/NoiseCollector/sounds/67376/ */
     'media/bush.wav',   /* CC: http://www.freesound.org/people/j1987/sounds/106113/ */   'media/sword.wav',   /* CC:  http://www.freesound.org/people/Langerium/sounds/84616/ */
-    'media/ow.mp3',   /* CC:  http://www.freesound.org/people/alex_audio/sounds/188568/ */ 
+    'media/ow.mp3', 'media/ow.wav',   /* CC:  http://www.freesound.org/people/alex_audio/sounds/188568/ */ 
     'media/grunt.wav',   /* CC:  http://www.freesound.org/people/JCH321/sounds/66206/ */ 'media/octorok-pain.wav', /* CC: http://www.freesound.org/people/Michel88/sounds/76972/ */
-    'media/falling.eav',   /* CC:  http://www.freesound.org/people/UncleSigmund/sounds/30988/ */ 
+    'media/falling.wav',   /* CC:  http://www.freesound.org/people/UncleSigmund/sounds/30988/ */  
+    'media/bomb-explosion.mp3',  'media/bomb-explosion.wav',   /* CC:  http://www.freesound.org/people/Zangrutz/sounds/155235/ */  
     
     // character sprites
     'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 
@@ -40,7 +41,7 @@ Crafty.scene('Loading', function(){
     
     // UI
     'includes/images/mochaGrunge.png', 'includes/images/lightGrunge.png', 
-    'assets/heart-empty-1.png', 'assets/dialogue-next.gif', 'assets/coin-single.png',
+    'assets/heart-empty-1.png', 'assets/dialogue-next.gif', 'assets/coin-single.png', 'assets/bomb-single.png',
     
     // tiles
     'assets/RPGTiles-40.png', 'assets/fire-tile.png', 'assets/grass-1.png',  
@@ -58,7 +59,7 @@ Crafty.scene('Loading', function(){
     // box images for inventory slots
     'assets/inventory/Wooden Sword-inv.png', 'assets/inventory/Longspear-inv.png',
     'assets/inventory/Boomerang-inv.png', 'assets/inventory/Magic Boomerang-inv.png', 
-    'assets/inventory/Shield-inv.png', 
+    'assets/inventory/Shield-inv.png', 'assets/inventory/Bombs-inv.png',
     'assets/inventory/Wedding Dress-inv.png', 'assets/inventory/Platemail-inv.png', 
     'assets/inventory/Blue Ring-inv.png',
     'assets/inventory/Rupees-inv.png', 'assets/inventory/Heart Container-inv.png'
@@ -103,6 +104,9 @@ Crafty.scene('Loading', function(){
             chest_closed_up: [0, 0],
             chest_open_up: [1, 0]
             });
+        Crafty.sprite(19, 20, "assets/bomb-single.png", {
+            bomb_drop: [0, 0]
+            });
         Crafty.sprite(8, 14, "assets/coins.png", {
             rupeeG1: [0, 0], rupeeG2: [1, 0], rupeeG3: [2, 0],
             rupeeB1: [3, 0], rupeeB2: [4, 0], rupeeB3: [5, 0],
@@ -122,6 +126,12 @@ Crafty.scene('Loading', function(){
         Crafty.sprite(56, 56, "assets/boomerang.png", {
             boomerang: [0, 0],
             magic_boomerang: [0, 1]
+            });
+        Crafty.sprite(30, 37, "assets/bomb-sprite.png", {
+            bomb_placed: [0, 0]
+            });
+        Crafty.sprite(90, 92, "assets/bomb-explosion.png", {
+            bomb_explosion: [0, 0]
             });
         Crafty.sprite(40, "assets/bounce.png", {
             bounce: [0, 0]
@@ -240,8 +250,9 @@ Crafty.scene('Loading', function(){
         // Sets sound effects
         Crafty.audio.add({
               rupee: ['media/rupee.mp3', 'media/LOZ_Get_Rupee.wav'],    // coin get
-              secret: ['media/secret.mp3'],                             // find secret
+              secret: ['media/secret.mp3', 'media/secret.wav'],                             // find secret
               gulp: ['media/gulp.wav'],                                 // heart refill get
+              pickup: ['media/pickup.wav'],                                 // item pickup (used for bombs atm)
               chest: ['media/chest.wav'],                               // open chest
               wood_hit: ['media/wood-hit.wav'],                             // something bounces off wood
               bounce: ['media/bounce.wav'],                             // something bounces off a guard
@@ -249,8 +260,9 @@ Crafty.scene('Loading', function(){
               boomerang: ['media/boomerang.wav'],                        // boomerang whrrrr
               sword_swing: ['media/sword.wav'],                               // sword swing
               bush_hit: ['media/bush.wav'],                                  // bush hit
-              ow: ['media/ow.mp3'],                                  // player 'ow'
+              ow: ['media/ow.wav'],                                  // player 'ow'
               falling: ['media/falling.wav'],                                  // player falling
+              bomb_explosion: [ 'media/bomb-explosion.wav', 'media/bomb-explosion.mp3'],                                  // monster grunt
               grunt: ['media/grunt.wav'],                                  // monster grunt
               octorok_pain: ['media/octorok-pain.wav']                                  // octorok grunt
             });

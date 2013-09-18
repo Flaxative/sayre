@@ -20,6 +20,9 @@ Crafty.c('HeartContainer', {
         } 
     });
 
+// Basic Bomb component
+Crafty.c('BombDrop', {init: function() {this.requires('Actor, SpriteAnimation, Collision, Tween, bomb_drop').attr({rotation: 0, overx: 10, overy: 10, w: 19, h: 20, value: 1}); } });
+
 // Basic Rupee component
 Crafty.c('Rupee', {init: function() {this.requires('Actor, SpriteAnimation, Collision, Tween').attr({rotation: 0, overx: 12, overy: 6}); } });
 
