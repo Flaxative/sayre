@@ -15,8 +15,8 @@ Crafty.c('Grid', {
     } else {
     
       this.attr({ x: x * Game.map_grid.tile.width, y: y * Game.map_grid.tile.height });
-      if(this.overx) {x = this.x+this.overx; this.attr({x: x});}
-      if(this.overy) {y = this.y+this.overy; this.attr({y: y});}
+      if(this.overx) {x = this.x+this.overx; this.attr({x: x}); tell(this.overx);}
+      if(this.overy) {y = this.y+this.overy; this.attr({y: y}); tell(this.overy);}
       return this;
     }
   }
@@ -66,7 +66,8 @@ Crafty.c('Old Man', {
     this.requires('NPC2').attr({w:29, h:40, overx: 5.5}).collision();
         }    
 });
-Crafty.c('Shy Kid', {init: function() {this.requires('NPC2').attr({w:29, h:34, overx:5.5, overy:6}).collision(); } });
+Crafty.c('Shy Kid', {init: function() {this.requires('NPC2').attr({w:29, h:34, overx:5.5, overy:4}).collision(); } });
+Crafty.c('Healer', {init: function() {this.requires('NPC2').attr({w:24, h:32, overx:8, overy:3}).collision(); } });
 
 // The player character entity. Super complex!!
 Crafty.c('PlayerCharacter', {

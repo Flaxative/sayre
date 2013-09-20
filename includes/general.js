@@ -13,11 +13,11 @@ var max_hp = 66; var current_hp = 66;
 
 // ~~~~~
 /* INVENTORY VARS */
-var coins = 0; var bombs = 50; var keys = 0;
+var coins = 0; var bombs = 0; var keys = 0;
 var weapon = 'Wooden Sword'; 
 var weapons_carried = ['Wooden Sword'];
 var secondary = ''; 
-var secondaries_carried = ['Boomerang', 'Bombs'];
+var secondaries_carried = ['Boomerang'];
 var armor = ''; 
 var outfits_carried = [];
 var accessory = ''; 
@@ -37,11 +37,21 @@ var item_description = {
 
 // ~~~~~
 /* placeholder/temp - DIALOGUE VARS */
-var old_man_dialogue = 'You are a brave young man, to go exploring this ten-tile world all on your own. Your grandmother would be so proud if she could see you today.|Let me tell you a thing or two about navigating. As you know already, hitting C will allow you to interact with NPCs and objects.|But did you know that C is also the key used to attack? When we\'re done talking, you can try it out.|Moving along, S opens your inventory. In your inventory, navigate with the arrow keys. Use C to select an item.|The D key activates your secondary item.|Finally, ESCAPE pauses the game and allows you to access the menu (assuming Flak has it set up).|I hope that I\'ve been helpful! Enjoy your journey!';
-var fisherman_dialogue = 'The fish aren\'t biting today. I wonder if it has anything to do with the weather.';
-var groundskeeper_dialogue = 'It is a dreadful infestation.';
-var shy_kid_dialogue = 'You found me!';
-var nope = 'It is a very poorly kept secret.';
+var old_man_dialogue = [
+    'You are a brave young man, to go exploring this ten-tile world all on your own. Your grandmother would be so proud if she could see you today.', 
+    'Let me tell you a thing or two about navigating. As you know already, hitting C will allow you to interact with NPCs and objects.', 
+    'But did you know that C is also the key used to attack? When we\'re done talking, you can try it out.',
+    'Moving along, S opens your inventory. In your inventory, navigate with the arrow keys. Use C to select an item.', 
+    'The D key activates your secondary item.',
+    'Finally, ESCAPE pauses the game and allows you to access the menu (assuming Flak has it set up).',
+    'I hope that I\'ve been helpful! Enjoy your journey!'
+    ];
+var fisherman_dialogue = ['The fish aren\'t biting today. I wonder if it has anything to do with the weather.'];
+var groundskeeper_dialogue = ['It is a dreadful infestation.'];
+var shy_kid_dialogue = ['You found me!'];
+var healer_dialogue = ['Let me heal you :)'];
+var nope = ['It is a very poorly kept secret.'];
+var woodsman_dialogue = ['Hello! ... <br />That block over there sure looks heavy, dontcha think?'];
 
 // ~~~~~
 /* GENERAL FUNCTIONS */
@@ -100,6 +110,7 @@ function pause_key(e) {
                 }
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
+            dialogueCallback();                 // check if we need to do anything after dialogue
             }
         else if(talking&&more_dialogue) {       // else if in middle of dialogue, continue dialogue
             eval(interlocutor.interact);
@@ -120,6 +131,7 @@ function pause_key(e) {
             }
         }
     }
+    
 
 
 // ~~~~~
@@ -320,11 +332,21 @@ function exit(x, y, destination, scene) {
     }
  
 // places an NPC
-function setNPCname(name) {NPCname = name, NPCnice = NPCname.toLowerCase().replace(' ', '_');}
-function makeNPC(name, x, y, interaction, facing) {
-    if(typeof(facing)==='undefined') {facing = 'down';}
-    setNPCname(name);
-    Crafty.e('NPC2').addComponent(NPCname, NPCnice+'_'+facing).at(x, y).attr({spriteName: NPCnice, name: NPCname, interact: interaction});
+function setNPCname(name) {NPCname = name; NPCnice = NPCname.toLowerCase().replace(' ', '_');}
+function makeNPC(options) {
+    if(typeof(options.facing)==='undefined') {options.facing = 'down';}
+    if(typeof(options.facing)==='undefined') {options.callback = false;}
+    setNPCname(options.name);
+    tell("Generating "+options.name+" at "+options.x+","+options.y+".");
+    var newNPC = Crafty.e('NPC2').addComponent(options.name, NPCnice+'_'+options.facing)
+        .at(options.x, options.y)
+        .attr({
+            spriteName: NPCnice, 
+            name: options.NPCname, 
+            interact: options.interaction, 
+            callback: options.callback, 
+            callbackDestroy:options.callbackDestroy});
+    tell(newNPC.overx); tell(newNPC.overy);
     } 
     
 // places monsters
@@ -401,6 +423,7 @@ function interact(e) {
                 }
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
+            dialogueCallback();                 // check if we need to do anything after dialogue
             }
         else if(talking&&more_dialogue) {       // if more dialogue, continue dialogue
             eval(interlocutor.interact);
@@ -425,6 +448,7 @@ function useSecondary(e) {
                 }
             resumeAll();
             Crafty.bind('KeyDown', (inventory));
+            dialogueCallback();                 // check if we need to do anything after dialogue
             }
         else if(talking&&more_dialogue) {       // if more dialogue, continue dialogue
             eval(interlocutor.interact);
@@ -454,35 +478,42 @@ function useSecondary(e) {
         }
     }
 
-// basic dialogue functionality
-function dialogue(statement, speaker, portrait, statement_number) {
-    if(talking) {dialog.destroy();} 
-    if(statement.indexOf('|')>-1) {
-        // tell('hi'); tell(statement.indexOf('|')); // debug
-        var statement_array = statement.split("|");
-        var number_of_statements = statement_array.length;
-        if(!current_statement) {current_statement = 0;}
-        var words = statement_array[current_statement];
-        current_statement++; 
-        // tell(current_statement+'/'+number_of_statements); // debug
-            // check if there's more after this
-            if(current_statement < number_of_statements) {more_dialogue = true;} 
-            else {more_dialogue = false; current_statement = 0;}
-        //tell(more_dialogue) //debug
-        }
-    else {var words = statement; more_dialogue = false;}
+// ==================================|
+// basic dialogue functionality  :)  |
+// ==================================|
+function dialogue(statement, speaker, portrait) {
+    if(talking) {dialog.destroy();}                         // clear previous pane if any
+    var panes = statement.length; var text; var message;    // set up variables
     talking = true; trackplayer.x = Crafty('player').x; trackplayer.y = Crafty('player').y;
-    var text;
-    text = '<p>' + words + '</p>';
+    if(panes>1) {                                       // if it's a multi-pane convo, do some counting
+        if(!current_statement) {current_statement = 0;} // make sure we're on the 1st pane of a new dialogue
+        message = statement[current_statement];         // get the message for the current pane 
+        current_statement++;                            // increment panes for next dialogue() call
+            // check if there's more after this
+            if(current_statement < panes) {more_dialogue = true;} 
+            else {more_dialogue = false; current_statement = 0;}
+        }
+    else {message = statement[0]; more_dialogue = false;}   // if it's a single-pane convo, just get it over with
+    // set up the text for the dialogue box
+    text = '<p>' + message + '</p>';
     if(more_dialogue) {text = text + '<img class="dialogue-next" src="assets/dialogue-next.gif" alt="there\'s more!" />';}
-    if(speaker) {   
+    if(speaker) {       // if there's a speaker, display his name
         text = '<h3><b>' + speaker + '</b></h3>' + text;      
-        if(portrait) {
+        if(portrait) {  // if there's a portrait, show the portrait
             text = '<div class="portrait" style="background-image:url(\''+'assets/portraits/'+speaker+'.png'+'\');"></div>'+text;
             }
         }
-    pauseAll(); Crafty.unbind('KeyDown', (inventory));
+    // display the dialogue box
     dialog = Crafty.e("2D, DOM, Text, dialogue, dbox, light, innershadow").attr({ w: 480, h:179, x: 0, y: 300}).text(text);
+    pauseAll(); Crafty.unbind('KeyDown', (inventory)); // pause the player
+    }
+
+// some dialogues do something after you're done with them
+function dialogueCallback() {    
+    // check for a callback - something to do once dialogue is complete
+    if( !interlocutor.callback ) { tell('no callback'); return;}
+    else {tell('callback triggered'); eval(interlocutor.callback);}
+    if(interlocutor.callbackDestroy) {interlocutor.callback = '';}
     }
 
 // test of non-dialogue interaction 
@@ -505,7 +536,8 @@ function openChest() {
             }
         if(chest.type == "secondary") {
             secondaries_carried.push(chest.contents);
-            chestNotice(chest.contents, "secondary");
+            if(chest.contents = 'Bombs') {getBombs(chest.value);} // if secondary is bombs, also get some bombs
+            chestNotice(chest.contents, "secondary", chest.value);
             return;
             }
         if(chest.type == "armor") {
@@ -543,8 +575,9 @@ function chestNotice(contents, type, value) {
     if(type=="weapon"||type=="secondary"||type=="armor"||type=="misc") {
         chestNotification += " <br /><br />You can equip this item from your inventory by pressing S.";
         }
+    var message = [chestNotification];
     itemGet = true;                     // allows the dialogue closing trigger to work best
-    dialogue(chestNotification);        // creates notification
+    dialogue(message);        // creates notification
     if(contents=='Heart Container') {heartContainer();}
     Crafty.e('Reward').attr({x: Crafty('player').x-11, y: Crafty('player').y-58});  // displays reward shining above head
     $(".Reward").append('<img src="assets/inventory/'+contents+'-inv.png" />');
@@ -608,7 +641,10 @@ function killMonster(monster) {
 function randomLoot(x, y) { // add a "worth" argument in order to tier random drops
     var loot_result = Math.floor((Math.random()*9)+1);
     var loot_table = ['', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeG', 'RupeeB', 'BombDrop', 'HeartFull', 'HeartHalf', 'HeartHalf'];
+    //var loot_table = ['BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop', 'BombDrop']; // debugging bombs
     if(!loot_table[loot_result]) {tell('no drops');}
+    // don't drop bombs unless player has bombs
+    else if(loot_table[loot_result]=='BombDrop'&&jQuery.inArray("Bombs", secondaries_carried)<0) {tell("You don't have bombs yet so lawl");}
     else {dropLoot(loot_table[loot_result], x, y);}
     }
 

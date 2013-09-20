@@ -278,13 +278,13 @@ Crafty.c('SlimeBase', {
 });
 
 // Normal Pink Slime
-Crafty.c('Slime', {init: function() {this.requires("SlimeBase, Minion").attr({death: "random"})},});
+Crafty.c('Slime', {init: function() {this.requires("SlimeBase, Minion").attr({death: "random"}).collision(new Crafty.circle(20, 20, 20));},});
 
 // Big Pink Slime
 Crafty.c('KingSlime', {
     init: function() {
         this.requires("SlimeBase, Stable")
-        .attr({h:80, w:80, hp: 10, strength: 22, death: "slimeSplit"}).collision();
+        .attr({h:80, w:80, hp: 10, strength: 22, death: "slimeSplit"}).collision(new Crafty.circle(40, 40, 40));
         },
     });
         // big pink slime turns into lots of little pink slimes

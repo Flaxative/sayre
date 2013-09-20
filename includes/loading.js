@@ -27,7 +27,7 @@ Crafty.scene('Loading', function(){
     
     // character sprites
     'assets/character-narrow.png'/*, 'assets/character-hit.png'*/, 
-    'assets/old-man.png', 'assets/shy-kid.png',
+    'assets/old-man.png', 'assets/shy-kid.png', 'assets/healer.png',
     
     // weapons
     'assets/bounce.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/boomerang.png',
@@ -179,6 +179,12 @@ Crafty.scene('Loading', function(){
             shy_kid_up: [1, 3],
             shy_kid_right: [1, 2],
             shy_kid_left: [1, 1]
+            });
+        Crafty.sprite(24, 32, "assets/healer.png", {
+            healer_down: [0, 0],
+            healer_left: [1, 0],
+            healer_right: [2, 0],
+            healer_up: [3, 0]
             });
         Crafty.sprite(40, "assets/slimes-5.png", {
             slimedown: [0, 2],
