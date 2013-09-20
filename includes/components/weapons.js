@@ -215,6 +215,7 @@ Crafty.c('Bomb Explosion', {
             // missing: somehow tell the game not to repopulate the bush. stop rupee farming.
             data[0].obj.destroy();
             })
+        .onHit('Door', function(data) {data[0].obj.open();}) // bombs blow up doors. ultimately they will blow up bomb-specific things instead.
         .onHit('Monster', function(data) {
             if(data[0].obj.has('vulnerable')) {
                 hurtMonster(data[0].obj);

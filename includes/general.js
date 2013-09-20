@@ -735,7 +735,7 @@ function dropPlayer(xpos, ypos) {
 // temp function; should be 'open doors' or similar; opens closed doors in dungeon room when it's cleared
 function unlockDoors() {
     console.log('you hear a rumbling from the walls...');
-    Crafty('Door').destroy();
+    Crafty('Door').each(function() {this.open();});
     }
 // makes sure that the player is inside the room, and not stuck in a solid dungeon door
 function closeDoors(monsters) {

@@ -55,10 +55,10 @@ Crafty.c('Cobble_Dark', {init: function() {this.requires('Actor, cobble_dark');}
 // Basic Wall component
 Crafty.c('Wall', {init: function() {this.requires('Barricade').attr({hitNoise: 'bounce'});}, });
 // Basic Door component
-Crafty.c('Door', {init: function() {this.requires('Barricade').attr({hitNoise: 'wood_hit'});}, });
+Crafty.c('Door', {init: function() {this.requires('Barricade').attr({hitNoise: 'wood_hit'});}, open: function() {Crafty.e('Door'+this.facing+'open').attr({x:this.x, y:this.y}); this.destroy();} });
 // Dungeon Walls
-Crafty.c('WallL', {init: function() {this.requires('Wall, wallL').attr({h:40, w:40}).collision([0, 0], [16, 0], [16, 40], [0, 40]);},});
-Crafty.c('WallR', {init: function() {this.requires('Wall, wallR').attr({h:40, w:40}).collision([24, 0], [40, 0], [40, 40], [24, 40]);},});
+Crafty.c('WallL', {init: function() {this.requires('Wall, wallL').attr({h:40, w:40}).collision();},});
+Crafty.c('WallR', {init: function() {this.requires('Wall, wallR').attr({h:40, w:40}).collision();},});
 Crafty.c('WallT', {init: function() {this.requires('Wall, wallT').attr({h:40, w:40}).collision();},});
 Crafty.c('WallB', {init: function() {this.requires('Wall, wallB').attr({h:40, w:40}).collision();},});
 Crafty.c('WallTL', {init: function() {this.requires('Wall, wallTL').attr({h:40, w:40}).collision();},});
@@ -66,10 +66,15 @@ Crafty.c('WallTR', {init: function() {this.requires('Wall, wallTR').attr({h:40, 
 Crafty.c('WallBL', {init: function() {this.requires('Wall, wallBL').attr({h:40, w:40}).collision();},});
 Crafty.c('WallBR', {init: function() {this.requires('Wall, wallBR').attr({h:40, w:40}).collision();},});
 // Dungeon Doors
-Crafty.c('DoorT', {init: function() {this.requires('Door, doorT').attr({h:40, w:40}).collision();},});
-Crafty.c('DoorB', {init: function() {this.requires('Door, doorB').attr({h:40, w:40}).collision();},});
-Crafty.c('DoorL', {init: function() {this.requires('Door, doorL').attr({h:40, w:40}).collision().collision([0, 0], [16, 0], [16, 40], [0, 40]);},});
-Crafty.c('DoorR', {init: function() {this.requires('Door, doorR').attr({h:40, w:40}).collision().collision([24, 0], [40, 0], [40, 40], [24, 40]);},});
+Crafty.c('DoorT', {init: function() {this.requires('Door, doorT').attr({h:40, w:40, facing: "T"}).collision();}});
+Crafty.c('DoorB', {init: function() {this.requires('Door, doorB').attr({h:40, w:40, facing: "B"}).collision();},});
+Crafty.c('DoorL', {init: function() {this.requires('Door, doorL').attr({h:40, w:40, facing: "L"}).collision();},});
+Crafty.c('DoorR', {init: function() {this.requires('Door, doorR').attr({h:40, w:40, facing: "R"}).collision();},});
+ 
+Crafty.c('DoorTopen', {init: function() {this.requires('Actor, doorTopen').attr({h:40, w:40, z: 1003});}});
+Crafty.c('DoorBopen', {init: function() {this.requires('Actor, doorBopen').attr({h:40, w:40, z: 1003});}});
+Crafty.c('DoorLopen', {init: function() {this.requires('Actor, doorLopen').attr({h:40, w:40, z: 1003});}});
+Crafty.c('DoorRopen', {init: function() {this.requires('Actor, doorRopen').attr({h:40, w:40, z: 1003});}});
  
  
 // Props

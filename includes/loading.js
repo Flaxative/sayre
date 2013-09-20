@@ -44,7 +44,7 @@ Crafty.scene('Loading', function(){
     'assets/heart-empty-1.png', 'assets/dialogue-next.gif', 'assets/coin-single.png', 'assets/bomb-single.png',
     
     // tiles
-    'assets/RPGTiles-40.png', 'assets/fire-tile.png', 'assets/grass-1.png',  
+    'assets/RPGTiles-40.png', 'assets/fire-tile.png', 'assets/grass-1.png',  'assets/walls.png',  
     
     // props
     'assets/cactus.png', 'assets/hole-1.png', 'assets/fire.png', 'assets/remains.png',
@@ -238,13 +238,14 @@ Crafty.scene('Loading', function(){
             grassBL: [13,1],
             grassL: [5, 1],
             });
-        Crafty.sprite(16, "assets/walls.png", {
-            wallTL: [0, 0], wallTR: [2, 0],
-            wallBL: [0, 3], wallBR: [2, 2],
-            wallL: [0,1],
-            wallR: [2, 1],
-            wallB: [1, 2], wallT: [1, 2],
-            doorT: [1, 0], doorR: [8, 1], doorL: [9, 1], doorB: [1, 0]
+        Crafty.sprite(32, "assets/walls.png", {
+            wallTL: [0, 4], wallTR: [1, 4],
+            wallBL: [2, 4], wallBR: [3, 4],
+            wallL: [7, 2],
+            wallR: [8, 2],
+            wallB: [9, 2], wallT: [1, 2],
+            doorT: [1, 0], doorR: [3, 0], doorL: [4, 0], doorB: [5, 0],
+            doorTopen: [4, 4], doorRopen: [6, 4], doorLopen: [7, 4], doorBopen: [5, 4]
             });
             
         // Sets sound effects

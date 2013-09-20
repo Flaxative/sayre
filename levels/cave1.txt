@@ -1,13 +1,13 @@
 dwTL	dwT	dwT	dwT	dwT	dwT	dc.DT	dwT	dwT	dwT	dwT	dwT	dwTR
-dc.r5.dwL	dc.r1	dc.r6		dc.r2						dc.r5	dc.r5	dc.dwR.r4
-dc.r4.dwL	dc.r5		dc.r3							dc.r4	dc.r2	dc.dwR.r3
-dc.r4.dwL								dc.r6			dc.r1	dc.dwR.r3
+dc.r5.dwL	dc.r1	dc.r6		dc.r2						dc.r5	dc.r5	dc.dwR
+dc.r4.dwL	dc.r5		dc.r3							dc.r4	dc.r2	dc.dwR
+dc.r4.dwL								dc.r6			dc.r1	dc.dwR
 dc.dwL												dc.dwR
 dc.dwL												dc.dwR
 dc.dwL		dc.r2										dc.dwR
 dc.dwL												dc.dwR
 dc.dwL										dc.r1	dc.r2	dc.dwR
 dc.dwL												dc.dwR
-dc.dwL	dc.r5										dc.r3	dc.dwR.r4
+dc.dwL	dc.r5										dc.r3	dc.dwR
 dc.r4.dwL	dc.r3				dc.r6					dc.r6	dc.r5	dc.dwR
 dwBL	dwB	dwB	dwB	dwB	dwB	dwB	dwB	dwB	dwB	dwB	dwB	dwBR
