@@ -48,7 +48,8 @@ var old_man_dialogue = [
     ];
 var fisherman_dialogue = ['The fish aren\'t biting today. I wonder if it has anything to do with the weather.'];
 var groundskeeper_dialogue = ['It is a dreadful infestation.'];
-var shy_kid_dialogue = ['You found me!'];
+var shy_kid_dialogue = ['You found me!', 'As a one-time reward for finding me, I\'ll give you something I found in the bushes.'];
+var shy_kid_callback = "chestNotice('Bombs', 'secondary', 5); shy_kid_dialogue = ['You found me again!']; shy_kid_callback = '';";
 var healer_dialogue = ['Let me heal you :)'];
 var nope = ['It is a very poorly kept secret.'];
 var woodsman_dialogue = ['Hello! ... <br />That block over there sure looks heavy, dontcha think?'];
@@ -417,7 +418,7 @@ function interact(e) {
             talking = false;
             dialog.destroy(); 
             if(itemGet == true) {
-                Crafty('player').sprite(0,3); itemGet = false;
+                Crafty('player').sprite(0,3); facing = 'up'; interlocutor = false; itemGet = false;
                 Crafty('Reward').destroy();
                 Crafty.audio.unpause("theme");
                 }
@@ -504,7 +505,8 @@ function dialogue(statement, speaker, portrait) {
             }
         }
     // display the dialogue box
-    dialog = Crafty.e("2D, DOM, Text, dialogue, dbox, light, innershadow").attr({ w: 480, h:179, x: 0, y: 300}).text(text);
+    if(Crafty('player').y>280) {var dialogue_y = -1;} else {var dialogue_y = 300;} // display the box over the half of the screen the player is not in
+    dialog = Crafty.e("2D, DOM, Text, dialogue, dbox, light, innershadow").attr({ w: 480, h:179, x: 0, y: dialogue_y}).text(text);
     pauseAll(); Crafty.unbind('KeyDown', (inventory)); // pause the player
     }
 
@@ -530,28 +532,22 @@ function openChest() {
         interlocutor = false;           // clear interlocutor to prevent spammability
         chest.removeComponent('poi').addComponent('chest_open_'+chest.direction);    // prevent further opening || chest.direction is for extensibility
         if(chest.type == "weapon") {
-            weapons_carried.push(chest.contents);
             chestNotice(chest.contents, "weapon");
             return;
             }
         if(chest.type == "secondary") {
-            secondaries_carried.push(chest.contents);
-            if(chest.contents = 'Bombs') {getBombs(chest.value);} // if secondary is bombs, also get some bombs
             chestNotice(chest.contents, "secondary", chest.value);
             return;
             }
         if(chest.type == "armor") {
-            outfits_carried.push(chest.contents);
             chestNotice(chest.contents, "armor");
             return;
             }
         if(chest.type == "misc") {
-            accessories_carried.push(chest.contents);
             chestNotice(chest.contents, "misc");
             return;
             }
         if(chest.type == "rupee") {
-            getCoins(chest.value);
             chestNotice(chest.contents, "rupee", chest.value);
             return;
             }
@@ -562,10 +558,28 @@ function openChest() {
     }
 
 function chestNotice(contents, type, value) {
+    // actually give the player the thing
+    if(type == "weapon") {
+        weapons_carried.push(contents);
+        }
+    else if(type =="secondary") {
+        secondaries_carried.push(contents);
+        if(contents == 'Bombs') {getBombs(value);} // if secondary is bombs, also get some bombs
+        }
+    else if(type == "armor") {
+        outfits_carried.push(contents);
+        }
+    else if(type == "misc") {
+        accessories_carried.push(contents);
+        }
+    else if(type == "rupee") {
+        getCoins(value);
+        }
+    // do everything else
     Crafty.audio.pause("theme");
     Crafty.audio.play('chest');     // plays chest sound
     Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item GET pose
-    // create notificaion text
+    // create notification text
     var chestNotification = "You found ";
         // get the article
         if(value) {chestNotification += value+' ';} 

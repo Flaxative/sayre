@@ -27,8 +27,11 @@ Crafty.scene('Game', function() {
         x:11, y:11, 
         interaction:"dialogue("+NPCnice+"_dialogue, '"+NPCname+"')", 
         facing: 'left', 
-        callback:"dialogue(['You found me again!'], '"+NPCname+"');",
-        callbackDestroy: true
+        callback: shy_kid_callback,
+        callbackDestroy: true,
+        value: 5,
+        contents: "Bombs",
+        type: "secondary"
         });  
     
     setNPCname('Healer');

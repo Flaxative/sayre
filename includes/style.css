@@ -38,7 +38,7 @@ h1 {font-size: 12px; padding: 10px;}
 
 #console span {max-width: 100%; display:none;}
 
-.dialogue {border-top: 1px solid #000;}
+.dialogue {border-top: 1px solid #000; border-bottom: 1px solid #000;}
 
 .dbox {
     padding: 20px;
@@ -126,7 +126,7 @@ legend {color: #fff; font-size: 8px;}
     display: none; }
     
 .Reward {
-    vertical-align:top; border-radius: 5px;
+    vertical-align:top; border-radius: 40px;
     border: 3px solid #ffd43d; margin: 0px 10px 10px 0;
     width: 40px; height: 40px; padding: 6px;
     display: inline-block; text-align: center; background: #000;
