@@ -72,15 +72,15 @@ Crafty.c('Healer', {init: function() {this.requires('NPC2').attr({w:24, h:32, ov
 // The player character entity. Super complex!!
 Crafty.c('PlayerCharacter', {
     init: function() {
-        this.requires('Actor, Tween, Player, FourwayFlak, Collision, chardown, vulnerable, SpriteAnimation, Pausable')
+        this.requires('Actor, Tween, player, FourwayFlak, Collision, chardown, vulnerable, SpriteAnimation, Pausable')
         .attr({x: 0, y: 0, w: 36, h: 40, z: 1000, facing: 'down'})
         .attr({alpha: 1.0, name: "Flak"})
         .fourway(4)
         //.multiway(4, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180})
-        .reel("walk_left", 500, 0, 1, 9)//.animate("walk_left", -1)
-        .reel("walk_right", 500, 0, 2, 9)
-        .reel("walk_up", 500, 0, 3, 8)
-        .reel("walk_down", 500, 0, 0, 8)
+        .animate("walk_left", 0, 1, 8)
+        .animate("walk_right", 0, 2, 8)
+        .animate("walk_up", 0, 3, 7)
+        .animate("walk_down", 0, 0, 7)
         .collision([4,4], [32, 4], [32,34], [4,34]) // reduces hitbox to make collision match the sprite better.
                                                     // if there are any issues with collision & movement,
                                                     // revert last 2 y values to 36.
@@ -89,7 +89,7 @@ Crafty.c('PlayerCharacter', {
             if(pushedblock) {this.detach(pushedblock); console.log('detached by direction'); pushedblock = '';}
             if (direction.x < 0) {
                 if (!this.isPlaying("walk_left"))
-                    this.pauseAnimation().animate("walk_left", -1);
+                    this.stop().animate("walk_left", 10, -1);
                     dir.left = true; dir.right = false; facing = 'left'; this.facing = 'left';
                     /*if(swinging) {
                         Crafty('weapon').attr({
@@ -101,7 +101,7 @@ Crafty.c('PlayerCharacter', {
             }
             if (direction.x > 0) {
                 if (!this.isPlaying("walk_right"))
-                    this.pauseAnimation().animate("walk_right", -1);
+                    this.stop().animate("walk_right", 10, -1);
                     dir.right = true; dir.left = false; facing = 'right'; this.facing = 'right';
                    /* if(swinging) {
                         Crafty('weapon').attr({
@@ -113,7 +113,7 @@ Crafty.c('PlayerCharacter', {
             }
             if (direction.y < 0) {
                 if (!this.isPlaying("walk_up"))
-                    this.pauseAnimation().animate("walk_up", -1);
+                    this.stop().animate("walk_up", 10, -1);
                     dir.up = true; dir.down = false; facing='up'; this.facing = 'up';
                   /*  if(swinging) {
                         Crafty('weapon').attr({
@@ -125,7 +125,7 @@ Crafty.c('PlayerCharacter', {
             }
             if (direction.y > 0) {
                 if (!this.isPlaying("walk_down"))
-                    this.pauseAnimation().animate("walk_down", -1);
+                    this.stop().animate("walk_down", 10, -1);
                     dir.down = true; dir.up = false; facing='down'; this.facing = 'down';
                    /* if(swinging) {
                         Crafty('weapon').attr({
@@ -136,7 +136,7 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if(!direction.x && !direction.y) {
-                this.pauseAnimation(); dir.up = false; dir.down = false; dir.left = false; dir.right = false;
+                this.stop(); dir.up = false; dir.down = false; dir.left = false; dir.right = false;
             }
         })
         .onHit("Heart", function(data) {
@@ -209,7 +209,7 @@ Crafty.c('PlayerCharacter', {
   },
   checkBlock: function(data) {
     if(pushedblock.x >= pushedblock.maxX || pushedblock.x <= pushedblock.minX || pushedblock.y >= pushedblock.maxY || pushedblock.y <= pushedblock.minY) {
-        Crafty('Player').detach(pushedblock); console.log('detached by distance');
+        Crafty('player').detach(pushedblock); console.log('detached by distance');
         if(pushedblock.trigger) {eval(pushedblock.interact);}
         pushedblock.unbind('Change'); pushedblock = '';
         }

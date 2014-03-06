@@ -80,18 +80,16 @@ function enableActions() {
     
 // pause player & monsters
 function pauseAll() {
-    //tell("going away for a sec..."); //debug
     Crafty('Monster Pausable').trigger("Pause");
     Crafty('Projectile').trigger("Pause");
-    Crafty('Player').trigger("Pause");
-    Crafty('Player').disableControl().pauseAnimation();
+    Crafty('player').trigger("Pause");
+    Crafty('player').disableControl().stop();
     }
 // unpause player & monsters
 function resumeAll() {
-    //tell("we're back"); //debug
     Crafty('Monster Pausable').trigger("Run");
-    Crafty('Projectile').trigger("Run"); //tell(speed);
-    Crafty('Player').trigger("Run").enableControl();
+    Crafty('Projectile').trigger("Run");
+    Crafty('player').trigger("Run").fourway(speed);
     }
     
 // pause key
@@ -107,7 +105,7 @@ function pause_key(e) {
             talking = false;
             dialog.destroy(); 
             if(itemGet == true) {
-                Crafty('Player').sprite(0,3); itemGet = false;
+                Crafty('player').sprite(0,3); itemGet = false;
                 Crafty('Reward').destroy();
                 Crafty.audio.unpause("theme");
                 }
@@ -172,9 +170,9 @@ function updateHP(speed) {
         }
     if (current_hp<=0) {
         disableActions(); Crafty('Weapon').destroy();
-        Crafty('Player').disableControl().pauseAnimation().tween({
-            x: Crafty('Player').x+18,
-            y: Crafty('Player').y+20,
+        Crafty('player').disableControl().stop().tween({
+            x: Crafty('player').x+18,
+            y: Crafty('player').y+20,
             w: 0, h: 0
             }, 32).timeout(function() {Crafty.scene('defeat');}, 1000); 
         }
@@ -420,7 +418,7 @@ function interact(e) {
             talking = false;
             dialog.destroy(); 
             if(itemGet == true) {
-                Crafty('Player').sprite(0,3); facing = 'up'; interlocutor = false; itemGet = false;
+                Crafty('player').sprite(0,3); facing = 'up'; interlocutor = false; itemGet = false;
                 Crafty('Reward').destroy();
                 Crafty.audio.unpause("theme");
                 }
@@ -445,7 +443,7 @@ function useSecondary(e) {
             talking = false;
             dialog.destroy(); 
             if(itemGet == true) {
-                Crafty('Player').sprite(0,3); itemGet = false;
+                Crafty('player').sprite(0,3); itemGet = false;
                 Crafty('Reward').destroy();
                 Crafty.audio.unpause("theme");
                 }
@@ -470,7 +468,7 @@ function useSecondary(e) {
                     }
                 else { // if you have bombs, use one of them
                     getBombs(-1); //tell("You used a bomb..."); 
-                    Crafty.e("Bomb").attr({x: Crafty("Player").x+5, y: Crafty("Player").y+1});
+                    Crafty.e("Bomb").attr({x: Crafty("player").x+5, y: Crafty("player").y+1});
                     }
                 //chuckBoomerang();
                 }
@@ -487,7 +485,7 @@ function useSecondary(e) {
 function dialogue(statement, speaker, portrait) {
     if(talking) {dialog.destroy();}                         // clear previous pane if any
     var panes = statement.length; var text; var message;    // set up variables
-    talking = true; trackplayer.x = Crafty('Player').x; trackplayer.y = Crafty('Player').y;
+    talking = true; trackplayer.x = Crafty('player').x; trackplayer.y = Crafty('player').y;
     if(panes>1) {                                       // if it's a multi-pane convo, do some counting
         if(!current_statement) {current_statement = 0;} // make sure we're on the 1st pane of a new dialogue
         message = statement[current_statement];         // get the message for the current pane 
@@ -507,7 +505,7 @@ function dialogue(statement, speaker, portrait) {
             }
         }
     // display the dialogue box
-    if(Crafty('Player').y>280) {var dialogue_y = -1;} else {var dialogue_y = 300;} // display the box over the half of the screen the player is not in
+    if(Crafty('player').y>280) {var dialogue_y = -1;} else {var dialogue_y = 300;} // display the box over the half of the screen the player is not in
     dialog = Crafty.e("2D, DOM, Text, dialogue, dbox, light, innershadow").attr({ w: 480, h:179, x: 0, y: dialogue_y}).text(text);
     pauseAll(); Crafty.unbind('KeyDown', (inventory)); // pause the player
     }
@@ -524,7 +522,7 @@ function dialogueCallback() {
 function torchBushes() {//console.log(Crafty('Bush'));
     Crafty('Bush').destroy();
     //tell('The crazy dude burned all the bushes.');
-    dialogue(['The crazy dude burned all the bushes.']);
+    dialogue('The crazy dude burned all the bushes.');
     }
 
 // opens chests!
@@ -580,7 +578,7 @@ function chestNotice(contents, type, value) {
     // do everything else
     Crafty.audio.pause("theme");
     Crafty.audio.play('chest');     // plays chest sound
-    Crafty('Player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item GET pose
+    Crafty('player').sprite(0, 4).attr({w: 36, h: 40}).collision([4,4], [32, 4], [32,36], [4,36]);  // item GET pose
     // create notification text
     var chestNotification = "You found ";
         // get the article
@@ -595,7 +593,7 @@ function chestNotice(contents, type, value) {
     itemGet = true;                     // allows the dialogue closing trigger to work best
     dialogue(message);        // creates notification
     if(contents=='Heart Container') {heartContainer();}
-    Crafty.e('Reward').attr({x: Crafty('Player').x-11, y: Crafty('Player').y-58});  // displays reward shining above head
+    Crafty.e('Reward').attr({x: Crafty('player').x-11, y: Crafty('player').y-58});  // displays reward shining above head
     $(".Reward").append('<img src="assets/inventory/'+contents+'-inv.png" />');
     }
 
@@ -608,34 +606,34 @@ function chestNotice(contents, type, value) {
 // triggers on interaction key (Z) when not in a menu or dialogue. uses active weapon.
 function useWeapon(weapon) {
     swinging = true; potent = true;             // enable attacks
-    Crafty('Player').disableControl().pauseAnimation();   // pause the player
+    Crafty('player').disableControl().stop();   // pause the player
     disableActions();                           // stop interaction & inventory & pause
     //console.log("You swing your mighty "+weapon+" "+facing+"!");
     
     Crafty.e(weapon).attr({x: 100, y: 100}).timeout(function() {
         Crafty('Weapon').destroy(); swinging = false; 
-        Crafty('Player').trigger("Run").enableControl();
+        Crafty('player').trigger("Run").fourway(speed);
         enableActions();
         }, Crafty('Weapon').useSpeed);
     if(facing=='up') {
         Crafty('Weapon')
-        .attr({rotation: 180, x: Crafty('Player').x+Crafty('Player').w/2+Crafty('Weapon').w/2-8, y: Crafty('Player').y+15});
+        .attr({rotation: 180, x: Crafty('player').x+Crafty('player').w/2+Crafty('Weapon').w/2-8, y: Crafty('player').y+15});
         }
     if(facing=='left') {
         Crafty('Weapon')
-        .attr({rotation: 90, x: Crafty('Player').x+15, y: Crafty('Player').y+Crafty('Player').h/2-Crafty('Weapon').w/2+8});
+        .attr({rotation: 90, x: Crafty('player').x+15, y: Crafty('player').y+Crafty('player').h/2-Crafty('Weapon').w/2+8});
         }
     if(facing=='right') {
         Crafty('Weapon')
-        .attr({rotation: 270, x: Crafty('Player').x+Crafty('Player').w-15, y: Crafty('Player').y+Crafty('Player').h/2+Crafty('Weapon').w/2+8});
+        .attr({rotation: 270, x: Crafty('player').x+Crafty('player').w-15, y: Crafty('player').y+Crafty('player').h/2+Crafty('Weapon').w/2+8});
         }
     if(facing=='down') {
         Crafty('Weapon')
-        .attr({z: 1001, rotation: 0, x: Crafty('Player').x+Crafty('Player').w/2-Crafty('Weapon').w/2+8, y: Crafty('Player').y+Crafty('Player').h-15});
+        .attr({z: 1001, rotation: 0, x: Crafty('player').x+Crafty('player').w/2-Crafty('Weapon').w/2+8, y: Crafty('player').y+Crafty('player').h-15});
         }
-    Crafty('Player').attach(Crafty('Weapon'));  // weapon moves with you if you move, though ATM you shouldn't move
+    Crafty('player').attach(Crafty('Weapon'));  // weapon moves with you if you move, though ATM you shouldn't move
     Crafty('Weapon').attr({h:0}).tween({h:Crafty('Weapon').length}, 2); // extend the weapon quickly
-    //Crafty('weapon').pauseAnimation().animate("swing", 6.5, 1);
+    //Crafty('weapon').stop().animate("swing", 6.5, 1);
     }
 
 // triggers when a monster hits 0 hp or falls in a hole
@@ -647,9 +645,9 @@ function killMonster(monster) {
         randomLoot(monster.x, monster.y); // add a "worth" attribute or something in order to tier random drops
         }
     //primitive death animation using alpha tween
-    monster.pauseAnimation().unbind("EnterFrame").trigger("Pause")    // stop its movement
+    monster.stop().unbind("EnterFrame").trigger("Pause")    // stop its movement
     .removeComponent("Painful").removeComponent("Monster")  // stop it from hurting PC, or dying multiple times
-    .tween({alpha:0.0}, 500).timeout(function() {this.destroy();tell("it's gone!");}, 500);
+    .tween({alpha:0}, 16).timeout(function() {this.destroy();}, 500);
     if(monsters_on_screen<=0&&unlock_by_killing) {unlockDoors();}
     }
 
@@ -681,25 +679,25 @@ function heartContainer() {
 function damagePlayer(x) {
     tell("You've been hit!"); 
     current_hp = Math.max(current_hp-x, 0); updateHP(10);
-    Crafty('Player').removeComponent('vulnerable');//.fourway(2); speed = 2;
+    Crafty('player').removeComponent('vulnerable');//.fourway(2); speed = 2;
     flicker1(10);
    }
    
 // flicker out
 function flicker1(x) {
     if(x&&current_hp>0) {
-        if(!Crafty('Player').paused) {x--; console.log(x);}
-        Crafty('Player').tween({alpha: 0.5}, 5)
+        if(!Crafty('player').paused) {x--; console.log(x);}
+        Crafty('player').tween({alpha: 0.5}, 5)
         .timeout(function(){flicker2(x);}, 100);
         }
     else if (current_hp>0) {
-        Crafty('Player').addComponent('vulnerable');//.fourway(4); speed = 4;
+        Crafty('player').addComponent('vulnerable');//.fourway(4); speed = 4;
         }
     }
 
 // flicker in
 function flicker2(x) {
-    Crafty('Player').tween({alpha: 1.0}, 5)
+    Crafty('player').tween({alpha: 1.0}, 5)
     .timeout(function(){flicker1(x);}, 100);
     }
     
@@ -729,8 +727,8 @@ function fall() {
     current_hole.removeComponent('hole').addComponent('hole_entered'); // easier than unbinding anything!
     disableActions();                                                  // turn off all controls
     Crafty.audio.play('falling');
-    Crafty('Player').disableControl()                                  // turn off player controls; stop animation; tween falling animation
-        .sprite(0,0).pauseAnimation()
+    Crafty('player').disableControl()                                  // turn off player controls; stop animation; tween falling animation
+        .sprite(0,0).stop()
         .tween({
             w: 1, h: 1, 
             rotation: -45, 
@@ -744,7 +742,7 @@ function fall() {
 // enemies that fall into holes die permanently, but don't drop loot.
 function fallFoe(foe, foe_hole) {
     foe.unbind('EnterFrame')
-        .sprite(0,0).pauseAnimation().tween({w: 1, h: 1, rotation: -45, x: foe_hole.x+19, y: foe_hole.y+19}, 32)
+        .sprite(0,0).stop().tween({w: 1, h: 1, rotation: -45, x: foe_hole.x+19, y: foe_hole.y+19}, 32)
         .timeout(function(){foe.death(''); killMonster(foe);}, 1000);
     }
 
@@ -754,7 +752,7 @@ function fallEndless() {
     if(current_hp<=0) {return;}
     else {
         Crafty('hole_entered').addComponent('hole').removeComponent('hole_entered');    // reset hole for falling
-        Crafty('Player').destroy();                                                     // destroy tiny, fallen PC
+        Crafty('player').destroy();                                                     // destroy tiny, fallen PC
         placePlayer();                                                                  // create fresh PC
         facing = "down";                                                                // always facing down after fall
         enableActions();                                                                // re-enable inventory and action
@@ -773,8 +771,8 @@ function go_to(destination) {
 function dropPlayer(xpos, ypos) {
     trackplayer.x = xpos; trackplayer.y = ypos;
     facing = "down";
-    Crafty('Player').attr({x:xpos, y:0}).disableControl().pauseAnimation().tween({y: ypos}, 16).timeout(function() {
-        Crafty('Player').fourway(speed);
+    Crafty('player').attr({x:xpos, y:0}).disableControl().stop().tween({y: ypos}, 16).timeout(function() {
+        Crafty('player').fourway(speed);
         enableActions();
         falling = false;
         }, 500);
@@ -792,8 +790,8 @@ function unlockDoors() {
 // makes sure that the player is inside the room, and not stuck in a solid dungeon door
 function closeDoors(monsters) {
     if(monsters) {unlock_by_killing = true;} else {unlock_by_killing = false;} // sometimes you need to unlock doors by other means!
-    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('Player').tween({x: 440}, 4);} 
-    if(trackplayer.x<40) {trackplayer.x = 40; Crafty('Player').tween({x: 40}, 4);}
-    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('Player').tween({y: 440}, 4);} 
-    if(trackplayer.y<40) {trackplayer.y = 40; Crafty('Player').tween({y: 40}, 4);}
+    if(trackplayer.x>440) {trackplayer.x = 440; Crafty('player').tween({x: 440}, 4);} 
+    if(trackplayer.x<40) {trackplayer.x = 40; Crafty('player').tween({x: 40}, 4);}
+    if(trackplayer.y>440) {trackplayer.y = 440; Crafty('player').tween({y: 440}, 4);} 
+    if(trackplayer.y<40) {trackplayer.y = 40; Crafty('player').tween({y: 40}, 4);}
     }

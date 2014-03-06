@@ -34,6 +34,7 @@
 	* @see Multiway
 	*/
 	fourway: function (speed) {
+	   //tell('workin'); //debug
 		this.multiway(speed, {
 			UP_ARROW: -90,
 			DOWN_ARROW: 90,

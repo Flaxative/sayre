@@ -17,7 +17,7 @@ Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausab
 
 // Some monsters hurt you just by touch 
 Crafty.c('Painful', { init: function() { this.bind("Moved", function(from) {
-       if(this.hit('Player')&&Crafty('Player').has('vulnerable')){
+       if(this.hit('player')&&Crafty('player').has('vulnerable')){
            tell('ouch!'); Crafty.audio.play('ow');
            damagePlayer(this.strength);
         }
@@ -173,28 +173,28 @@ Crafty.c('FourSlide', {init: function(){this.bind('Slide', function(direction){
     if(direction[0]==1) {
             if (!this.isPlaying("walk_right")) {
                 this.facing = "right";
-                this.pauseAnimation().animate("walk_right", -1);
+                this.stop().animate("walk_right", 8, -1);
                 return;
                 }
             }
         if(direction[0]==-1) {
             if (!this.isPlaying("walk_left")) {
                 this.facing = "left";
-                this.pauseAnimation().animate("walk_left", -1);
+                this.stop().animate("walk_left", 8, -1);
                 return;
                 }
             }
         if(direction[1]==1) {
             if (!this.isPlaying("walk_down")) {
                 this.facing = "down";
-                this.pauseAnimation().animate("walk_down", -1);
+                this.stop().animate("walk_down", 8, -1);
                 return;
                 }
             }
         if(direction[1]==-1) {
             if (!this.isPlaying("walk_up")) {
                 this.facing = "up";
-                this.pauseAnimation().animate("walk_up", -1);
+                this.stop().animate("walk_up", 8, -1);
                 return;
                 }
             }
@@ -208,48 +208,48 @@ Crafty.c('Rotator', {init: function(){this.bind('Rotate', function(args){
     var keepw = this.w; var keeph = this.h; // get height and width to preserve after rotation
     if(this.facing=="left") {
             if (rotateDir=='cw') {
-                this.animate("walk_up", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_up", 1, 1);
                 this.facing = "up";
                 return true;
                 }
             if (rotateDir=='ccw') {
-                this.animate("walk_down", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_down", 1, 1);
                 this.facing = "down";
                 return true;
                 }
             }
     if(this.facing=="up") {
             if (rotateDir=='cw') {
-                this.animate("walk_right", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_right", 1, 1);
                 this.facing = "right";
                 return true;
                 }
             if (rotateDir=='ccw') {
-                this.animate("walk_left", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_left", 1, 1);
                 this.facing = "left";
                 return true;
                 }
             }
     if(this.facing=="right") {
             if (rotateDir=='cw') {
-                this.animate("walk_down", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_down", 1, 1);
                 this.facing = "down";
                 return true;
                 }
             if (rotateDir=='ccw') {
-                this.animate("walk_up", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_up", 1, 1);
                 this.facing = "up";
                 return true;
                 }
             }
     if(this.facing=="down") {
             if (rotateDir=='cw') {
-                this.animate("walk_left", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_left", 1, 1);
                 this.facing = "left";
                 return true;
                 }
             if (rotateDir=='ccw') {
-                this.animate("walk_right", 1, 1).reelPosition(1).pauseAnimation();
+                this.animate("walk_right", 1, 1);
                 this.facing = "right";
                 return true;
                 }
@@ -260,12 +260,12 @@ Crafty.c('Rotator', {init: function(){this.bind('Rotate', function(args){
 // Pink Slime Foundation -- uses old RandomAI
 Crafty.c('SlimeBase', {
   init: function() {
-    this.requires('Monster, RandomAIOld, Tween, SpriteAnimation, FourSlide, Painful, vulnerable, ooze, slimedown')
+    this.requires('Monster, RandomAIOld, SpriteAnimation, FourSlide, Painful, vulnerable, ooze, slimedown')
       //.color('#ff5ec4')
-        .reel("walk_up", 300, 0, 0, 3)
-        .reel("walk_right", 300, 0, 1, 3)
-        .reel("walk_down", 300, 0, 2, 3)
-        .reel("walk_left", 300, 0, 3, 3)
+        .animate("walk_up", 0, 0, 2)
+        .animate("walk_right", 0, 1, 2)
+        .animate("walk_down", 0, 2, 2)
+        .animate("walk_left", 0, 3, 2)
         .attr({w:40, h:40, hp: 5, strength: 11, hitNoise: 'grunt'}).collision()
       .bind('Moved', function(from) {
            if(this.hit('Solid')||this.hit('Exit')||this.hit('Monster')){
@@ -305,16 +305,16 @@ Crafty.c('Octorok', {
     //this.shotInterval = 1500 + 100 * Math.floor((Math.random()*30)+1); // stop & shoot every 1.5-4.5 seconds
     this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, vulnerable, octorok, octdown')
       //.color('#ff5ec4')
-        .reel("walk_down", 300, 0, 0, 4)
-        .reel("walk_up", 300, 0, 1, 4)
-        .reel("walk_left", 300, 0, 2, 4)
-        .reel("walk_right", 300, 0, 3, 4)
+        .animate("walk_down", 0, 0, 3)
+        .animate("walk_up", 0, 1, 3)
+        .animate("walk_left", 0, 2, 3)
+        .animate("walk_right", 0, 3, 3)
         .attr({w:40, h:40, hp: 5, strength: 11, death: "random", speed: 2, 
             projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },
     countToShot: function() { // counts down to shooting phase
-        if(Crafty('Player').paused) {return false;}
+        if(Crafty('player').paused) {return false;}
         this.timeTillNextShot--;
         if(this.timeTillNextShot<=0) {
             this.unbind("EnterFrame", this.countToShot);
@@ -324,11 +324,11 @@ Crafty.c('Octorok', {
             }
         },
     countToCount: function() { // executes shooting phase while counting down to movement
-        if(Crafty('Player').paused) {return false;}
+        if(Crafty('player').paused) {return false;}
         this.timeTillNextShot--;
         if(this.timeTillNextShot == 31) {
             this.trigger("Pause");          // pause monster to stop movement
-            this.pauseAnimation();                    // stop animation
+            this.stop();                    // stop animation
             this.fireProjectile();          // fire!!
             return;
             }
@@ -358,16 +358,16 @@ Crafty.c('OctorokBlue', {
     //this.shotInterval = 1500 + 100 * Math.floor((Math.random()*30)+1); // stop & shoot every 1.5-4.5 seconds
     this.requires('Monster, RandomAI, SpriteAnimation, FourSlide, Shooter, Painful, Rotator, Minion, vulnerable, octorok, octBdown')
       //.color('#ff5ec4')
-        .reel("walk_down", 300, 0, 0, 4)
-        .reel("walk_up", 300, 0, 1, 4)
-        .reel("walk_left", 300, 0, 2, 4)
-        .reel("walk_right", 300, 0, 3, 4)
+        .animate("walk_down", 0, 0, 3)
+        .animate("walk_up", 0, 1, 3)
+        .animate("walk_left", 0, 2, 3)
+        .animate("walk_right", 0, 3, 3)
         .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, 
             projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },
     countToShot: function() {
-        if(Crafty('Player').paused) {return false;}
+        if(Crafty('player').paused) {return false;}
         this.timeTillNextShot--;
         if(this.timeTillNextShot<=0) {
             this.unbind("EnterFrame", this.countToShot);
@@ -377,11 +377,11 @@ Crafty.c('OctorokBlue', {
             }
         },
     countToCount: function() {
-        if(Crafty('Player').paused) {return false;}
+        if(Crafty('player').paused) {return false;}
         this.timeTillNextShot--;
         if(this.timeTillNextShot == 123) {
             this.trigger("Pause"); 
-            this.pauseAnimation();
+            this.stop();
             this.fireProjectile(); 
             return;
             }
@@ -424,7 +424,7 @@ Crafty.c('RockProjectile', {
             bounce(data[0].obj.x, data[0].obj.y, 'bounce_quiet');
             this.destroy();
             })
-        .onHit("Player", function() {
+        .onHit("player", function() {
             Crafty.audio.play('ow');
             damagePlayer(this.strength);
             this.destroy();

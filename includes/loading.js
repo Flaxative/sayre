@@ -15,7 +15,7 @@ Crafty.scene('Loading', function(){
     'media/opening.ogg', "media/opening.mp3", // stolen from mantra
     
     // SFX
-    "media/LOZ_Get_Rupee.mp3", "media/rupee.mp3", "media/secret.mp3","media/secret.wav", "media/chest.wav", // these are all stolen from Legend of Zelda games
+    "media/LOZ_Get_Rupee.wav", "media/rupee.mp3", "media/secret.mp3","media/secret.wav", "media/chest.wav", // these are all stolen from Legend of Zelda games
     "media/gulp.wav", /* CC: http://www.freesound.org/people/Q.K./sounds/56271/ */ 'media/pickup.wav', /* CC: http://www.freesound.org/people/timgormly/sounds/170170/ */
     'media/bounce.wav', 'media/bounce-quiet.wav', /* CC: http://www.freesound.org/people/gezortenplotz/sounds/20132/ */ 'media/wood-hit.wav', /* CC: http://www.freesound.org/people/dheming/sounds/177780/ */
     'media/boomerang.wav',  /* CC: http://www.freesound.org/people/NoiseCollector/sounds/67376/ */

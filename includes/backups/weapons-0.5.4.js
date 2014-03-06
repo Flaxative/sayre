@@ -29,7 +29,7 @@ Crafty.c('Wooden Sword', {
     init: function() {
         this.requires("Weapon, wooden_sword")
         .attr({h: 30, w: 10, damage: 5, z: 2, length: 30, useSpeed: 200}).collision()
-        //.reel("swing", 300, 0, 0, 2) // initializes the swing animation (currently not implemented)
+        .animate("swing", 0, 0, 2) // initializes the swing animation (currently not implemented)
         .onHit('Bush', function(data) {
             if(potent) {
                 Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush      
@@ -80,29 +80,28 @@ Crafty.c('RangeIncrement', {
 // boomerang functions
 function chuckBoomerang() {
     has_boomerang = false; swinging = true; potent = true;
-    Crafty('Player').disableControl().pauseAnimation();   // pause the player
+    Crafty('player').disableControl().stop();   // pause the player
     disableActions();                           // stop interaction & inventory & pause
-    Crafty("Player").addComponent("Shooter").attr({projectile: "BoomerangProjectile", pw: 20, ph: 20}).fireProjectile();
-    var RIx = 0; var RIy = 0; //"RI" is Range Increment
-    if(Crafty('Player').facing=='left') {RIx = Crafty('Player').x-240; RIy = Crafty('Player').y;}
-    else if(Crafty('Player').facing=='right') {RIx = Crafty('Player').x+240; RIy = Crafty('Player').y;}
-    else if(Crafty('Player').facing=='up') {RIx = Crafty('Player').x; RIy = Crafty('Player').y-240;}
-    else if(Crafty('Player').facing=='down') {RIx = Crafty('Player').x; RIy = Crafty('Player').y+240;}
+    Crafty("player").addComponent("Shooter").attr({projectile: "BoomerangProjectile", pw: 20, ph: 20}).fireProjectile();
+    var RIx = 0; var RIy = 0;
+    if(Crafty('player').facing=='left') {RIx = Crafty('player').x-240; RIy = Crafty('player').y;}
+    else if(Crafty('player').facing=='right') {RIx = Crafty('player').x+240; RIy = Crafty('player').y;}
+    else if(Crafty('player').facing=='up') {RIx = Crafty('player').x; RIy = Crafty('player').y-240;}
+    else if(Crafty('player').facing=='down') {RIx = Crafty('player').x; RIy = Crafty('player').y+240;}
     Crafty.e("RangeIncrement").attr({x: RIx, y: RIy});
     Crafty.audio.play('boomerang');
     }
 function catchBoomerang() {
-    tell('yo?');
     has_boomerang = true; swinging = false; 
-    Crafty('Player').trigger("Run").enableControl();
+    Crafty('player').trigger("Run").fourway(speed);
     enableActions();
     }
 
 // component for displaying 'ding' & reflection @ location of impact
 Crafty.c('Bounce', {
     init: function() {
-        this.requires('Actor, SpriteAnimation, bounce').reel("bounce", 140, 0, 0, 2).attr({z: 1003, w: 40, h: 40});
-        this.animate("bounce", 1).timeout(function() {this.destroy();}, 140);
+        this.requires('Actor, SpriteAnimation, bounce').animate("bounce", 0, 0, 1).attr({z: 1003, w: 40, h: 40});
+        this.animate("bounce", 4, 1).timeout(function() {this.destroy();}, 140);
         },
     });
     
@@ -115,9 +114,9 @@ function bounce(x, y, noise) {
 Crafty.c('BoomerangProjectile', {
     init: function() {
         this.requires('Projectile, projectile, boomerang')
-        .reel("rotate", 190, 0, 0, 8)
+        .animate("rotate", 0, 0, 7)
         .attr({z: 1003, w: 20, h: 20, speed: 6, strength: 3}).collision()
-        .onHit("Player", function() {
+        .onHit("player", function() {
             // destroy the boomerang projectile and regain the ability to chuck it
             this.unbind("timeout").destroy(); catchBoomerang(); //tell('it returned!');
             })
@@ -150,17 +149,17 @@ Crafty.c('BoomerangProjectile', {
                 Crafty('BoomerangProjectile').boomerangReturn(data, data[0].obj.hitNoise); // bounce back
                 }
             });
-            this.animate("rotate", -1);
+            this.animate("rotate", 6, -1);
         },
     boomerangReturn: function(data, ricochet) {
         // if boomerang overlaps guard/monster/etc. by too much to bounce back, simply return it
         if(data) {
             if(data[0].overlap<-6) {
                 if(ricochet) {
-                    if(Crafty('Player').facing=='left') {bounce(Crafty('Player').x-40, Crafty('Player').y, ricochet);}
-                    else if(Crafty('Player').facing=='right') {bounce(Crafty('Player').x+30, Crafty('Player').y, ricochet);}
-                    else if(Crafty('Player').facing=='up') {bounce(Crafty('Player').x, Crafty('Player').y-40, ricochet);}
-                    else if(Crafty('Player').facing=='down') {bounce(Crafty('Player').x, Crafty('Player').y+30, ricochet);}
+                    if(Crafty('player').facing=='left') {bounce(Crafty('player').x-40, Crafty('player').y, ricochet);}
+                    else if(Crafty('player').facing=='right') {bounce(Crafty('player').x+30, Crafty('player').y, ricochet);}
+                    else if(Crafty('player').facing=='up') {bounce(Crafty('player').x, Crafty('player').y-40, ricochet);}
+                    else if(Crafty('player').facing=='down') {bounce(Crafty('player').x, Crafty('player').y+30, ricochet);}
                     }
                 this.destroy(); catchBoomerang(); 
                 return;}
@@ -192,11 +191,10 @@ Crafty.c('BoomerangProjectile', {
 // BOMBS!
 Crafty.c('Bomb', {
     init: function() {
-        tell("placed!");
         this.requires('Actor, SpriteAnimation, bomb_placed')
-        .reel("commence_detonation", 1000, 0, 0, 16).reel("faster_detonation", 375, 0, 0, 16).attr({z: 1, w: 30, h: 37, overx: 5, overy: 1});
-        this.animate("commence_detonation", 1).timeout(function() { // initial, slower animation - play once in 1 second
-            this.animate("faster_detonation", 2).timeout(function() { // second, faster animation - play twice in 1 second
+        .animate("commence_detonation", 0, 0, 15).attr({z: 1, w: 30, h: 37, overx: 5, overy: 1});
+        this.animate("commence_detonation", 24, 1).timeout(function() { // initial, slower animation - play once in 1 second
+            this.animate("commence_detonation", 16, 2).timeout(function() { // second, faster animation - play twice in 1 second
                 Crafty.e('Bomb Explosion').attr({x: this.x-30, y: this.y-26});
                 this.destroy(); // destroy the bomb
                 }, 750);
@@ -207,7 +205,7 @@ Crafty.c('Bomb', {
 Crafty.c('Bomb Explosion', {
     init: function() {
         this.requires('Actor, SpriteAnimation, Collision, bomb_explosion')
-        .reel("explosion", 500, 0, 0, 10).attr({z: 1, w: 90, h: 92, overx: -25, overy: -25, damage: 10, strength: 22}).collision()
+        .animate("explosion", 0, 0, 9).attr({z: 1, w: 90, h: 92, overx: -25, overy: -25, damage: 10, strength: 22}).collision()
         .onHit('Bush', function(data) { // bombs should destroy plants
             Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush      
             var loot_result = Math.floor((Math.random()*3)+1);
@@ -226,14 +224,14 @@ Crafty.c('Bomb Explosion', {
                 if(data[0].obj.hp<1) {killMonster(data[0].obj);}    // kill monsters with 0 or fewer HPs
                 }
             })
-        .onHit("Player", function() { // bombs should hurt players
-            if(Crafty('Player').has('vulnerable')) {
+        .onHit("player", function() { // bombs should hurt players
+            if(Crafty('player').has('vulnerable')) {
                 tell('ouch!'); Crafty.audio.play('ow');
                damagePlayer(this.strength);
                 }
             });
         Crafty.audio.play('bomb_explosion');
-        this.animate("explosion", 1).timeout(function() { // play the explosion animation
+        this.animate("explosion", 16, 1).timeout(function() { // play the explosion animation
                 this.destroy(); // destroy the explosion
             }, 500);
         },

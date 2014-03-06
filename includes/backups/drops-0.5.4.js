@@ -29,7 +29,7 @@ Crafty.c('Rupee', {init: function() {this.requires('Actor, SpriteAnimation, Coll
 Crafty.c('RupeeG', {
     init: function() {
         this.requires('Rupee, rupeeG1').attr({value: 1})
-        .reel("shine", 500, 0, 0, 3).animate("shine", -1)
+        .animate("shine", 0, 0, 2).animate("shine", 24, -1)
         .attr({w: 16, h: 28})
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
@@ -37,7 +37,7 @@ Crafty.c('RupeeG', {
 Crafty.c('RupeeB', {
     init: function() {
         this.requires('Rupee, rupeeB1').attr({value: 5})
-        .reel("shine", 500, 3, 0, 3).animate("shine", -1)
+        .animate("shine", 3, 0, 5).animate("shine", 24, -1)
         .attr({w: 16, h: 28})
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
@@ -45,7 +45,7 @@ Crafty.c('RupeeB', {
 Crafty.c('RupeeY', {
     init: function() {
         this.requires('Rupee, rupeeY1').attr({value: 10})
-        .reel("shine", 500, 6, 0, 3).animate("shine", -1)
+        .animate("shine", 6, 0, 8).animate("shine", 24, -1)
         .attr({w: 16, h: 28})
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
@@ -53,7 +53,7 @@ Crafty.c('RupeeY', {
 Crafty.c('RupeeR', {
     init: function() {
         this.requires('Rupee, rupeeR1').attr({value: 20})
-        .reel("shine", 500, 9, 0, 3).animate("shine", -1)
+        .animate("shine", 9, 0, 11).animate("shine", 24, -1)
         .attr({w: 16, h: 28})
         .collision([8, 0], [16, 8], [16, 20], [8, 28], [0, 20], [0, 8]);
         }
