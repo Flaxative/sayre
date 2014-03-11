@@ -88,9 +88,10 @@ Crafty.c('PlayerCharacter', {
             pushing = 0;
             if(pushedblock) {this.detach(pushedblock); console.log('detached by direction'); pushedblock = '';}
             if (direction.x < 0) {
-                if (!this.isPlaying("walk_left")&&!this.disableControls)
+                if (!this.isPlaying("walk_left")&&!this.disableControls) {
                     this.pauseAnimation().animate("walk_left", -1);
                     dir.left = true; dir.right = false; facing = 'left'; this.facing = 'left';
+                    }
                     /*if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 90, 
@@ -100,9 +101,10 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.x > 0) {
-                if (!this.isPlaying("walk_right")&&!this.disableControls)
+                if (!this.isPlaying("walk_right")&&!this.disableControls) {
                     this.pauseAnimation().animate("walk_right", -1);
                     dir.right = true; dir.left = false; facing = 'right'; this.facing = 'right';
+                    }
                    /* if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 270, 
@@ -112,9 +114,10 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.y < 0) {
-                if (!this.isPlaying("walk_up")&&!this.disableControls)
+                if (!this.isPlaying("walk_up")&&!this.disableControls) {
                     this.pauseAnimation().animate("walk_up", -1);
                     dir.up = true; dir.down = false; facing='up'; this.facing = 'up';
+                    }
                   /*  if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 180, 
@@ -124,9 +127,10 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.y > 0) {
-                if (!this.isPlaying("walk_down")&&!this.disableControls)
+                if (!this.isPlaying("walk_down")&&!this.disableControls) {
                     this.pauseAnimation().animate("walk_down", -1);
                     dir.down = true; dir.up = false; facing='down'; this.facing = 'down';
+                    }
                    /* if(swinging) {
                         Crafty('weapon').attr({
                             rotation: 0, 
@@ -176,7 +180,15 @@ Crafty.c('PlayerCharacter', {
             Crafty.scene(data[0].obj.direction);
             })     
       .bind('Moved', function(from) {
-           if(this.hit('Painful')&&this.has('vulnerable')){
+            // if for any reason direction is messed up, reset walking animation and facing
+            // need to find a way to only do this if a player is moving himself with the controls :)
+            // unless all non-controlled movement will be done with tween or something, which is possible 
+            if(from.y<this.y&&!this.isPlaying()) {this.animate("walk_down", -1); facing="down";}
+            if(from.y>this.y&&!this.isPlaying()) {this.animate("walk_up", -1); facing="up";}
+            if(from.x>this.x&&!this.isPlaying()) {this.animate("walk_left", -1); facing="left";}
+            if(from.x<this.x&&!this.isPlaying()) {this.animate("walk_right", -1); facing="right"}
+    
+          if(this.hit('Painful')&&this.has('vulnerable')){
                tell('ouch!'); Crafty.audio.play('ow');
                damagePlayer(this.hit('Painful')[0].obj.strength);
             }

@@ -93,10 +93,6 @@ function resumeAll() {
     Crafty('Monster Pausable').trigger("Run").each(function(){this.resumeAnimation();});
     Crafty('Projectile').trigger("Run"); //tell(speed);
     Crafty('Player').trigger("Run").enableControl();
-    if(dir.left) {Crafty('Player').animate("walk_left", -1);}
-    if(dir.right) {Crafty('Player').animate("walk_right", -1);}
-    if(dir.up) {Crafty('Player').animate("walk_up", -1);}
-    if(dir.down) {Crafty('Player').animate("walk_down", -1);}
     }
     
 // pause key
@@ -654,7 +650,7 @@ function killMonster(monster) {
     //primitive death animation using alpha tween
     // UNBINDING ENTERFRAME BREAKS MONSTER DEATH TWEEN
     // NOT UNBINDING IT BREAKS EVERYTHING ELSE ABOUT DEATH
-    monster.pauseAnimation().trigger("Pause").unbind("EnterFrame")   // stop its movement
+    monster.pauseAnimation().trigger("Pause").unbind("Moved").unbind("EnterFrame", monster.moveFunc)   // stop its movement
     .removeComponent("Painful").removeComponent("Monster")  // stop it from hurting PC, or dying multiple times
     .attr({alpha:1.0}).tween({alpha:0.0}, 500).timeout(function() {this.destroy();tell("it's gone!");}, 500);
     if(monsters_on_screen<=0&&unlock_by_killing) {unlockDoors();}
@@ -743,7 +739,7 @@ function fall() {
             rotation: -45, 
             x: current_hole.x+19, 
             y: current_hole.y+19
-            }, 32)
+            }, 1000)
             // above: set timer (32 frames = 1 sec) for falling animation; below: set timer (1000 ms = 1 sec) for control reset 
         .timeout(function(){eval(current_hole.interact);}, 1000);       // run hole function (e.g. fall endless or go_to)
     }

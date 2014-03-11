@@ -109,7 +109,10 @@ Crafty.c('Stable', {
         this._vy = direction[1] * this.speed / this._stepFrames;
 
         this._frames = this._stepFrames;
-      }).bind("EnterFrame",function(e) {
+      }).bind("EnterFrame", this.moveFunc);
+
+    }, 
+    moveFunc: function(e) {
         if(!this._moving) return false;
 
         // If we'removing, update our position by our per-frame velocity
@@ -125,9 +128,7 @@ Crafty.c('Stable', {
           this.y = this._destY;
         }
         this.trigger('Moved', {x: this.x, y: this.y});
-      });
-
-    }, 
+      },
     slideFrames: function(frames) { 
        this._stepFrames = frames;
     },

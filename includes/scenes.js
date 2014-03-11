@@ -57,7 +57,7 @@ Crafty.scene('Game', function() {
         name: NPCname, 
         x:3, y:4, 
         interaction:"dialogue("+NPCnice+"_dialogue, '"+NPCname+"')",
-        callback:"current_hp = max_hp; updateHP(1500);"
+        callback:"current_hp = max_hp; updateHP(1500); Crafty.audio.play('gulp');"
         });  
  
   // BURNINATOR
