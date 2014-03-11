@@ -88,7 +88,7 @@ Crafty.c('PlayerCharacter', {
             pushing = 0;
             if(pushedblock) {this.detach(pushedblock); console.log('detached by direction'); pushedblock = '';}
             if (direction.x < 0) {
-                if (!this.isPlaying("walk_left"))
+                if (!this.isPlaying("walk_left")&&!this.disableControls)
                     this.pauseAnimation().animate("walk_left", -1);
                     dir.left = true; dir.right = false; facing = 'left'; this.facing = 'left';
                     /*if(swinging) {
@@ -100,7 +100,7 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.x > 0) {
-                if (!this.isPlaying("walk_right"))
+                if (!this.isPlaying("walk_right")&&!this.disableControls)
                     this.pauseAnimation().animate("walk_right", -1);
                     dir.right = true; dir.left = false; facing = 'right'; this.facing = 'right';
                    /* if(swinging) {
@@ -112,7 +112,7 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.y < 0) {
-                if (!this.isPlaying("walk_up"))
+                if (!this.isPlaying("walk_up")&&!this.disableControls)
                     this.pauseAnimation().animate("walk_up", -1);
                     dir.up = true; dir.down = false; facing='up'; this.facing = 'up';
                   /*  if(swinging) {
@@ -124,7 +124,7 @@ Crafty.c('PlayerCharacter', {
                         }*/
             }
             if (direction.y > 0) {
-                if (!this.isPlaying("walk_down"))
+                if (!this.isPlaying("walk_down")&&!this.disableControls)
                     this.pauseAnimation().animate("walk_down", -1);
                     dir.down = true; dir.up = false; facing='down'; this.facing = 'down';
                    /* if(swinging) {
@@ -151,7 +151,7 @@ Crafty.c('PlayerCharacter', {
             })
         .onHit("Rupee", function(data) {
             // tell('on exit');
-            data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 1);
+            data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 31);
             data[0].obj.removeComponent('Rupee') // stop from triggering multiple times
             .timeout(function(){
                 Crafty.audio.play('rupee');
@@ -194,8 +194,8 @@ Crafty.c('PlayerCharacter', {
                     this.attr({x: from.x, y:from.y});
                     
                     if(pushing>14 && block.slide == facing && block.x < block.maxX && block.x > block.minX && block.y < block.maxY && block.y > block.minY) {
-                        this.attach(block); pushedblock = block;
-                        block.bind("Change", this.checkBlock);/*function() {
+                        this.attach(block); pushedblock = block; tell("attached");
+                        block.bind("Move", this.checkBlock);/*function() {
                             this.detach(derp[0].obj); this.unbind("EnterFrame"); console.log('detached');
                             }*/
                         }
@@ -211,7 +211,7 @@ Crafty.c('PlayerCharacter', {
     if(pushedblock.x >= pushedblock.maxX || pushedblock.x <= pushedblock.minX || pushedblock.y >= pushedblock.maxY || pushedblock.y <= pushedblock.minY) {
         Crafty('Player').detach(pushedblock); console.log('detached by distance');
         if(pushedblock.trigger) {eval(pushedblock.interact);}
-        pushedblock.unbind('Change'); pushedblock = '';
+        pushedblock.unbind('Move'); pushedblock = ''; 
         }
     }
 });

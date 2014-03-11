@@ -92,7 +92,6 @@ function chuckBoomerang() {
     Crafty.audio.play('boomerang');
     }
 function catchBoomerang() {
-    tell('yo?');
     has_boomerang = true; swinging = false; 
     Crafty('Player').trigger("Run").enableControl();
     enableActions();
@@ -129,7 +128,7 @@ Crafty.c('BoomerangProjectile', {
             })
         .onHit("Rupee", function(data) {
             // tell('on exit');
-            data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 1);
+            data[0].obj.attr({z:1002}).tween({y: data[0].obj.y-20}, 31);
             data[0].obj.removeComponent('Rupee') // stop from triggering multiple times
             .timeout(function(){
                 Crafty.audio.play('rupee');

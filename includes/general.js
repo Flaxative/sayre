@@ -8,6 +8,7 @@ var pushedblock; var pushing = 0; var speed = 4;
 var monsters_on_screen = 0; var unlock_by_killing = false;
 var more_dialogue = false; var current_statement = 0;
 var has_boomerang = true; var boomerang_returning = false;
+var started = false;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -81,7 +82,7 @@ function enableActions() {
 // pause player & monsters
 function pauseAll() {
     //tell("going away for a sec..."); //debug
-    Crafty('Monster Pausable').trigger("Pause");
+    Crafty('Monster Pausable').trigger("Pause").each(function(){this.pauseAnimation();});
     Crafty('Projectile').trigger("Pause");
     Crafty('Player').trigger("Pause");
     Crafty('Player').disableControl().pauseAnimation();
@@ -89,9 +90,13 @@ function pauseAll() {
 // unpause player & monsters
 function resumeAll() {
     //tell("we're back"); //debug
-    Crafty('Monster Pausable').trigger("Run");
+    Crafty('Monster Pausable').trigger("Run").each(function(){this.resumeAnimation();});
     Crafty('Projectile').trigger("Run"); //tell(speed);
     Crafty('Player').trigger("Run").enableControl();
+    if(dir.left) {Crafty('Player').animate("walk_left", -1);}
+    if(dir.right) {Crafty('Player').animate("walk_right", -1);}
+    if(dir.up) {Crafty('Player').animate("walk_up", -1);}
+    if(dir.down) {Crafty('Player').animate("walk_down", -1);}
     }
     
 // pause key
@@ -647,9 +652,11 @@ function killMonster(monster) {
         randomLoot(monster.x, monster.y); // add a "worth" attribute or something in order to tier random drops
         }
     //primitive death animation using alpha tween
-    monster.pauseAnimation().unbind("EnterFrame").trigger("Pause")    // stop its movement
+    // UNBINDING ENTERFRAME BREAKS MONSTER DEATH TWEEN
+    // NOT UNBINDING IT BREAKS EVERYTHING ELSE ABOUT DEATH
+    monster.pauseAnimation().trigger("Pause").unbind("EnterFrame")   // stop its movement
     .removeComponent("Painful").removeComponent("Monster")  // stop it from hurting PC, or dying multiple times
-    .tween({alpha:0.0}, 500).timeout(function() {this.destroy();tell("it's gone!");}, 500);
+    .attr({alpha:1.0}).tween({alpha:0.0}, 500).timeout(function() {this.destroy();tell("it's gone!");}, 500);
     if(monsters_on_screen<=0&&unlock_by_killing) {unlockDoors();}
     }
 
@@ -771,10 +778,10 @@ function go_to(destination) {
 
 // simulates player "falling" into place
 function dropPlayer(xpos, ypos) {
-    trackplayer.x = xpos; trackplayer.y = ypos;
+    trackplayer.x = xpos; trackplayer.y = ypos; tell("ypos="+ypos);
     facing = "down";
-    Crafty('Player').attr({x:xpos, y:0}).disableControl().pauseAnimation().tween({y: ypos}, 16).timeout(function() {
-        Crafty('Player').fourway(speed);
+    Crafty('Player').attr({x:xpos, y:0}).removeComponent("vulnerable").disableControl().pauseAnimation().tween({y: ypos}, 500).timeout(function() {
+        Crafty('Player').enableControl().addComponent("vulnerable");
         enableActions();
         falling = false;
         }, 500);
