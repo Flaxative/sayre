@@ -33,7 +33,7 @@ Crafty.scene('Loading', function(){
     'assets/bounce.png', 'assets/longspear.png', 'assets/wooden-sword.png', 'assets/wooden-sword-2.png', 'assets/boomerang.png',
     
     // monster sprites
-    'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png',
+    'assets/slimes-5.png', 'assets/slimes-blue.png', 'assets/octorok-40.png', 'assets/octorok-blue.png', 'assets/octorok-gold.png', 'assets/octorok-green.png',
     'assets/projectile-rock.png', 'assets/projectile-rock-big.png',
     
     // portraits
@@ -216,6 +216,12 @@ Crafty.scene('Loading', function(){
             octGleft: [0, 2],
             octGright: [0, 3]
             });
+        Crafty.sprite(40, "assets/octorok-green.png", {
+            octGreendown: [0, 0],
+            octGreenup: [0, 1],
+            octGreenleft: [0, 2],
+            octGreenright: [0, 3]
+            });
         Crafty.sprite(40, "assets/RPGTiles-40.png", {
             sand: [0, 0], grass: [0, 1],
             waterTL: [8,0],
@@ -288,7 +294,7 @@ Crafty.scene('Loading', function(){
                 enableActions();
                 $("#console").click( function() {console.log(dir);});
                 $('.sidebar').html(sidebar_base); setSlot('weapon'); updateHP(10); updateCoins();
-                theme('opening'); tile_theme = 'opening'; // initialize music 
+                //theme('opening'); tile_theme = 'opening'; // initialize music 
                 started = true;
                 })
             ;

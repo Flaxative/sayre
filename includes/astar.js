@@ -57,7 +57,7 @@ function findPath(world, pathStart, pathEnd, movement)
     if(movement == "swim") {maxWalkableTileNum = 1;}
     if(movement == "hover") {maxWalkableTileNum = 2;}
     if(movement == "fly") {maxWalkableTileNum = 3;}
-    tell(movement+maxWalkableTileNum);
+    //tell(movement+maxWalkableTileNum);
     
     
     

@@ -22,6 +22,7 @@ Crafty.scene('Game', function() {
     exit(-1,6, 'west1');
     exit(-1,7, 'west1');
     exit(6, 13, 'south1');
+    exit(13, 6, 'east1');
     
     this.occupied[5][5] = true; // occupy player's initial position
  
@@ -242,5 +243,24 @@ Crafty.scene('south1', function() {
     monster('Octorok', 3, 9);
     monster('OctorokGold', 9, 3);
     monster('OctorokBlue', 9, 9);
+ 
+});
+
+Crafty.scene('east1', function() {
+    current_scene = this;
+    scene_name = "south1";
+    initOccupy();
+    placePlayer();
+    exit(-1, 6, 'Game');
+
+    tile('Grass', 0, 0); tile('Grass', 1, 0); tile('Grass', 2, 0); tile('Grass', 3, 0); tile('Grass', 4, 0); tile('Grass', 5, 0); tile('Grass', 6, 0); tile('Grass', 7, 0); tile('Grass', 8, 0); tile('Grass', 9, 0); tile('Grass', 10, 0); tile('Grass', 11, 0); tile('Grass', 12, 0); tile('Grass', 0, 1); tile('Grass', 1, 1); tile('Grass', 2, 1); tile('Grass', 3, 1); tile('Grass', 4, 1); tile('Grass', 5, 1); tile('Grass', 6, 1); tile('Grass', 7, 1); tile('Grass', 8, 1); tile('Grass', 9, 1); tile('Grass', 10, 1); tile('Grass', 11, 1); tile('Grass', 12, 1); tile('Grass', 0, 2); tile('Grass', 1, 2); prop('Rock', 2, 2); tile('Grass', 3, 2); tile('Grass', 4, 2); tile('Grass', 5, 2); prop('Rock', 6, 2); tile('Grass', 7, 2); tile('Grass', 8, 2); tile('Grass', 9, 2); prop('Rock', 10, 2); tile('Grass', 11, 2); tile('Grass', 12, 2); tile('Grass', 0, 3); tile('Grass', 1, 3); tile('Grass', 2, 3); tile('Grass', 3, 3); tile('Grass', 4, 3); tile('Grass', 5, 3); tile('Grass', 6, 3); tile('Grass', 7, 3); tile('Grass', 8, 3); tile('Grass', 9, 3); tile('Grass', 10, 3); tile('Grass', 11, 3); tile('Grass', 12, 3); tile('Grass', 0, 4); tile('Grass', 1, 4); tile('Grass', 2, 4); tile('Grass', 3, 4); prop('Rock', 4, 4); tile('Grass', 5, 4); tile('Grass', 6, 4); tile('Grass', 7, 4); prop('Rock', 8, 4); tile('Grass', 9, 4); tile('Grass', 10, 4); tile('Grass', 11, 4); tile('Grass', 12, 4); tile('Grass', 0, 5); tile('Grass', 1, 5); tile('Grass', 2, 5); tile('Grass', 3, 5); tile('Grass', 4, 5); tile('Grass', 5, 5); tile('Grass', 6, 5); tile('Grass', 7, 5); tile('Grass', 8, 5); tile('Grass', 9, 5); tile('Grass', 10, 5); tile('Grass', 11, 5); tile('Grass', 12, 5); tile('Grass', 0, 6); tile('Grass', 1, 6); prop('Rock', 2, 6); tile('Grass', 3, 6); tile('Grass', 4, 6); tile('Grass', 5, 6); prop('Rock', 6, 6); tile('Grass', 7, 6); tile('Grass', 8, 6); tile('Grass', 9, 6); prop('Rock', 10, 6); tile('Grass', 11, 6); tile('Grass', 12, 6); tile('Grass', 0, 7); tile('Grass', 1, 7); tile('Grass', 2, 7); tile('Grass', 3, 7); tile('Grass', 4, 7); tile('Grass', 5, 7); tile('Grass', 6, 7); tile('Grass', 7, 7); tile('Grass', 8, 7); tile('Grass', 9, 7); tile('Grass', 10, 7); tile('Grass', 11, 7); tile('Grass', 12, 7); tile('Grass', 0, 8); tile('Grass', 1, 8); tile('Grass', 2, 8); tile('Grass', 3, 8); prop('Rock', 4, 8); tile('Grass', 5, 8); tile('Grass', 6, 8); tile('Grass', 7, 8); prop('Rock', 8, 8); tile('Grass', 9, 8); tile('Grass', 10, 8); tile('Grass', 11, 8); tile('Grass', 12, 8); tile('Grass', 0, 9); tile('Grass', 1, 9); tile('Grass', 2, 9); tile('Grass', 3, 9); tile('Grass', 4, 9); tile('Grass', 5, 9); tile('Grass', 6, 9); tile('Grass', 7, 9); tile('Grass', 8, 9); tile('Grass', 9, 9); tile('Grass', 10, 9); tile('Grass', 11, 9); tile('Grass', 12, 9); tile('Grass', 0, 10); tile('Grass', 1, 10); prop('Rock', 2, 10); tile('Grass', 3, 10); tile('Grass', 4, 10); tile('Grass', 5, 10); prop('Rock', 6, 10); tile('Grass', 7, 10); tile('Grass', 8, 10); tile('Grass', 9, 10); prop('Rock', 10, 10); tile('Grass', 11, 10); tile('Grass', 12, 10); tile('Grass', 0, 11); tile('Grass', 1, 11); tile('Grass', 2, 11); tile('Grass', 3, 11); tile('Grass', 4, 11); tile('Grass', 5, 11); tile('Grass', 6, 11); tile('Grass', 7, 11); tile('Grass', 8, 11); tile('Grass', 9, 11); tile('Grass', 10, 11); tile('Grass', 11, 11); tile('Grass', 12, 11); tile('Grass', 0, 12); tile('Grass', 1, 12); tile('Grass', 2, 12); tile('Grass', 3, 12); tile('Grass', 4, 12); tile('Grass', 5, 12); tile('Grass', 6, 12); tile('Grass', 7, 12); tile('Grass', 8, 12); tile('Grass', 9, 12); tile('Grass', 10, 12); tile('Grass', 11, 12); tile('Grass', 12, 12);
+
+    edgePop('Tree');
+    
+    monster('OctorokGreen', 11, 11);
+ 
+    monster('OctorokGreen', 5, 5);
+ 
+    monster('OctorokGreen', 11, 2);
  
 });

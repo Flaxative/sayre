@@ -12,6 +12,7 @@
         $i += count(file('includes/crafty-extensions.js'));
         $i += count(file('includes/general.js'));
         $i += count(file('includes/components.js'));
+        $i += count(file('includes/astar.js'));
         $i += count(file('includes/scenes.js'));
         $i += count(file('includes/loading.js'));
         $i += count(file('includes/defeat.js'));

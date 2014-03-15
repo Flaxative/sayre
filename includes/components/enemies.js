@@ -168,6 +168,46 @@ Crafty.c("RandomAI",{
     return this._directions[Math.floor(Math.random()*4)];
   }
 });
+
+Crafty.c("Beeline",{
+  _directions:  [[0,-1], [0,1], [1,0], [-1,0]],
+    init: function() {
+        this.requires('Slide, Tween');
+        //this.timeout(function()  {this.checkMovement();}, 5)
+        this.timeout(this.checkMovement, 5)
+        .bind('Moved', function(from) {
+            if(this.hit('Solid')||this.hit('Exit')||this.hit('Monster')){
+                this.cancelSlide();// this.checkMovement();
+                }
+                });
+            },
+        
+  checkMovement: function() {
+        // get position of monster, get position of player
+        if(!this.paused) {
+            console.log([this.at().x, this.at().y]);
+            var start = [Math.round(this.at().x), Math.round(this.at().y)];
+            this.at(start[0],start[1]);
+            var goal = [Math.round(player.at().x), Math.round(player.at().y)];
+            // get path
+            var path = findPath(world, start, goal);
+            if(path[1][0]>path[0][0]) {this.dir = [1,0];}
+            if(path[1][0]<path[0][0]) {this.dir = [-1,0];}
+            if(path[1][1]>path[0][1]) {this.dir = [0,1];}
+            if(path[1][1]<path[0][1]) {this.dir = [0,-1];}
+        
+            //this.dir = this._randomDirection();                 // get initial random direction
+            this.bind("EnterFrame", function() {
+                if(!this.paused) {this.trigger("Slide", this.dir);} // don't move if paused
+                });  
+            }
+        this.timeout(function(){this.cancelSlide();this.checkMovement();}, 800);    
+        },
+        
+  _randomDirection: function() {
+    return this._directions[Math.floor(Math.random()*4)];
+  }
+});
    
 // animation binds for simple four-directional slide enemies
 Crafty.c('FourSlide', {init: function(){this.bind('Slide', function(direction){
@@ -298,6 +338,29 @@ Crafty.c('KingSlime', {
             Crafty.e('Slime').attr({x:x, y:y+40});
             Crafty.e('Slime').attr({x:x+40, y:y+40});
             }
+    
+// Octorok that doesn't shoot
+Crafty.c('OctorokGreen', {
+    init: function() {
+        this.requires('Monster, Beeline, SpriteAnimation, FourSlide, Painful, Minion, vulnerable, octorok, octGreendown')
+        .reel("walk_down", 300, 0, 0, 4)
+        .reel("walk_up", 300, 0, 1, 4)
+        .reel("walk_left", 300, 0, 2, 4)
+        .reel("walk_right", 300, 0, 3, 4)
+        .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, 
+            projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision();
+            
+            // test some pathfinding
+           /* this.bind("Pause", function(data){
+                //tell(this.at().x+', '+this.at().y);
+                var start = [Math.round(this.at().x), Math.round(this.at().y)];
+                var goal = [Math.round(player.at().x), Math.round(player.at().y)];
+                console.log(goal);
+                colorPath(start, goal);
+                });
+            this.bind("Run", function(data){clearPath();});*/
+            }
+        });
     
 // Octorok with better movement
 Crafty.c('Octorok', {
