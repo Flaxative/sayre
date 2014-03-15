@@ -313,6 +313,8 @@ function theme(track) {
 
 // initializes array to check if a grid space is occupied
 function initOccupy(scene) {
+    
+    emptyWorld();
     // there aren't any monsters yet.
     monsters_on_screen = 0;
     // A 2D array to keep track of all occupied tiles
@@ -350,6 +352,7 @@ function makeNPC(options) {
             interact: options.interaction, 
             callback: options.callback, 
             callbackDestroy:options.callbackDestroy});
+    world[options.x][options.y] = newNPC.walkability;
     tell(newNPC.overx); tell(newNPC.overy);
     } 
     
@@ -366,7 +369,10 @@ function monster(rawr, x, y, scene) {
 function prop(type, x, y, scene) {
     if(typeof(scene)==='undefined') scene = current_scene;
     scene.occupied[x][y] = true;
-    return Crafty.e(type).at(x, y);
+    var newprop = Crafty.e(type).at(x, y);
+    //console.log(newprop);
+    if(typeof(newprop.walkability)!="undefined") {world[x][y] = newprop.walkability;}    
+    return newprop;
     }
     
 // fills a rectangle with a certain prop

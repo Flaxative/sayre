@@ -21,6 +21,14 @@ Crafty.c('Grid', {
     }
   }
 });
+
+
+// set up walkability
+Crafty.c('open', { init: function() {this.attr({walkability: 0}); }, }); 
+Crafty.c('swimmable', { init: function() {this.attr({walkability: 1}); }, });
+Crafty.c('hoverable', { init: function() {this.attr({walkability: 2}); }, });
+Crafty.c('blocking', { init: function() {this.attr({walkability: 3}); }, });
+Crafty.c('forcefield', { init: function() {this.attr({walkability: 4}); }, });
  
 // Pausable component for PCs and monsters
 Crafty.c('Pausable', {
@@ -57,7 +65,7 @@ Crafty.c('NPC', {
 
 Crafty.c('NPC2', {
     init: function() {
-    this.requires('Actor, Solid, Collision, Tween, SpriteAnimation, poi');
+    this.requires('Actor, Solid, Collision, Tween, SpriteAnimation, poi, blocking');
     }
 });
 
@@ -86,7 +94,7 @@ Crafty.c('PlayerCharacter', {
                                                     // revert last 2 y values to 36.
         .bind("NewDirection", function (direction) {
             pushing = 0;
-            if(pushedblock) {this.detach(pushedblock); console.log('detached by direction'); pushedblock = '';}
+            //if(pushedblock) {this.detach(pushedblock); console.log('detached by direction'); pushedblock = '';}
             if (direction.x < 0) {
                 if (!this.isPlaying("walk_left")&&!this.disableControls) {
                     this.pauseAnimation().animate("walk_left", -1);
@@ -206,7 +214,22 @@ Crafty.c('PlayerCharacter', {
                     this.attr({x: from.x, y:from.y});
                     
                     if(pushing>14 && block.slide == facing && block.x < block.maxX && block.x > block.minX && block.y < block.maxY && block.y > block.minY) {
+                        world[block.at().x][block.at().y] = 0;
                         this.attach(block); pushedblock = block; tell("attached");
+                        
+                        // need to pause the player properly here, 
+                        // right now things can get funky fast with pausing/actions :p
+                            // OK, fixed I think!!
+                        
+                        disableActions();
+                        player.disableControl().timeout(function(){player.enableControl();enableActions();}, 300);
+                        
+                        // play pushing animations, shove player along with block
+                        if(facing=='left') {player.tween({x:player.x-40}, 300).animate("walk_left", -1);}
+                        if(facing=='right') {player.tween({x:player.x+40}, 300).animate("walk_right", -1);}
+                        if(facing=='up') {player.tween({y:player.y-40}, 300).animate("walk_up", -1);}
+                        if(facing=='down') {player.tween({y:player.y+40}, 300).animate("walk_down", -1);}
+                        
                         block.bind("Move", this.checkBlock);/*function() {
                             this.detach(derp[0].obj); this.unbind("EnterFrame"); console.log('detached');
                             }*/
@@ -223,6 +246,9 @@ Crafty.c('PlayerCharacter', {
     if(pushedblock.x >= pushedblock.maxX || pushedblock.x <= pushedblock.minX || pushedblock.y >= pushedblock.maxY || pushedblock.y <= pushedblock.minY) {
         Crafty('Player').detach(pushedblock); console.log('detached by distance');
         if(pushedblock.trigger) {eval(pushedblock.interact);}
+        var newx = pushedblock.x/40; 
+        var newy = pushedblock.y/40;
+        world[newx][newy] = 3;
         pushedblock.unbind('Move'); pushedblock = ''; 
         }
     }

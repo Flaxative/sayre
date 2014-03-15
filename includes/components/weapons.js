@@ -32,7 +32,8 @@ Crafty.c('Wooden Sword', {
         //.reel("swing", 300, 0, 0, 2) // initializes the swing animation (currently not implemented)
         .onHit('Bush', function(data) {
             if(potent) {
-                Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush      
+                //Crafty.e('BushDead').attr({x:data[0].obj.x, y:data[0].obj.y}); // replace with cut bush 
+                prop("BushDead",      data[0].obj.at().x, data[0].obj.at().y);
                 var loot_result = Math.floor((Math.random()*3)+1);
                 var loot_table = Array(4); loot_table[1] = 'RupeeG';
                 if(loot_table[loot_result]) {dropLoot(loot_table[loot_result], data[0].obj.x, data[0].obj.y);}

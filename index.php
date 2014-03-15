@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="includes/crafty.js"></script>
 	<script type="text/javascript" src="includes/crafty-extensions.js"></script>
 	<script type="text/javascript" src="includes/general.js"></script>
+	
 	<!-- <script type="text/javascript" src="includes/components/sprite-color.js"></script> unused ATM -->
 	<script type="text/javascript" src="includes/components.js"></script>
 	<script type="text/javascript" src="includes/components/terrain.js"></script>
@@ -16,6 +17,7 @@
 	<script type="text/javascript" src="includes/components/enemies.js"></script>
 	<script type="text/javascript" src="includes/components/weapons.js"></script>
 	<script type="text/javascript" src="includes/loading.js"></script>
+	<script type="text/javascript" src="includes/astar.js"></script>
 	<script type="text/javascript" src="includes/scenes.js"></script>
 	<script type="text/javascript" src="includes/defeat.js"></script>
 </head>

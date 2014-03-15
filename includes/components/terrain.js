@@ -79,23 +79,23 @@ Crafty.c('DoorRopen', {init: function() {this.requires('Actor, doorRopen').attr(
  
 // Props
 // Basic building block for anything that occupies a full square and blocks attacks
-Crafty.c('Barricade', { init: function() { this.requires('Actor, Solid, Collision, Guard'); }, }); 
+Crafty.c('Barricade', { init: function() { this.requires('Actor, Solid, Collision, Guard'); }, });
  
 // Tree
-Crafty.c('Tree', { init: function() { this.requires('Barricade, tree').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
+Crafty.c('Tree', { init: function() { this.requires('Barricade, tree, blocking').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
 // Walkable Tree
 Crafty.c('TreeWalkable', { init: function() { this.requires('Actor, tree'); }, });
 // Cactus
-Crafty.c('Cactus', { init: function() { this.requires('Barricade, cactus').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
+Crafty.c('Cactus', { init: function() { this.requires('Barricade, cactus, blocking').attr({hitNoise: 'wood_hit'}).collision(); }, }); 
 // Bush
-Crafty.c('Bush', { init: function() { this.requires('Actor, Solid, bush, Collision').collision(); }, });
+Crafty.c('Bush', { init: function() { this.requires('Actor, Solid, bush, Collision, blocking').collision(); }, });
 // When you chop down a bush, you make a dead bush
-Crafty.c('BushDead', { init: function() { this.requires('Actor, bush_dead') }, });
+Crafty.c('BushDead', { init: function() { this.requires('Actor, bush_dead, open').attr({walkability: 0}) }, });
 
 // A rock is a barricade that looks like a Link to the Past ziggurat.
-Crafty.c('Rock', {init: function() {this.requires('Barricade, rock').attr({hitNoise: 'bounce'}).collision();},});
+Crafty.c('Rock', {init: function() {this.requires('Barricade, rock, blocking').attr({hitNoise: 'bounce'}).collision();},});
 // Literally exactly the same as a rock, but pushable.
-Crafty.c('RockP', {init: function() {this.requires('Rock, pushable').collision();},});
+Crafty.c('RockP', {init: function() {this.requires('Rock, pushable, blocking').collision();},});
 
 
 // Hell (Defeat Screen)
