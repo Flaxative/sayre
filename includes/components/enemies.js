@@ -9,7 +9,7 @@
 function hurtMonster(monster) { 
     monster.removeComponent('vulnerable').timeout(function() {
         monster.addComponent('vulnerable')
-        }, 500);
+        }, 500); // during this delay, the monster should be knocked back
     }
 
 // Monster base - actors with collision
@@ -20,6 +20,7 @@ Crafty.c('Painful', { init: function() { this.bind("Moved", function(from) {
        if(this.hit('Player')&&Crafty('Player').has('vulnerable')){
            tell('ouch!'); Crafty.audio.play('ow');
            damagePlayer(this.strength);
+           //if(this.has('Slide')) {this.cancelSlide(); tell('hi');} // fail debug
         }
     }); },});
 
@@ -169,6 +170,9 @@ Crafty.c("RandomAI",{
   }
 });
 
+// first pathfinding AI, "homes" but doesn't move on diagonals
+// moves in grid tiles, sliding block to block
+// navigates obstacles
 Crafty.c("Beeline",{
   _directions:  [[0,-1], [0,1], [1,0], [-1,0]],
     init: function() {
@@ -184,7 +188,7 @@ Crafty.c("Beeline",{
         
   checkMovement: function() {
         // get position of monster, get position of player
-        if(!this.paused) {
+        if(!this.paused&&this) {
             console.log([this.at().x, this.at().y]);
             var start = [Math.round(this.at().x), Math.round(this.at().y)];
             this.at(start[0],start[1]);

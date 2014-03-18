@@ -9,6 +9,7 @@ var monsters_on_screen = 0; var unlock_by_killing = false;
 var more_dialogue = false; var current_statement = 0;
 var has_boomerang = true; var boomerang_returning = false;
 var started = false;
+var EverythingPaused = false;
 
 var max_hp = 66; var current_hp = 66;
 
@@ -82,6 +83,7 @@ function enableActions() {
 // pause player & monsters
 function pauseAll() {
     //tell("going away for a sec..."); //debug
+    EverythingPaused = true;
     Crafty('Monster Pausable').trigger("Pause").each(function(){this.pauseAnimation();});
     Crafty('Projectile').trigger("Pause");
     Crafty('Player').trigger("Pause");
@@ -89,6 +91,7 @@ function pauseAll() {
     }
 // unpause player & monsters
 function resumeAll() {
+    EverythingPaused = false;
     //tell("we're back"); //debug
     Crafty('Monster Pausable').trigger("Run").each(function(){this.resumeAnimation();});
     Crafty('Projectile').trigger("Run"); //tell(speed);
@@ -656,7 +659,7 @@ function killMonster(monster) {
     //primitive death animation using alpha tween
     // UNBINDING ENTERFRAME BREAKS MONSTER DEATH TWEEN
     // NOT UNBINDING IT BREAKS EVERYTHING ELSE ABOUT DEATH
-    monster.pauseAnimation().trigger("Pause").unbind("Moved").unbind("EnterFrame", monster.moveFunc)   // stop its movement
+    monster.pauseAnimation().trigger("Pause").unbind("Moved").unbind("Slide").unbind("EnterFrame", monster.moveFunc)   // stop its movement
     .removeComponent("Painful").removeComponent("Monster")  // stop it from hurting PC, or dying multiple times
     .attr({alpha:1.0}).tween({alpha:0.0}, 500).timeout(function() {this.destroy();tell("it's gone!");}, 500);
     if(monsters_on_screen<=0&&unlock_by_killing) {unlockDoors();}

@@ -14,16 +14,40 @@ Crafty.c('Weapon', {
             if(potent&&data[0].obj.has('vulnerable')) {potent = false;                             // make sure we only hit once!
                                                                     // console.log(this.damage);
                                                                     // console.log(data[0].obj.hp);
-                hurtMonster(data[0].obj);
-                Crafty.audio.play(data[0].obj.hitNoise);
-                data[0].obj.hp -= this.damage;                      // damage hit monsters
-                if(data[0].obj.hp<1) {killMonster(data[0].obj);}    // kill monsters with 0 or fewer HPs
+                
+                var victim = data[0].obj
+                hurtMonster(victim);
+                tell(victim.facing);
+                if(victim.has("Minion")) {knockback(victim, victim.facing);}     // still pretty buggy! function below.
+                Crafty.audio.play(victim.hitNoise);
+                victim.hp -= this.damage;                      // damage hit monsters
+                if(victim.hp<1) {killMonster(victim);}    // kill monsters with 0 or fewer HPs
                 }
             //this.unbind("EnterFrame");
             });
         }
     });
-
+    
+// function to knock an enemy back on hit
+function knockback(dude, facing) {
+    if(facing=='up') {
+        dude.paused = true; 
+        dude.tween({y:dude.y+40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        }
+    if(facing=='down') {
+        dude.paused = true; 
+        dude.tween({y:dude.y-40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        }
+    if(facing=='left') {
+        dude.paused = true; 
+        dude.tween({x:dude.x+40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        }
+    if(facing=='right') {
+        dude.paused = true; 
+        dude.tween({x:dude.x-40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        }
+    }
+    
 // wooden sword - a classic!
 Crafty.c('Wooden Sword', {
     init: function() {
