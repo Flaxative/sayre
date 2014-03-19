@@ -14,14 +14,17 @@ Crafty.c('Weapon', {
             if(potent&&data[0].obj.has('vulnerable')) {potent = false;                             // make sure we only hit once!
                                                                     // console.log(this.damage);
                                                                     // console.log(data[0].obj.hp);
-                
                 var victim = data[0].obj
                 hurtMonster(victim);
-                tell(victim.facing);
-                if(victim.has("Minion")) {knockback(victim, victim.facing);}     // still pretty buggy! function below.
+                //tell(victim.facing); // debug
+                
                 Crafty.audio.play(victim.hitNoise);
+                
                 victim.hp -= this.damage;                      // damage hit monsters
                 if(victim.hp<1) {killMonster(victim);}    // kill monsters with 0 or fewer HPs
+                else { // only check knockback if the monster isn't dead!
+                    if(victim.has("Minion")) {knockback(victim);}     // still pretty buggy! function below.
+                    }
                 }
             //this.unbind("EnterFrame");
             });
@@ -29,22 +32,58 @@ Crafty.c('Weapon', {
     });
     
 // function to knock an enemy back on hit
-function knockback(dude, facing) {
-    if(facing=='up') {
-        dude.paused = true; 
-        dude.tween({y:dude.y+40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
-        }
+function knockback(dude) {
+    var knockback_time = 1000; // 200ms of knockback/invuln. Can tweak, or make it monster-specific.
+    var kd = dude.knockback_distance
+    monster_starting_position = [dude.x, dude.y];
     if(facing=='down') {
-        dude.paused = true; 
-        dude.tween({y:dude.y-40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        dude.paused = true; var new_y = dude.y+kd;
+        var check_loc = to_grid([dude.x],[new_y], 'round'); 
+        if(world[check_loc[0]][check_loc[1]]>dude.movement_type) {
+             tell("can't go there!"); // debug
+            dude.timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, knockback_time);
+            }
+        else {
+            dude.knocking_back = 'down';
+            dude.tween({y:new_y}, knockback_time).timeout(function(){if(!EverythingPaused) {dude.paused = false;} dude._sourceY = new_y; dude._destY = new_y; dude.knocking_back = false;}, knockback_time);
+            }
+        
         }
-    if(facing=='left') {
-        dude.paused = true; 
-        dude.tween({x:dude.x+40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+    if(facing=='up') {
+        dude.paused = true; var new_y = dude.y-kd;
+        var check_loc = to_grid([dude.x],[new_y], 'floor'); 
+        if(world[check_loc[0]][check_loc[1]]>dude.movement_type) {
+             tell("can't go there!"); // debug
+            dude.timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, knockback_time);
+            }
+        else {
+            dude.knocking_back = 'up';
+            dude.tween({y:new_y}, knockback_time).timeout(function(){if(!EverythingPaused) {dude.paused = false;} dude._sourceY = new_y; dude._destY = new_y; dude.knocking_back = false; }, knockback_time);
+            }        
         }
     if(facing=='right') {
-        dude.paused = true; 
-        dude.tween({x:dude.x-40}, 200).timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, 200);
+        dude.paused = true; var new_x = dude.x+kd;
+        var check_loc = to_grid([new_x],[dude.y], 'round'); 
+        if(world[check_loc[0]][check_loc[1]]>dude.movement_type) {
+             tell("can't go there!"); // debug
+            dude.timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, knockback_time);
+            }
+        else {
+            dude.knocking_back = 'right';
+            dude.tween({x:new_x}, knockback_time).timeout(function(){if(!EverythingPaused) {dude.paused = false;} dude._sourceX = new_x; dude._destX = new_x; dude.knocking_back = false;}, knockback_time);
+            }        
+        }
+    if(facing=='left') {
+        dude.paused = true; var new_x = dude.x-kd;
+        var check_loc = to_grid([new_x],[dude.y], 'floor'); 
+        if(world[check_loc[0]][check_loc[1]]>dude.movement_type) {
+             tell("can't go there!"); // debug
+            dude.timeout(function(){if(!EverythingPaused) {dude.paused = false;}}, knockback_time);
+            }
+        else {
+            dude.knocking_back = 'up';
+            dude.tween({x:new_x}, knockback_time).timeout(function(){if(!EverythingPaused) {dude.paused = false;} dude._sourceX = new_x; dude._destX = new_x; dude.knocking_back = false;}, knockback_time);
+            }        
         }
     }
     

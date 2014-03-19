@@ -9,11 +9,14 @@
 function hurtMonster(monster) { 
     monster.removeComponent('vulnerable').timeout(function() {
         monster.addComponent('vulnerable')
-        }, 500); // during this delay, the monster should be knocked back
+        }, 200); // during this delay, the monster should be knocked back.
+        // 200ms is how long it takes us to knock our monsters back. we might want to make this monster specific.
+        // when we do, just have it be an attr of the monster, so we can check it both for knockback time & invulnerable time
+        // also, at some point, we should hook some graphics into this
     }
 
 // Monster base - actors with collision
-Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausable').attr({z: 2}); },});
+Crafty.c('Monster', { init: function() { this.requires('Actor, Collision, Pausable, ground'/* remove 'ground' when you introduce more movement types, and assign it to individual monster species */).attr({z: 2}); },});
 
 // Some monsters hurt you just by touch 
 Crafty.c('Painful', { init: function() { this.bind("Moved", function(from) {
@@ -323,7 +326,7 @@ Crafty.c('SlimeBase', {
 });
 
 // Normal Pink Slime
-Crafty.c('Slime', {init: function() {this.requires("SlimeBase, Minion").attr({death: "random"}).collision(new Crafty.circle(20, 20, 20));},});
+Crafty.c('Slime', {init: function() {this.requires("SlimeBase, Minion").attr({death: "random", knockback_distance: 40}).collision(new Crafty.circle(20, 20, 20));},});
 
 // Big Pink Slime
 Crafty.c('KingSlime', {
@@ -351,7 +354,7 @@ Crafty.c('OctorokGreen', {
         .reel("walk_up", 300, 0, 1, 4)
         .reel("walk_left", 300, 0, 2, 4)
         .reel("walk_right", 300, 0, 3, 4)
-        .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, 
+        .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, knockback_distance: 40, 
             projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision();
             
             // test some pathfinding
@@ -377,7 +380,7 @@ Crafty.c('Octorok', {
         .reel("walk_up", 300, 0, 1, 4)
         .reel("walk_left", 300, 0, 2, 4)
         .reel("walk_right", 300, 0, 3, 4)
-        .attr({w:40, h:40, hp: 5, strength: 11, death: "random", speed: 2, 
+        .attr({w:40, h:40, hp: 5, strength: 11, death: "random", speed: 2, knockback_distance: 20, 
             projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },
@@ -430,7 +433,7 @@ Crafty.c('OctorokBlue', {
         .reel("walk_up", 300, 0, 1, 4)
         .reel("walk_left", 300, 0, 2, 4)
         .reel("walk_right", 300, 0, 3, 4)
-        .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, 
+        .attr({w:40, h:40, hp: 10, strength: 11, death: "random", speed: 2, knockback_distance: 20, 
             projectile: "RockProjectile", pw: 16, ph: 16, hitNoise: 'octorok_pain'}).collision()
         .bind("EnterFrame", this.countToShot);
   },

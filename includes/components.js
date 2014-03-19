@@ -22,6 +22,12 @@ Crafty.c('Grid', {
   }
 });
 
+function to_grid(x, y, method) {
+    //tell(x); tell(y); //debug
+    if(method=="round") {return [Math.round(x/Game.map_grid.tile.width), Math.round(y/Game.map_grid.tile.height)];}
+    else if(method=="floor") {return [Math.floor(x/Game.map_grid.tile.width), Math.floor(y/Game.map_grid.tile.height)];}
+    }
+
 
 // set up walkability
 Crafty.c('open', { init: function() {this.attr({walkability: 0}); }, }); 
@@ -29,6 +35,9 @@ Crafty.c('swimmable', { init: function() {this.attr({walkability: 1}); }, });
 Crafty.c('hoverable', { init: function() {this.attr({walkability: 2}); }, });
 Crafty.c('blocking', { init: function() {this.attr({walkability: 3}); }, });
 Crafty.c('forcefield', { init: function() {this.attr({walkability: 4}); }, });
+
+// set up movement type
+Crafty.c('ground', { init: function() {this.attr({movement_type: 0}); }, });
  
 // Pausable component for PCs and monsters
 Crafty.c('Pausable', {

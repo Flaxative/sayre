@@ -10,14 +10,15 @@ var more_dialogue = false; var current_statement = 0;
 var has_boomerang = true; var boomerang_returning = false;
 var started = false;
 var EverythingPaused = false;
+var monster_starting_position;
 
 var max_hp = 66; var current_hp = 66;
 
 // ~~~~~
 /* INVENTORY VARS */
 var coins = 0; var bombs = 0; var keys = 0;
-var weapon = 'Wooden Sword'; 
-var weapons_carried = ['Wooden Sword'];
+var weapon = 'Longspear'; 
+var weapons_carried = ['Wooden Sword', 'Longspear'];
 var secondary = ''; 
 var secondaries_carried = ['Boomerang'];
 var armor = ''; 
@@ -574,14 +575,14 @@ function chestNotice(contents, type, value) {
     if(type == "weapon") {
         weapons_carried.push(contents);
         }
-    else if(type =="secondary") {
+    else if(type == "secondary") {
         secondaries_carried.push(contents);
         if(contents == 'Bombs') {getBombs(value);} // if secondary is bombs, also get some bombs
         }
     else if(type == "armor") {
         outfits_carried.push(contents);
         }
-    else if(type == "misc") {
+    else if(type == "misc"&&contents!="Heart Container") {
         accessories_carried.push(contents);
         }
     else if(type == "rupee") {
